@@ -52,6 +52,22 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
+				payroll: {
+					header: 'hsl(var(--payroll-header))',
+					draft: 'hsl(var(--payroll-draft))',
+					confirm: 'hsl(var(--payroll-confirm))',
+					total: 'hsl(var(--payroll-total))',
+					positive: 'hsl(var(--payroll-positive))',
+					negative: 'hsl(var(--payroll-negative))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
