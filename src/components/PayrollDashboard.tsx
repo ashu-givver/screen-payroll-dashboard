@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { TabType, AdvancedFilter } from '@/types/payroll';
+import { TabType, AdvancedFilter, SavedFilterView } from '@/types/payroll';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
 import { PayrollTabs } from '@/components/PayrollTabs';
@@ -21,6 +21,7 @@ export const PayrollDashboard = () => {
   const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
+  const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
@@ -121,6 +122,29 @@ export const PayrollDashboard = () => {
     });
   };
 
+  const handleSaveView = (view: Omit<SavedFilterView, 'id'>) => {
+    const newView: SavedFilterView = {
+      ...view,
+      id: Math.random().toString(36).substr(2, 9)
+    };
+    setSavedViews(prev => [...prev, newView]);
+    toast({
+      title: "View Saved",
+      description: `Filter view "${view.name}" has been saved.`,
+    });
+  };
+
+  const handleLoadView = (view: SavedFilterView) => {
+    setAdvancedFilters([...view.filters]);
+    setShowChangesOnly(view.basicFilters.showChangesOnly);
+    setSelectedDepartment(view.basicFilters.department);
+    setSelectedEmploymentType(view.basicFilters.employmentType);
+    toast({
+      title: "View Loaded",
+      description: `Applied filter view "${view.name}".`,
+    });
+  };
+
   const renderTabContent = () => {
     const commonProps = {
       employees: filteredEmployees,
@@ -171,6 +195,14 @@ export const PayrollDashboard = () => {
         <AdvancedFilterPanel
           filters={advancedFilters}
           onFiltersChange={setAdvancedFilters}
+          savedViews={savedViews}
+          onSaveView={handleSaveView}
+          onLoadView={handleLoadView}
+          currentBasicFilters={{
+            showChangesOnly,
+            department: selectedDepartment,
+            employmentType: selectedEmploymentType
+          }}
         />
 
         <TotalsSummaryBar 

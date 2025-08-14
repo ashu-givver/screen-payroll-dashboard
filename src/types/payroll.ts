@@ -61,6 +61,17 @@ export interface AdvancedFilter {
   compareToLastMonth: boolean;
 }
 
+export interface SavedFilterView {
+  id: string;
+  name: string;
+  filters: AdvancedFilter[];
+  basicFilters: {
+    showChangesOnly: boolean;
+    department: string;
+    employmentType: string;
+  };
+}
+
 export interface PayrollPeriod {
   month: string;
   year: number;

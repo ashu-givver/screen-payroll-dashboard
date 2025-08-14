@@ -4,12 +4,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, Plus, X } from 'lucide-react';
-import { AdvancedFilter } from '@/types/payroll';
+import { ChevronDown, Plus, X, Save, FolderOpen } from 'lucide-react';
+import { AdvancedFilter, SavedFilterView } from '@/types/payroll';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface AdvancedFilterPanelProps {
   filters: AdvancedFilter[];
   onFiltersChange: (filters: AdvancedFilter[]) => void;
+  savedViews: SavedFilterView[];
+  onSaveView: (view: Omit<SavedFilterView, 'id'>) => void;
+  onLoadView: (view: SavedFilterView) => void;
+  currentBasicFilters: {
+    showChangesOnly: boolean;
+    department: string;
+    employmentType: string;
+  };
 }
 
 const PAY_ELEMENTS = [
@@ -31,8 +40,17 @@ const CONDITIONS = [
   { value: 'equal', label: '=' },
 ];
 
-export const AdvancedFilterPanel = ({ filters, onFiltersChange }: AdvancedFilterPanelProps) => {
+export const AdvancedFilterPanel = ({ 
+  filters, 
+  onFiltersChange, 
+  savedViews, 
+  onSaveView, 
+  onLoadView, 
+  currentBasicFilters 
+}: AdvancedFilterPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [viewName, setViewName] = useState('');
 
   const addFilter = () => {
     const newFilter: AdvancedFilter = {
@@ -58,6 +76,18 @@ export const AdvancedFilterPanel = ({ filters, onFiltersChange }: AdvancedFilter
 
   const clearAllFilters = () => {
     onFiltersChange([]);
+  };
+
+  const handleSaveView = () => {
+    if (viewName.trim()) {
+      onSaveView({
+        name: viewName.trim(),
+        filters: [...filters],
+        basicFilters: { ...currentBasicFilters }
+      });
+      setViewName('');
+      setSaveDialogOpen(false);
+    }
   };
 
   return (
@@ -169,6 +199,63 @@ export const AdvancedFilterPanel = ({ filters, onFiltersChange }: AdvancedFilter
               <Plus className="h-4 w-4" />
               Add Condition
             </Button>
+
+            <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  disabled={filters.length === 0}
+                >
+                  <Save className="h-4 w-4" />
+                  Save View
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Save Filter View</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="viewName">View Name</Label>
+                    <Input
+                      id="viewName"
+                      value={viewName}
+                      onChange={(e) => setViewName(e.target.value)}
+                      placeholder="Enter view name..."
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSaveView} disabled={!viewName.trim()}>
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {savedViews.length > 0 && (
+              <Select onValueChange={(viewId) => {
+                const view = savedViews.find(v => v.id === viewId);
+                if (view) onLoadView(view);
+              }}>
+                <SelectTrigger className="w-40">
+                  <FolderOpen className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Load View" />
+                </SelectTrigger>
+                <SelectContent>
+                  {savedViews.map((view) => (
+                    <SelectItem key={view.id} value={view.id}>
+                      {view.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
             {filters.length > 0 && (
               <Button
