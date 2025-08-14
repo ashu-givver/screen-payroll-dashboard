@@ -26,7 +26,14 @@ export const PayrollHeader = ({ period, onConfirm }: PayrollHeaderProps) => {
               </Badge>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-end">
+              <Button variant="outline" size="sm" className="flex items-center gap-2">
+                <Download className="h-3 w-3" />
+                Sync Data
+              </Button>
+              <span className="text-xs text-muted-foreground mt-1">Last updated: 2 min ago</span>
+            </div>
             <Button variant="ghost" size="sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>

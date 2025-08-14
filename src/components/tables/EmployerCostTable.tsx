@@ -1,5 +1,6 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
@@ -8,9 +9,12 @@ import { useState } from 'react';
 interface EmployerCostTableProps {
   employees: Employee[];
   summary: PayrollSummary;
+  viewMode: 'compact' | 'detailed';
+  approvedEmployees: Set<string>;
+  onApproveEmployee: (employeeId: string) => void;
 }
 
-export const EmployerCostTable = ({ employees, summary }: EmployerCostTableProps) => {
+export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: EmployerCostTableProps) => {
   const [searchValue, setSearchValue] = useState('');
   
   // Calculate summary totals for employer cost breakdown
@@ -37,6 +41,7 @@ export const EmployerCostTable = ({ employees, summary }: EmployerCostTableProps
             <TableHead className="text-right w-40">National Insurance</TableHead>
             <TableHead className="text-right w-28">Pension</TableHead>
             <TableHead className="text-right w-40">Total Employer Cost</TableHead>
+            <TableHead className="w-20">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -55,6 +60,7 @@ export const EmployerCostTable = ({ employees, summary }: EmployerCostTableProps
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalEmployerCost)}
             </TableCell>
+            <TableCell></TableCell>
           </TableRow>
           
           {/* Employee rows */}
@@ -81,6 +87,17 @@ export const EmployerCostTable = ({ employees, summary }: EmployerCostTableProps
               </TableCell>
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.employerCost)}
+              </TableCell>
+              <TableCell>
+                <Button
+                  size="sm"
+                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                  onClick={() => onApproveEmployee(employee.id)}
+                  disabled={approvedEmployees.has(employee.id)}
+                  className="h-6 px-2 text-xs"
+                >
+                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                </Button>
               </TableCell>
             </TableRow>
           ))}

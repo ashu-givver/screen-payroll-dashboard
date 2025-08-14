@@ -1,6 +1,7 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
@@ -9,9 +10,12 @@ import { useState } from 'react';
 interface DeductionsTableProps {
   employees: Employee[];
   summary: PayrollSummary;
+  viewMode: 'compact' | 'detailed';
+  approvedEmployees: Set<string>;
+  onApproveEmployee: (employeeId: string) => void;
 }
 
-export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) => {
+export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: DeductionsTableProps) => {
   const [searchValue, setSearchValue] = useState('');
   
   // Calculate summary totals for deduction breakdown
@@ -45,6 +49,7 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
             <TableHead className="text-right w-36">Postgraduate Loan</TableHead>
             <TableHead className="text-right w-36">Total Deductions</TableHead>
             <TableHead className="text-right w-28">Net Pay</TableHead>
+            <TableHead className="w-20">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -81,6 +86,7 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
                 <span className="text-xs text-red-600">-144.08</span>
               </div>
             </TableCell>
+            <TableCell></TableCell>
           </TableRow>
           
           {/* Employee rows */}
@@ -133,6 +139,17 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
                     </span>
                   )}
                 </div>
+              </TableCell>
+              <TableCell>
+                <Button
+                  size="sm"
+                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                  onClick={() => onApproveEmployee(employee.id)}
+                  disabled={approvedEmployees.has(employee.id)}
+                  className="h-6 px-2 text-xs"
+                >
+                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                </Button>
               </TableCell>
             </TableRow>
           ))}
