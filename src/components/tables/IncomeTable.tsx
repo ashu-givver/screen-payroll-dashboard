@@ -19,7 +19,7 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0">
       <PayrollTableFilter
         searchValue={searchValue}
         onSearchChange={setSearchValue}
@@ -28,19 +28,19 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
       
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Employee</TableHead>
-            <TableHead className="text-right">Base Pay</TableHead>
-            <TableHead className="text-right">Bonus</TableHead>
-            <TableHead className="text-right">Commission</TableHead>
-            <TableHead className="text-right">Overtime</TableHead>
-            <TableHead className="text-right">GIF Flex</TableHead>
-            <TableHead className="text-right">Gross Pay</TableHead>
+          <TableRow className="h-9">
+            <TableHead className="w-48">Employee</TableHead>
+            <TableHead className="text-right w-28">Base Pay</TableHead>
+            <TableHead className="text-right w-24">Bonus</TableHead>
+            <TableHead className="text-right w-32">Commission</TableHead>
+            <TableHead className="text-right w-28">Overtime</TableHead>
+            <TableHead className="text-right w-28">GIF Flex</TableHead>
+            <TableHead className="text-right w-32">Gross Pay</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* Total row */}
-          <TableRow className="bg-blue-50/30 font-medium">
+          <TableRow className="bg-gray-50/60 font-medium h-9">
             <TableCell className="font-semibold text-gray-900">Total</TableCell>
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
@@ -56,15 +56,15 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
           
           {/* Employee rows */}
           {filteredEmployees.map((employee) => (
-            <TableRow key={employee.id}>
+            <TableRow key={employee.id} className="h-9">
               <TableCell>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <EmployeeAvatar 
                     name={employee.name}
                     initials={employee.initials}
                     size="sm"
                   />
-                  <span className="font-medium text-gray-900">{employee.name}</span>
+                  <span className="font-medium text-gray-900 text-sm">{employee.name}</span>
                 </div>
               </TableCell>
               <TableCell className="text-right font-medium text-gray-900">

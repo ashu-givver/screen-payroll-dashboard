@@ -19,7 +19,7 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0">
       <PayrollTableFilter
         searchValue={searchValue}
         onSearchChange={setSearchValue}
@@ -28,17 +28,17 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
       
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Employee</TableHead>
-            <TableHead className="text-right">Gross Up</TableHead>
-            <TableHead className="text-right">Deductions</TableHead>
-            <TableHead className="text-right">Take Home Pay</TableHead>
-            <TableHead className="text-right">Employer Cost</TableHead>
+          <TableRow className="h-9">
+            <TableHead className="w-48">Employee</TableHead>
+            <TableHead className="text-right w-32">Gross Up</TableHead>
+            <TableHead className="text-right w-32">Deductions</TableHead>
+            <TableHead className="text-right w-36">Take Home Pay</TableHead>
+            <TableHead className="text-right w-36">Employer Cost</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* Total row */}
-          <TableRow className="bg-blue-50/30 font-medium">
+          <TableRow className="bg-gray-50/60 font-medium h-9">
             <TableCell className="font-semibold text-gray-900">Total</TableCell>
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
@@ -62,15 +62,15 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
           
           {/* Employee rows */}
           {filteredEmployees.map((employee) => (
-            <TableRow key={employee.id}>
+            <TableRow key={employee.id} className="h-9">
               <TableCell>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <EmployeeAvatar 
                     name={employee.name}
                     initials={employee.initials}
                     size="sm"
                   />
-                  <span className="font-medium text-gray-900">{employee.name}</span>
+                  <span className="font-medium text-gray-900 text-sm">{employee.name}</span>
                 </div>
               </TableCell>
               <TableCell className="text-right font-medium text-gray-900">

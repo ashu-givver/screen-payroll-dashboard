@@ -9,7 +9,7 @@ const Table = React.forwardRef<
   <div className="relative w-full overflow-auto border border-gray-200 rounded-lg bg-white">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm border-collapse", className)}
+      className={cn("w-full caption-bottom text-sm border-collapse min-w-full", className)}
       {...props}
     />
   </div>
@@ -20,7 +20,7 @@ const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
+  <thead ref={ref} className={cn("sticky top-0 bg-white z-10 [&_tr]:border-b", className)} {...props} />
 ))
 TableHeader.displayName = "TableHeader"
 
@@ -58,7 +58,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b border-gray-100 hover:bg-gray-50/50 transition-colors duration-150",
+      "border-b border-gray-100 hover:bg-gray-50/40 transition-colors duration-150 h-9",
       className
     )}
     {...props}
@@ -73,7 +73,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-11 px-4 text-left align-middle font-medium text-gray-600 text-xs uppercase tracking-wide bg-gray-50 border-b border-gray-200 whitespace-nowrap",
+      "h-9 px-3 text-left align-middle font-medium text-gray-600 text-xs uppercase tracking-wide bg-gray-50 border-b border-gray-200 whitespace-nowrap",
       className
     )}
     {...props}
@@ -87,7 +87,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("px-4 py-3 align-middle text-sm text-gray-900 whitespace-nowrap", className)}
+    className={cn("px-3 py-2 align-middle text-sm text-gray-900 whitespace-nowrap", className)}
     {...props}
   />
 ))
