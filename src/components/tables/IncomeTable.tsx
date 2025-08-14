@@ -11,30 +11,30 @@ interface IncomeTableProps {
 
 export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
   return (
-    <div className="bg-card">
+    <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="text-left font-medium text-muted-foreground">Employee</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Base Pay</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Salary basis</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Units</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Rate</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Total income</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Status ↑</TableHead>
+          <TableRow>
+            <TableHead>Employee</TableHead>
+            <TableHead className="text-right">Base Pay</TableHead>
+            <TableHead className="text-right">Salary basis</TableHead>
+            <TableHead className="text-right">Units</TableHead>
+            <TableHead className="text-right">Rate</TableHead>
+            <TableHead className="text-right">Total income</TableHead>
+            <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* Total row */}
-          <TableRow className="border-b border-border bg-muted/30">
-            <TableCell className="font-semibold text-payroll-total">Total</TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+          <TableRow className="bg-blue-50/50 font-medium">
+            <TableCell className="font-semibold text-gray-900">Total</TableCell>
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
             <TableCell></TableCell>
@@ -42,38 +42,38 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
           
           {/* Employee rows */}
           {employees.map((employee) => (
-            <TableRow key={employee.id} className="border-b border-border hover:bg-muted/20">
-              <TableCell className="py-4">
+            <TableRow key={employee.id}>
+              <TableCell>
                 <div className="flex items-center gap-3">
                   <EmployeeAvatar 
                     name={employee.name}
                     initials={employee.initials}
                     size="sm"
                   />
-                  <span className="font-medium">{employee.name}</span>
+                  <span className="font-medium text-gray-900">{employee.name}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.basePay)}
               </TableCell>
-              <TableCell className="text-right text-muted-foreground">
+              <TableCell className="text-right text-gray-600">
                 {employee.salaryBasis}
               </TableCell>
-              <TableCell className="text-right text-muted-foreground">
+              <TableCell className="text-right text-gray-600">
                 {employee.units}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.rate)}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.totalIncome)}
               </TableCell>
               <TableCell className="text-right">
                 <Badge 
                   variant="outline" 
-                  className="bg-success/10 text-success border-success/20"
+                  className="bg-green-50 text-green-700 border-green-200 text-xs"
                 >
-                  <div className="w-2 h-2 bg-success rounded-full mr-2"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                   {employee.status}
                 </Badge>
               </TableCell>
@@ -82,7 +82,7 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
         </TableBody>
       </Table>
       
-      <div className="px-6 py-4 text-sm text-muted-foreground">
+      <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
         1 - {employees.length} of {employees.length} records
       </div>
     </div>

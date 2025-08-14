@@ -18,59 +18,59 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
   const totalPostgradLoan = employees.reduce((sum, emp) => sum + emp.postgradLoan, 0);
 
   return (
-    <div className="bg-card">
+    <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border">
-            <TableHead className="text-left font-medium text-muted-foreground">Gross Pay</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">PAYE</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">NI</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Pension</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Student loan</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Postgrad loan</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Total deductions</TableHead>
-            <TableHead className="text-right font-medium text-muted-foreground">Net Payment</TableHead>
+          <TableRow>
+            <TableHead>Gross Pay</TableHead>
+            <TableHead className="text-right">PAYE</TableHead>
+            <TableHead className="text-right">NI</TableHead>
+            <TableHead className="text-right">Pension</TableHead>
+            <TableHead className="text-right">Student loan</TableHead>
+            <TableHead className="text-right">Postgrad loan</TableHead>
+            <TableHead className="text-right">Total deductions</TableHead>
+            <TableHead className="text-right">Net Payment</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* Total row */}
-          <TableRow className="border-b border-border bg-muted/30">
-            <TableCell className="font-semibold text-payroll-total">
+          <TableRow className="bg-blue-50/50 font-medium">
+            <TableCell className="font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(totalPaye)}
             </TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(totalNI)}
             </TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(totalPension)}
             </TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(totalStudentLoan)}
             </TableCell>
-            <TableCell className="text-right font-semibold text-payroll-total">
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(totalPostgradLoan)}
             </TableCell>
             <TableCell className="text-right font-semibold">
               <div className="flex flex-col items-end">
-                <span className="text-payroll-total">{formatCurrency(summary.totalDeductions)}</span>
-                <span className="text-xs text-payroll-positive">+144.08</span>
+                <span className="text-gray-900">{formatCurrency(summary.totalDeductions)}</span>
+                <span className="text-xs text-green-600">+144.08</span>
               </div>
             </TableCell>
             <TableCell className="text-right font-semibold">
               <div className="flex flex-col items-end">
-                <span className="text-payroll-total">{formatCurrency(summary.totalTakeHomePay)}</span>
-                <span className="text-xs text-payroll-negative">-144.08</span>
+                <span className="text-gray-900">{formatCurrency(summary.totalTakeHomePay)}</span>
+                <span className="text-xs text-red-600">-144.08</span>
               </div>
             </TableCell>
           </TableRow>
           
           {/* Employee rows */}
           {employees.map((employee) => (
-            <TableRow key={employee.id} className="border-b border-border hover:bg-muted/20">
-              <TableCell className="py-4">
+            <TableRow key={employee.id}>
+              <TableCell>
                 <div className="flex items-center gap-3">
                   <EmployeeAvatar 
                     name={employee.name}
@@ -78,31 +78,31 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
                     size="sm"
                   />
                   <div>
-                    <div className="font-medium">{formatCurrency(employee.totalIncome)}</div>
-                    <div className="text-sm text-muted-foreground">{employee.name}</div>
+                    <div className="font-medium text-gray-900">{formatCurrency(employee.totalIncome)}</div>
+                    <div className="text-xs text-gray-500">{employee.name}</div>
                   </div>
                 </div>
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.paye)}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.ni)}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.pension)}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.studentLoan)}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.postgradLoan)}
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex flex-col items-end">
-                  <span className="font-medium">{formatCurrency(employee.deductions)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(employee.deductions)}</span>
                   {employee.deductionVariance && (
-                    <span className={`text-xs ${employee.deductionVariance > 0 ? 'text-payroll-positive' : 'text-payroll-negative'}`}>
+                    <span className={`text-xs ${employee.deductionVariance > 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {employee.deductionVariance > 0 ? '+' : ''}{employee.deductionVariance.toFixed(2)}
                     </span>
                   )}
@@ -110,9 +110,9 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex flex-col items-end">
-                  <span className="font-medium">{formatCurrency(employee.takeHomePay)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(employee.takeHomePay)}</span>
                   {employee.netPaymentVariance && (
-                    <span className={`text-xs ${employee.netPaymentVariance > 0 ? 'text-payroll-positive' : 'text-payroll-negative'}`}>
+                    <span className={`text-xs ${employee.netPaymentVariance > 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {employee.netPaymentVariance > 0 ? '+' : ''}{employee.netPaymentVariance.toFixed(2)}
                     </span>
                   )}
@@ -123,7 +123,7 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
         </TableBody>
       </Table>
       
-      <div className="px-6 py-4 text-sm text-muted-foreground">
+      <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
         1 - {employees.length} of {employees.length} records
       </div>
     </div>
