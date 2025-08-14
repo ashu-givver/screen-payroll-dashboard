@@ -1,15 +1,14 @@
 import { useState, useMemo } from 'react';
-import { TabType } from '@/types/payroll';
+import { TabType, AdvancedFilter } from '@/types/payroll';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
 import { PayrollTabs } from '@/components/PayrollTabs';
 import { SmartFilterPanel } from '@/components/SmartFilterPanel';
+import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
 import { TotalsSummaryBar } from '@/components/TotalsSummaryBar';
 import { ViewModeToggle } from '@/components/ViewModeToggle';
-import { SummaryTable } from '@/components/tables/SummaryTable';
-import { IncomeTable } from '@/components/tables/IncomeTable';
-import { DeductionsTable } from '@/components/tables/DeductionsTable';
-import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
+import { CompactTable } from '@/components/tables/CompactTable';
+import { DetailedTable } from '@/components/tables/DetailedTable';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -21,6 +20,7 @@ export const PayrollDashboard = () => {
   const [selectedEmploymentType, setSelectedEmploymentType] = useState('all');
   const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
@@ -30,24 +30,58 @@ export const PayrollDashboard = () => {
         return false;
       }
       
-      // Changes only filter (mock: employees with ID 1,3,5,7 have changes)
+      // Changes only filter
       if (showChangesOnly && !['1', '3', '5', '7'].includes(employee.id)) {
         return false;
       }
       
-      // Department filter (mock logic)
-      if (selectedDepartment !== 'all') {
-        return true; // In real app, would check employee.department
+      // Department filter
+      if (selectedDepartment !== 'all' && employee.department !== selectedDepartment) {
+        return false;
       }
       
-      // Employment type filter (mock logic)
-      if (selectedEmploymentType !== 'all') {
-        return true; // In real app, would check employee.employmentType
+      // Employment type filter
+      if (selectedEmploymentType !== 'all' && employee.employmentType !== selectedEmploymentType) {
+        return false;
+      }
+      
+      // Advanced filters
+      for (const filter of advancedFilters) {
+        const currentValue = employee[filter.payElement as keyof typeof employee] as number;
+        const compareValue = filter.compareToLastMonth && employee.previousMonth 
+          ? employee.previousMonth[filter.payElement as keyof typeof employee.previousMonth] as number
+          : 0;
+          
+        let testValue = currentValue;
+        
+        if (filter.compareToLastMonth && employee.previousMonth) {
+          if (filter.isPercentage) {
+            testValue = compareValue > 0 ? ((currentValue - compareValue) / compareValue) * 100 : 0;
+          } else {
+            testValue = currentValue - compareValue;
+          }
+        }
+        
+        const filterValue = filter.isPercentage && !filter.compareToLastMonth 
+          ? (filter.value / 100) * testValue 
+          : filter.value;
+          
+        switch (filter.condition) {
+          case 'greater':
+            if (testValue <= filterValue) return false;
+            break;
+          case 'less':
+            if (testValue >= filterValue) return false;
+            break;
+          case 'equal':
+            if (Math.abs(testValue - filterValue) > 0.01) return false;
+            break;
+        }
       }
       
       return true;
     });
-  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType]);
+  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType, advancedFilters]);
 
   const handleConfirm = () => {
     toast({
@@ -91,22 +125,15 @@ export const PayrollDashboard = () => {
     const commonProps = {
       employees: filteredEmployees,
       summary: payrollSummary,
-      viewMode,
       approvedEmployees,
       onApproveEmployee: handleApproveEmployee,
     };
 
-    switch (activeTab) {
-      case 'summary':
-        return <SummaryTable {...commonProps} />;
-      case 'income':
-        return <IncomeTable {...commonProps} />;
-      case 'deductions':
-        return <DeductionsTable {...commonProps} />;
-      case 'employer-cost':
-        return <EmployerCostTable {...commonProps} />;
-      default:
-        return null;
+    // For the new view modes, we render different tables regardless of tab
+    if (viewMode === 'compact') {
+      return <CompactTable {...commonProps} />;
+    } else {
+      return <DetailedTable {...commonProps} />;
     }
   };
 
@@ -139,6 +166,11 @@ export const PayrollDashboard = () => {
           onDepartmentChange={setSelectedDepartment}
           selectedEmploymentType={selectedEmploymentType}
           onEmploymentTypeChange={setSelectedEmploymentType}
+        />
+
+        <AdvancedFilterPanel
+          filters={advancedFilters}
+          onFiltersChange={setAdvancedFilters}
         />
 
         <TotalsSummaryBar 

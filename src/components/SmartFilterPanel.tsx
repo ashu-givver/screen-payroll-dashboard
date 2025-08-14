@@ -90,10 +90,11 @@ export const SmartFilterPanel = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Departments</SelectItem>
-            <SelectItem value="engineering">Engineering</SelectItem>
-            <SelectItem value="sales">Sales</SelectItem>
-            <SelectItem value="marketing">Marketing</SelectItem>
-            <SelectItem value="finance">Finance</SelectItem>
+            <SelectItem value="Engineering">Engineering</SelectItem>
+            <SelectItem value="Sales">Sales</SelectItem>
+            <SelectItem value="Marketing">Marketing</SelectItem>
+            <SelectItem value="Finance">Finance</SelectItem>
+            <SelectItem value="Operations">Operations</SelectItem>
           </SelectContent>
         </Select>
 
@@ -104,9 +105,9 @@ export const SmartFilterPanel = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="full-time">Full-time</SelectItem>
-            <SelectItem value="part-time">Part-time</SelectItem>
-            <SelectItem value="contractor">Contractor</SelectItem>
+            <SelectItem value="Full-time">Full-time</SelectItem>
+            <SelectItem value="Part-time">Part-time</SelectItem>
+            <SelectItem value="Contractor">Contractor</SelectItem>
           </SelectContent>
         </Select>
       </div>
