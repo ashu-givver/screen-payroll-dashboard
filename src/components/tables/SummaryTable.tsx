@@ -2,7 +2,9 @@ import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
+import { useState } from 'react';
 
 interface SummaryTableProps {
   employees: Employee[];
@@ -10,16 +12,28 @@ interface SummaryTableProps {
 }
 
 export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const filteredEmployees = employees.filter(employee =>
+    employee.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div className="space-y-4">
+      <PayrollTableFilter
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        placeholder="Search employees..."
+      />
+      
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Employee</TableHead>
-            <TableHead className="text-right">Income</TableHead>
+            <TableHead className="text-right">Gross Up</TableHead>
             <TableHead className="text-right">Deductions</TableHead>
-            <TableHead className="text-right">Take home pay</TableHead>
-            <TableHead className="text-right">Employer cost</TableHead>
+            <TableHead className="text-right">Take Home Pay</TableHead>
+            <TableHead className="text-right">Employer Cost</TableHead>
             <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -49,7 +63,7 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
           </TableRow>
           
           {/* Employee rows */}
-          {employees.map((employee) => (
+          {filteredEmployees.map((employee) => (
             <TableRow key={employee.id}>
               <TableCell>
                 <div className="flex items-center gap-3">

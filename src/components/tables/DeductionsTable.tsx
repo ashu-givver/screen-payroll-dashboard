@@ -2,7 +2,9 @@ import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
+import { useState } from 'react';
 
 interface DeductionsTableProps {
   employees: Employee[];
@@ -10,6 +12,8 @@ interface DeductionsTableProps {
 }
 
 export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) => {
+  const [searchValue, setSearchValue] = useState('');
+  
   // Calculate summary totals for deduction breakdown
   const totalPaye = employees.reduce((sum, emp) => sum + emp.paye, 0);
   const totalNI = employees.reduce((sum, emp) => sum + emp.ni, 0);
@@ -17,25 +21,37 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
   const totalStudentLoan = employees.reduce((sum, emp) => sum + emp.studentLoan, 0);
   const totalPostgradLoan = employees.reduce((sum, emp) => sum + emp.postgradLoan, 0);
 
+  const filteredEmployees = employees.filter(employee =>
+    employee.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div className="space-y-4">
+      <PayrollTableFilter
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        placeholder="Search employees..."
+      />
+      
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Gross Pay</TableHead>
+            <TableHead>Employee</TableHead>
+            <TableHead className="text-right">Gross Pay</TableHead>
             <TableHead className="text-right">PAYE</TableHead>
             <TableHead className="text-right">NI</TableHead>
             <TableHead className="text-right">Pension</TableHead>
-            <TableHead className="text-right">Student loan</TableHead>
-            <TableHead className="text-right">Postgrad loan</TableHead>
-            <TableHead className="text-right">Total deductions</TableHead>
-            <TableHead className="text-right">Net Payment</TableHead>
+            <TableHead className="text-right">Student Loan</TableHead>
+            <TableHead className="text-right">Postgraduate Loan</TableHead>
+            <TableHead className="text-right">Total Deductions</TableHead>
+            <TableHead className="text-right">Net Pay</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* Total row */}
           <TableRow className="bg-blue-50/30 font-medium">
-            <TableCell className="font-semibold text-gray-900">
+            <TableCell className="font-semibold text-gray-900">Total</TableCell>
+            <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
             <TableCell className="text-right font-semibold text-gray-900">
@@ -68,7 +84,7 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
           </TableRow>
           
           {/* Employee rows */}
-          {employees.map((employee) => (
+          {filteredEmployees.map((employee) => (
             <TableRow key={employee.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
@@ -77,11 +93,11 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
                     initials={employee.initials}
                     size="sm"
                   />
-                  <div>
-                    <div className="font-medium text-gray-900">{formatCurrency(employee.totalIncome)}</div>
-                    <div className="text-xs text-gray-500">{employee.name}</div>
-                  </div>
+                  <span className="font-medium text-gray-900">{employee.name}</span>
                 </div>
+              </TableCell>
+              <TableCell className="text-right font-medium text-gray-900">
+                {formatCurrency(employee.totalIncome)}
               </TableCell>
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.paye)}
