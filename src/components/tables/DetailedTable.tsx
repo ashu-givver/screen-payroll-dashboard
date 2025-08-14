@@ -1,5 +1,6 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
+import { EditableCell } from '@/components/EditableCell';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/formatters';
@@ -9,9 +10,10 @@ interface DetailedTableProps {
   summary: PayrollSummary;
   approvedEmployees: Set<string>;
   onApproveEmployee: (employeeId: string) => void;
+  onEmployeeUpdate: (employeeId: string, field: string, value: number) => void;
 }
 
-export const DetailedTable = ({ employees, summary, approvedEmployees, onApproveEmployee }: DetailedTableProps) => {
+export const DetailedTable = ({ employees, summary, approvedEmployees, onApproveEmployee, onEmployeeUpdate }: DetailedTableProps) => {
   const filteredEmployees = employees;
 
   // Calculate comparison with previous month for any element
@@ -97,7 +99,14 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                 </TableCell>
                 <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
                   <div className="flex flex-col">
-                    <span>{formatCurrency(employee.basePay)}</span>
+                    <EditableCell
+                      value={employee.basePay}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
+                      field="basePay"
+                      employeeName={employee.name}
+                      className="font-medium"
+                      showZeroAs={formatCurrency(0)}
+                    />
                     {employee.previousMonth && (
                       <span className="text-xs text-gray-500">
                         {getElementChange(employee.basePay, employee.previousMonth.basePay).amount !== 0 && (
@@ -112,7 +121,12 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                 </TableCell>
                 <TableCell className="text-right text-gray-900 text-xs px-1">
                   <div className="flex flex-col">
-                    <span>{employee.bonus > 0 ? formatCurrency(employee.bonus) : '-'}</span>
+                    <EditableCell
+                      value={employee.bonus}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
+                      field="bonus"
+                      employeeName={employee.name}
+                    />
                     {employee.previousMonth && employee.bonus !== employee.previousMonth.bonus && (
                       <span className={`text-xs ${employee.bonus > employee.previousMonth.bonus ? 'text-green-600' : 'text-red-600'}`}>
                         {employee.bonus > employee.previousMonth.bonus ? '+' : ''}{formatCurrency(Math.abs(employee.bonus - employee.previousMonth.bonus))}
@@ -121,17 +135,37 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                   </div>
                 </TableCell>
                 <TableCell className="text-right text-gray-900 text-xs px-1">
-                  {employee.commission > 0 ? formatCurrency(employee.commission) : '-'}
+                  <EditableCell
+                    value={employee.commission}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
+                    field="commission"
+                    employeeName={employee.name}
+                  />
                 </TableCell>
                 <TableCell className="text-right text-gray-900 text-xs px-1">
-                  {employee.overtime > 0 ? formatCurrency(employee.overtime) : '-'}
+                  <EditableCell
+                    value={employee.overtime}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
+                    field="overtime"
+                    employeeName={employee.name}
+                  />
                 </TableCell>
                 <TableCell className="text-right text-gray-900 text-xs px-1">
-                  {employee.gifFlex > 0 ? formatCurrency(employee.gifFlex) : '-'}
+                  <EditableCell
+                    value={employee.gifFlex}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
+                    field="gifFlex"
+                    employeeName={employee.name}
+                  />
                 </TableCell>
                 <TableCell className="text-right text-gray-900 text-xs px-1">
                   <div className="flex flex-col">
-                    <span>{employee.onCall > 0 ? formatCurrency(employee.onCall) : '-'}</span>
+                    <EditableCell
+                      value={employee.onCall}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
+                      field="onCall"
+                      employeeName={employee.name}
+                    />
                     {employee.previousMonth && employee.onCall !== employee.previousMonth.onCall && (
                       <span className={`text-xs ${employee.onCall > employee.previousMonth.onCall ? 'text-green-600' : 'text-red-600'}`}>
                         {employee.onCall > employee.previousMonth.onCall ? '+' : ''}{formatCurrency(Math.abs(employee.onCall - employee.previousMonth.onCall))}

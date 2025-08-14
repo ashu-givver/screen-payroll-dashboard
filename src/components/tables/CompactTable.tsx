@@ -1,5 +1,6 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
+import { EditableCell } from '@/components/EditableCell';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/formatters';
@@ -9,9 +10,10 @@ interface CompactTableProps {
   summary: PayrollSummary;
   approvedEmployees: Set<string>;
   onApproveEmployee: (employeeId: string) => void;
+  onEmployeeUpdate: (employeeId: string, field: string, value: number) => void;
 }
 
-export const CompactTable = ({ employees, summary, approvedEmployees, onApproveEmployee }: CompactTableProps) => {
+export const CompactTable = ({ employees, summary, approvedEmployees, onApproveEmployee, onEmployeeUpdate }: CompactTableProps) => {
   const filteredEmployees = employees;
 
   // Calculate comparison with previous month for Net Pay only
@@ -101,22 +103,53 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
-                    {formatCurrency(employee.basePay)}
+                    <EditableCell
+                      value={employee.basePay}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
+                      field="basePay"
+                      employeeName={employee.name}
+                      className="font-medium"
+                    />
                   </TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1">
-                    {employee.bonus > 0 ? formatCurrency(employee.bonus) : '-'}
+                    <EditableCell
+                      value={employee.bonus}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
+                      field="bonus"
+                      employeeName={employee.name}
+                    />
                   </TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1">
-                    {employee.commission > 0 ? formatCurrency(employee.commission) : '-'}
+                    <EditableCell
+                      value={employee.commission}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
+                      field="commission"
+                      employeeName={employee.name}
+                    />
                   </TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1">
-                    {employee.overtime > 0 ? formatCurrency(employee.overtime) : '-'}
+                    <EditableCell
+                      value={employee.overtime}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
+                      field="overtime"
+                      employeeName={employee.name}
+                    />
                   </TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1">
-                    {employee.gifFlex > 0 ? formatCurrency(employee.gifFlex) : '-'}
+                    <EditableCell
+                      value={employee.gifFlex}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
+                      field="gifFlex"
+                      employeeName={employee.name}
+                    />
                   </TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1">
-                    {employee.onCall > 0 ? formatCurrency(employee.onCall) : '-'}
+                    <EditableCell
+                      value={employee.onCall}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
+                      field="onCall"
+                      employeeName={employee.name}
+                    />
                   </TableCell>
                   <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
                     {formatCurrency(employee.totalIncome)}

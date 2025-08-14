@@ -22,10 +22,11 @@ export const PayrollDashboard = () => {
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
+  const [employeeData, setEmployeeData] = useState(employees);
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
-    return employees.filter(employee => {
+    return employeeData.filter(employee => {
       // Search filter
       if (searchValue && !employee.name.toLowerCase().includes(searchValue.toLowerCase())) {
         return false;
@@ -82,7 +83,7 @@ export const PayrollDashboard = () => {
       
       return true;
     });
-  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType, advancedFilters]);
+  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType, advancedFilters, employeeData]);
 
   const handleConfirm = () => {
     toast({
@@ -122,6 +123,45 @@ export const PayrollDashboard = () => {
     });
   };
 
+  const handleEmployeeUpdate = (employeeId: string, field: string, value: number) => {
+    setEmployeeData(prev => prev.map(employee => {
+      if (employee.id === employeeId) {
+        const updatedEmployee = { ...employee, [field]: value };
+        
+        // Recalculate total income when pay elements change
+        if (['basePay', 'bonus', 'commission', 'overtime', 'gifFlex', 'onCall'].includes(field)) {
+          updatedEmployee.totalIncome = 
+            updatedEmployee.basePay + 
+            updatedEmployee.bonus + 
+            updatedEmployee.commission + 
+            updatedEmployee.overtime + 
+            updatedEmployee.gifFlex + 
+            updatedEmployee.onCall;
+          
+          // Recalculate take home pay (simplified calculation)
+          updatedEmployee.takeHomePay = updatedEmployee.totalIncome - updatedEmployee.deductions;
+        }
+        
+        return updatedEmployee;
+      }
+      return employee;
+    }));
+    
+    const fieldLabels: Record<string, string> = {
+      basePay: 'Base Pay',
+      bonus: 'Bonus',
+      commission: 'Commission',
+      overtime: 'Overtime',
+      gifFlex: 'GIF Flex',
+      onCall: 'OnCall'
+    };
+    
+    toast({
+      title: "Payment Updated",
+      description: `${fieldLabels[field] || field} updated for employee.`,
+    });
+  };
+
   const handleSaveView = (view: Omit<SavedFilterView, 'id'>) => {
     const newView: SavedFilterView = {
       ...view,
@@ -151,6 +191,7 @@ export const PayrollDashboard = () => {
       summary: payrollSummary,
       approvedEmployees,
       onApproveEmployee: handleApproveEmployee,
+      onEmployeeUpdate: handleEmployeeUpdate,
     };
 
     // For the new view modes, we render different tables regardless of tab
