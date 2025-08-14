@@ -260,7 +260,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
           </TableHeader>
           <TableBody>
             {/* Total row */}
-            <TableRow className="bg-gray-200/80 font-medium h-12 border-b-2 border-gray-400">
+            <TableRow className="bg-gray-200/80 font-medium h-12 border-b border-gray-300">
               <TableCell className="font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">Total</TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBasePay)}</TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBonus)}</TableCell>
@@ -281,9 +281,8 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
             
             {/* Employee rows */}
             {sortedEmployees.map((employee, index) => {
-              const isLastRow = index === sortedEmployees.length - 1;
               return (
-                <TableRow key={employee.id} className={`h-12 ${isLastRow ? 'border-b-2 border-gray-400' : 'border-b border-gray-300'} hover:bg-blue-50/30 transition-colors`}>
+                <TableRow key={employee.id} className="h-12 border-b border-gray-300 hover:bg-blue-50/30 transition-colors">
                   <TableCell className="px-2 py-3 border-r border-gray-300">
                     <div className="flex items-center gap-1">
                       <EmployeeAvatar 
