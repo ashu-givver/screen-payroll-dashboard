@@ -36,7 +36,6 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
             <TableHead className="text-right">Overtime</TableHead>
             <TableHead className="text-right">GIF Flex</TableHead>
             <TableHead className="text-right">Gross Pay</TableHead>
-            <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,7 +52,6 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
-            <TableCell></TableCell>
           </TableRow>
           
           {/* Employee rows */}
@@ -78,15 +76,6 @@ export const IncomeTable = ({ employees, summary }: IncomeTableProps) => {
               <TableCell className="text-right text-gray-600">£0.00</TableCell>
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.totalIncome)}
-              </TableCell>
-              <TableCell className="text-right">
-                <Badge 
-                  variant="outline" 
-                  className="bg-green-50 text-green-700 border-green-200 text-xs font-medium"
-                >
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  {employee.status}
-                </Badge>
               </TableCell>
             </TableRow>
           ))}

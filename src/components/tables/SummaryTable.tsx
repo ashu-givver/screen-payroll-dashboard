@@ -34,7 +34,6 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
             <TableHead className="text-right">Deductions</TableHead>
             <TableHead className="text-right">Take Home Pay</TableHead>
             <TableHead className="text-right">Employer Cost</TableHead>
-            <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -59,7 +58,6 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalEmployerCost)}
             </TableCell>
-            <TableCell></TableCell>
           </TableRow>
           
           {/* Employee rows */}
@@ -92,15 +90,6 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
               </TableCell>
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.employerCost)}
-              </TableCell>
-              <TableCell className="text-right">
-                <Badge 
-                  variant="outline" 
-                  className="bg-green-50 text-green-700 border-green-200 text-xs font-medium"
-                >
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  {employee.status}
-                </Badge>
               </TableCell>
             </TableRow>
           ))}
