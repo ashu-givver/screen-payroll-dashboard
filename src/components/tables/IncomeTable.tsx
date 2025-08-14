@@ -1,11 +1,8 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
-import { useState } from 'react';
 
 interface IncomeTableProps {
   employees: Employee[];
@@ -16,20 +13,10 @@ interface IncomeTableProps {
 }
 
 export const IncomeTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: IncomeTableProps) => {
-  const [searchValue, setSearchValue] = useState('');
-
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const filteredEmployees = employees;
 
   return (
     <div className="space-y-0">
-      <PayrollTableFilter
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        placeholder="Search employees..."
-      />
-      
       <Table>
         <TableHeader>
           <TableRow className="h-9">
@@ -40,6 +27,7 @@ export const IncomeTable = ({ employees, summary, viewMode, approvedEmployees, o
             <TableHead className="text-right w-28">Overtime</TableHead>
             <TableHead className="text-right w-28">GIF Flex</TableHead>
             <TableHead className="text-right w-32">Gross Pay</TableHead>
+            <TableHead className="w-20">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

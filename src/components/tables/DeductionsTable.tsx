@@ -1,11 +1,8 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
-import { useState } from 'react';
 
 interface DeductionsTableProps {
   employees: Employee[];
@@ -16,7 +13,7 @@ interface DeductionsTableProps {
 }
 
 export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: DeductionsTableProps) => {
-  const [searchValue, setSearchValue] = useState('');
+  const filteredEmployees = employees;
   
   // Calculate summary totals for deduction breakdown
   const totalPaye = employees.reduce((sum, emp) => sum + emp.paye, 0);
@@ -25,18 +22,8 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
   const totalStudentLoan = employees.reduce((sum, emp) => sum + emp.studentLoan, 0);
   const totalPostgradLoan = employees.reduce((sum, emp) => sum + emp.postgradLoan, 0);
 
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
-
   return (
     <div className="space-y-0">
-      <PayrollTableFilter
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        placeholder="Search employees..."
-      />
-      
       <Table>
         <TableHeader>
           <TableRow className="h-9">

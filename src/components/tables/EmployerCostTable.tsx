@@ -2,9 +2,7 @@ import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { PayrollTableFilter } from '@/components/PayrollTableFilter';
 import { formatCurrency } from '@/lib/formatters';
-import { useState } from 'react';
 
 interface EmployerCostTableProps {
   employees: Employee[];
@@ -15,24 +13,14 @@ interface EmployerCostTableProps {
 }
 
 export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: EmployerCostTableProps) => {
-  const [searchValue, setSearchValue] = useState('');
+  const filteredEmployees = employees;
   
   // Calculate summary totals for employer cost breakdown
   const totalEmployerNI = employees.reduce((sum, emp) => sum + emp.employerNI, 0);
   const totalEmployerPension = employees.reduce((sum, emp) => sum + emp.employerPension, 0);
 
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
-
   return (
     <div className="space-y-0">
-      <PayrollTableFilter
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        placeholder="Search employees..."
-      />
-      
       <Table>
         <TableHeader>
           <TableRow className="h-9">
