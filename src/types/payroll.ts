@@ -12,6 +12,14 @@ export interface Employee {
   takeHomePay: number;
   employerCost: number;
   status: 'Current' | 'Terminated' | 'On Leave';
+  // Deduction breakdown
+  paye: number;
+  ni: number;
+  pension: number;
+  studentLoan: number;
+  postgradLoan: number;
+  deductionVariance?: number;
+  netPaymentVariance?: number;
 }
 
 export interface PayrollPeriod {

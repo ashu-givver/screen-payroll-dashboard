@@ -13,7 +13,14 @@ export const employees: Employee[] = [
     deductions: 885.56,
     takeHomePay: 2864.44,
     employerCost: 4346.85,
-    status: 'Current'
+    status: 'Current',
+    paye: 540.20,
+    ni: 216.16,
+    pension: 129.20,
+    studentLoan: 0.00,
+    postgradLoan: 0.00,
+    deductionVariance: -0.20,
+    netPaymentVariance: 0.20
   },
   {
     id: '2', 
@@ -27,7 +34,14 @@ export const employees: Employee[] = [
     deductions: 904.96,
     takeHomePay: 2845.04,
     employerCost: 4346.85,
-    status: 'Current'
+    status: 'Current',
+    paye: 559.60,
+    ni: 216.16,
+    pension: 129.20,
+    studentLoan: 0.00,
+    postgradLoan: 0.00,
+    deductionVariance: -0.20,
+    netPaymentVariance: 0.20
   },
   {
     id: '3',
@@ -41,7 +55,14 @@ export const employees: Employee[] = [
     deductions: 1268.25,
     takeHomePay: 3148.42,
     employerCost: 5126.69,
-    status: 'Current'
+    status: 'Current',
+    paye: 865.66,
+    ni: 255.83,
+    pension: 146.76,
+    studentLoan: 0.00,
+    postgradLoan: 0.00,
+    deductionVariance: 0.39,
+    netPaymentVariance: -0.39
   },
   {
     id: '4',
@@ -55,7 +76,14 @@ export const employees: Employee[] = [
     deductions: 1899.08,
     takeHomePay: 3934.25,
     employerCost: 6818.40,
-    status: 'Current'
+    status: 'Current',
+    paye: 1285.66,
+    ni: 466.66,
+    pension: 146.76,
+    studentLoan: 0.00,
+    postgradLoan: 0.00,
+    deductionVariance: 72.25,
+    netPaymentVariance: -72.25
   },
   {
     id: '5',
@@ -69,7 +97,12 @@ export const employees: Employee[] = [
     deductions: 965.56,
     takeHomePay: 3034.44,
     employerCost: 4641.85,
-    status: 'Current'
+    status: 'Current',
+    paye: 590.20,
+    ni: 236.16,
+    pension: 139.20,
+    studentLoan: 0.00,
+    postgradLoan: 0.00
   },
   {
     id: '6',
@@ -83,7 +116,14 @@ export const employees: Employee[] = [
     deductions: 1383.82,
     takeHomePay: 2891.18,
     employerCost: 4963.77,
-    status: 'Current'
+    status: 'Current',
+    paye: 662.06,
+    ni: 253.00,
+    pension: 146.76,
+    studentLoan: 0.00,
+    postgradLoan: 0.00,
+    deductionVariance: -0.41,
+    netPaymentVariance: 0.41
   },
   {
     id: '7',
@@ -97,7 +137,14 @@ export const employees: Employee[] = [
     deductions: 1860.68,
     takeHomePay: 3972.65,
     employerCost: 6818.40,
-    status: 'Current'
+    status: 'Current',
+    paye: 1247.26,
+    ni: 466.66,
+    pension: 146.76,
+    studentLoan: 0.00,
+    postgradLoan: 0.00,
+    deductionVariance: 72.25,
+    netPaymentVariance: -72.25
   }
 ];
 

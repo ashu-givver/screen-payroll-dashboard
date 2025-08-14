@@ -6,6 +6,7 @@ import { PayrollTabs } from '@/components/PayrollTabs';
 import { PayrollActions } from '@/components/PayrollActions';
 import { SummaryTable } from '@/components/tables/SummaryTable';
 import { IncomeTable } from '@/components/tables/IncomeTable';
+import { DeductionsTable } from '@/components/tables/DeductionsTable';
 import { useToast } from '@/hooks/use-toast';
 
 export const PayrollDashboard = () => {
@@ -48,12 +49,7 @@ export const PayrollDashboard = () => {
       case 'income':
         return <IncomeTable employees={filteredEmployees} summary={payrollSummary} />;
       case 'deductions':
-        return (
-          <div className="p-12 text-center text-muted-foreground">
-            <h3 className="text-lg font-medium mb-2">Deductions View</h3>
-            <p>This view would show employee deductions breakdown.</p>
-          </div>
-        );
+        return <DeductionsTable employees={filteredEmployees} summary={payrollSummary} />;
       case 'employer-cost':
         return (
           <div className="p-12 text-center text-muted-foreground">
