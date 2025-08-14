@@ -260,144 +260,147 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
           </TableHeader>
           <TableBody>
             {/* Total row */}
-            <TableRow className="bg-gray-100 font-medium h-10 border-b border-gray-300">
-              <TableCell className="font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">Total</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalBasePay)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalBonus)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalCommission)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalOvertime)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalGifFlex)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalOnCall)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(summary.totalIncome)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalPaye)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalNI)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalPension)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalStudentLoan)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalPostgradLoan)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalEmployerNI)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 border-r border-gray-300">{formatCurrency(totalEmployerPension)}</TableCell>
-              <TableCell className="px-1"></TableCell>
+            <TableRow className="bg-gray-200/80 font-medium h-12 border-b-2 border-gray-400">
+              <TableCell className="font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">Total</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBasePay)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBonus)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalCommission)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalOvertime)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalGifFlex)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalOnCall)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(summary.totalIncome)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPaye)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalNI)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPension)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalStudentLoan)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPostgradLoan)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalEmployerNI)}</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalEmployerPension)}</TableCell>
+              <TableCell className="px-1 py-3 border-r border-gray-300"></TableCell>
             </TableRow>
             
             {/* Employee rows */}
-            {sortedEmployees.map((employee) => (
-              <TableRow key={employee.id} className="h-10 border-b border-gray-200 hover:bg-blue-50/30 transition-colors">
-                <TableCell className="px-2 border-r border-gray-200">
-                  <div className="flex items-center gap-1">
-                    <EmployeeAvatar 
-                      name={employee.name}
-                      initials={employee.initials}
+            {sortedEmployees.map((employee, index) => {
+              const isLastRow = index === sortedEmployees.length - 1;
+              return (
+                <TableRow key={employee.id} className={`h-12 ${isLastRow ? 'border-b-2 border-gray-400' : 'border-b border-gray-300'} hover:bg-blue-50/30 transition-colors`}>
+                  <TableCell className="px-2 py-3 border-r border-gray-300">
+                    <div className="flex items-center gap-1">
+                      <EmployeeAvatar 
+                        name={employee.name}
+                        initials={employee.initials}
+                        size="sm"
+                      />
+                      <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <div className="flex flex-col">
+                      <EditableCell
+                        value={employee.basePay}
+                        onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
+                        field="basePay"
+                        employeeName={employee.name}
+                        className="font-medium"
+                        showZeroAs={formatCurrency(0)}
+                      />
+                      {employee.previousMonth && (
+                        <span className="text-xs text-gray-500">
+                          {getElementChange(employee.basePay, employee.previousMonth.basePay).amount !== 0 && (
+                            <>
+                              {getElementChange(employee.basePay, employee.previousMonth.basePay).amount > 0 ? '+' : ''}
+                              {getElementChange(employee.basePay, employee.previousMonth.basePay).percentage.toFixed(1)}%
+                            </>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <div className="flex flex-col">
+                      <EditableCell
+                        value={employee.bonus}
+                        onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
+                        field="bonus"
+                        employeeName={employee.name}
+                      />
+                      {employee.previousMonth && employee.bonus !== employee.previousMonth.bonus && (
+                        <span className={`text-xs ${employee.bonus > employee.previousMonth.bonus ? 'text-green-600' : 'text-red-600'}`}>
+                          {employee.bonus > employee.previousMonth.bonus ? '+' : ''}{formatCurrency(Math.abs(employee.bonus - employee.previousMonth.bonus))}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <EditableCell
+                      value={employee.commission}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
+                      field="commission"
+                      employeeName={employee.name}
+                    />
+                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <EditableCell
+                      value={employee.overtime}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
+                      field="overtime"
+                      employeeName={employee.name}
+                    />
+                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <EditableCell
+                      value={employee.gifFlex}
+                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
+                      field="gifFlex"
+                      employeeName={employee.name}
+                    />
+                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <div className="flex flex-col">
+                      <EditableCell
+                        value={employee.onCall}
+                        onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
+                        field="onCall"
+                        employeeName={employee.name}
+                      />
+                      {employee.previousMonth && employee.onCall !== employee.previousMonth.onCall && (
+                        <span className={`text-xs ${employee.onCall > employee.previousMonth.onCall ? 'text-green-600' : 'text-red-600'}`}>
+                          {employee.onCall > employee.previousMonth.onCall ? '+' : ''}{formatCurrency(Math.abs(employee.onCall - employee.previousMonth.onCall))}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
+                    <div className="flex flex-col">
+                      <span>{formatCurrency(employee.totalIncome)}</span>
+                      {employee.previousMonth && (
+                        <span className={`text-xs ${employee.totalIncome > employee.previousMonth.totalIncome ? 'text-green-600' : 'text-red-600'}`}>
+                          {employee.totalIncome > employee.previousMonth.totalIncome ? '+' : ''}{formatCurrency(Math.abs(employee.totalIncome - employee.previousMonth.totalIncome))}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.paye)}</TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.ni)}</TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.pension)}</TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.studentLoan)}</TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.postgradLoan)}</TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.employerNI)}</TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.employerPension)}</TableCell>
+                  <TableCell className="px-1 py-3 border-r border-gray-300">
+                    <Button
                       size="sm"
-                    />
-                    <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right font-medium text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <div className="flex flex-col">
-                    <EditableCell
-                      value={employee.basePay}
-                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
-                      field="basePay"
-                      employeeName={employee.name}
-                      className="font-medium"
-                      showZeroAs={formatCurrency(0)}
-                    />
-                    {employee.previousMonth && (
-                      <span className="text-xs text-gray-500">
-                        {getElementChange(employee.basePay, employee.previousMonth.basePay).amount !== 0 && (
-                          <>
-                            {getElementChange(employee.basePay, employee.previousMonth.basePay).amount > 0 ? '+' : ''}
-                            {getElementChange(employee.basePay, employee.previousMonth.basePay).percentage.toFixed(1)}%
-                          </>
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <div className="flex flex-col">
-                    <EditableCell
-                      value={employee.bonus}
-                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
-                      field="bonus"
-                      employeeName={employee.name}
-                    />
-                    {employee.previousMonth && employee.bonus !== employee.previousMonth.bonus && (
-                      <span className={`text-xs ${employee.bonus > employee.previousMonth.bonus ? 'text-green-600' : 'text-red-600'}`}>
-                        {employee.bonus > employee.previousMonth.bonus ? '+' : ''}{formatCurrency(Math.abs(employee.bonus - employee.previousMonth.bonus))}
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <EditableCell
-                    value={employee.commission}
-                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
-                    field="commission"
-                    employeeName={employee.name}
-                  />
-                </TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <EditableCell
-                    value={employee.overtime}
-                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
-                    field="overtime"
-                    employeeName={employee.name}
-                  />
-                </TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <EditableCell
-                    value={employee.gifFlex}
-                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
-                    field="gifFlex"
-                    employeeName={employee.name}
-                  />
-                </TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <div className="flex flex-col">
-                    <EditableCell
-                      value={employee.onCall}
-                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
-                      field="onCall"
-                      employeeName={employee.name}
-                    />
-                    {employee.previousMonth && employee.onCall !== employee.previousMonth.onCall && (
-                      <span className={`text-xs ${employee.onCall > employee.previousMonth.onCall ? 'text-green-600' : 'text-red-600'}`}>
-                        {employee.onCall > employee.previousMonth.onCall ? '+' : ''}{formatCurrency(Math.abs(employee.onCall - employee.previousMonth.onCall))}
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right font-medium text-gray-900 text-xs px-1 border-r border-gray-200">
-                  <div className="flex flex-col">
-                    <span>{formatCurrency(employee.totalIncome)}</span>
-                    {employee.previousMonth && (
-                      <span className={`text-xs ${employee.totalIncome > employee.previousMonth.totalIncome ? 'text-green-600' : 'text-red-600'}`}>
-                        {employee.totalIncome > employee.previousMonth.totalIncome ? '+' : ''}{formatCurrency(Math.abs(employee.totalIncome - employee.previousMonth.totalIncome))}
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.paye)}</TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.ni)}</TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.pension)}</TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.studentLoan)}</TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.postgradLoan)}</TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.employerNI)}</TableCell>
-                <TableCell className="text-right text-gray-900 text-xs px-1 border-r border-gray-200">{formatCurrency(employee.employerPension)}</TableCell>
-                <TableCell className="px-1">
-                  <Button
-                    size="sm"
-                    variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                    onClick={() => onApproveEmployee(employee.id)}
-                    disabled={approvedEmployees.has(employee.id)}
-                    className="h-6 px-2 text-xs"
-                  >
-                    {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+                      variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                      onClick={() => onApproveEmployee(employee.id)}
+                      disabled={approvedEmployees.has(employee.id)}
+                      className="h-6 px-2 text-xs"
+                    >
+                      {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>

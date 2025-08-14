@@ -195,44 +195,45 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           </TableHeader>
           <TableBody>
             {/* Total row */}
-            <TableRow className="bg-gray-100 font-medium h-10 border-b border-gray-300">
-              <TableCell className="font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">Total</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+            <TableRow className="bg-gray-200/80 font-medium h-12 border-b-2 border-gray-400">
+              <TableCell className="font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">Total</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalBasePay)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalBonus)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalCommission)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalOvertime)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalGifFlex)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalOnCall)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(summary.totalIncome)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(summary.totalTakeHomePay)}
               </TableCell>
-              <TableCell className="text-right text-xs px-2 border-r border-gray-300">
+              <TableCell className="text-right text-xs px-2 py-3 border-r border-gray-300">
                 <span className="text-green-600 font-medium">+2.3%</span>
               </TableCell>
-              <TableCell className="px-2"></TableCell>
+              <TableCell className="px-2 py-3 border-r border-gray-300"></TableCell>
             </TableRow>
             
             {/* Employee rows */}
-            {sortedEmployees.map((employee) => {
+            {sortedEmployees.map((employee, index) => {
               const netPayChange = getNetPayChange(employee);
+              const isLastRow = index === sortedEmployees.length - 1;
               return (
-                <TableRow key={employee.id} className="h-10 border-b border-gray-200 hover:bg-blue-50/30 transition-colors">
-                  <TableCell className="px-2 border-r border-gray-200">
+                <TableRow key={employee.id} className={`h-12 ${isLastRow ? 'border-b-2 border-gray-400' : 'border-b border-gray-300'} hover:bg-blue-50/30 transition-colors`}>
+                  <TableCell className="px-2 py-3 border-r border-gray-300">
                     <div className="flex items-center gap-2">
                       <EmployeeAvatar 
                         name={employee.name}
@@ -242,7 +243,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
                       value={employee.basePay}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
@@ -251,7 +252,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       className="font-medium"
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
                       value={employee.bonus}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
@@ -259,7 +260,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
                       value={employee.commission}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
@@ -267,7 +268,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
                       value={employee.overtime}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
@@ -275,7 +276,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
                       value={employee.gifFlex}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
@@ -283,7 +284,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
                       value={employee.onCall}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
@@ -291,13 +292,13 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     {formatCurrency(employee.totalIncome)}
                   </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     {formatCurrency(employee.takeHomePay)}
                   </TableCell>
-                  <TableCell className="text-right text-xs px-2 border-r border-gray-200">
+                  <TableCell className="text-right text-xs px-2 py-3 border-r border-gray-300">
                     {netPayChange.amount !== 0 && (
                       <div className="flex flex-col">
                         <span className={`${netPayChange.amount > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
@@ -309,7 +310,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="px-2">
+                  <TableCell className="px-2 py-3 border-r border-gray-300">
                     <Button
                       size="sm"
                       variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
