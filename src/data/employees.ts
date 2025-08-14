@@ -3,8 +3,8 @@ import { Employee, PayrollPeriod, PayrollSummary } from '@/types/payroll';
 export const employees: Employee[] = [
   {
     id: '1',
-    name: 'Ahmad Kobeiter Abiad',
-    initials: 'AK',
+    name: 'Emma Thompson',
+    initials: 'ET',
     basePay: 3750.00,
     salaryBasis: 'Monthly',
     units: 1,
@@ -26,8 +26,8 @@ export const employees: Employee[] = [
   },
   {
     id: '2', 
-    name: 'Mariana Gentilhomem',
-    initials: 'MG',
+    name: 'James Rodriguez',
+    initials: 'JR',
     basePay: 3750.00,
     salaryBasis: 'Monthly',
     units: 1,
@@ -49,8 +49,8 @@ export const employees: Employee[] = [
   },
   {
     id: '3',
-    name: 'Michael Rose',
-    initials: 'MR',
+    name: 'Sarah Chen',
+    initials: 'SC',
     basePay: 4416.67,
     salaryBasis: 'Monthly',
     units: 1,
@@ -72,8 +72,8 @@ export const employees: Employee[] = [
   },
   {
     id: '4',
-    name: 'Nix Hall',
-    initials: 'NH',
+    name: 'David Wilson',
+    initials: 'DW',
     basePay: 5833.33,
     salaryBasis: 'Monthly',
     units: 1,
@@ -95,8 +95,8 @@ export const employees: Employee[] = [
   },
   {
     id: '5',
-    name: 'Rafael Boni',
-    initials: 'RB',
+    name: 'Lisa Patel',
+    initials: 'LP',
     basePay: 4000.00,
     salaryBasis: 'Monthly',
     units: 1,
@@ -116,8 +116,8 @@ export const employees: Employee[] = [
   },
   {
     id: '6',
-    name: 'Theo Gardner',
-    initials: 'TG',
+    name: 'Marcus Johnson',
+    initials: 'MJ',
     basePay: 4275.00,
     salaryBasis: 'Monthly',
     units: 1,
@@ -139,8 +139,8 @@ export const employees: Employee[] = [
   },
   {
     id: '7',
-    name: 'Zoe Yu Tung Law',
-    initials: 'ZL',
+    name: 'Sophia Martinez',
+    initials: 'SM',
     basePay: 5833.33,
     salaryBasis: 'Monthly',
     units: 1,
