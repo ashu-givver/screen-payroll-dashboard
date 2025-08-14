@@ -1,6 +1,8 @@
+import { useState, useMemo } from 'react';
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { EditableCell } from '@/components/EditableCell';
+import { SortableHeader, SortDirection } from '@/components/SortableHeader';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/formatters';
@@ -14,6 +16,46 @@ interface CompactTableProps {
 }
 
 export const CompactTable = ({ employees, summary, approvedEmployees, onApproveEmployee, onEmployeeUpdate }: CompactTableProps) => {
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: SortDirection }>({ 
+    key: '', 
+    direction: null 
+  });
+
+  // Sorting logic
+  const sortedEmployees = useMemo(() => {
+    if (!sortConfig.direction || !sortConfig.key) {
+      return employees;
+    }
+
+    return [...employees].sort((a, b) => {
+      let aValue: any = a[sortConfig.key as keyof Employee];
+      let bValue: any = b[sortConfig.key as keyof Employee];
+
+      // Handle string sorting (like employee names)
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+
+      // Handle numeric sorting
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      // Handle string sorting
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [employees, sortConfig]);
+
+  const handleSort = (key: string, direction: SortDirection) => {
+    setSortConfig({ key, direction });
+  };
   const filteredEmployees = employees;
 
   // Calculate comparison with previous month for Net Pay only
@@ -36,63 +78,161 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
 
   return (
     <div className="space-y-0">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader className="sticky top-0 bg-white z-10">
-            <TableRow className="h-8 border-b">
-              <TableHead className="w-40 text-xs font-medium text-gray-600 px-2">Employee</TableHead>
-              <TableHead className="text-right w-24 text-xs font-medium text-gray-600 px-1">Base Pay</TableHead>
-              <TableHead className="text-right w-20 text-xs font-medium text-gray-600 px-1">Bonus</TableHead>
-              <TableHead className="text-right w-24 text-xs font-medium text-gray-600 px-1">Commission</TableHead>
-              <TableHead className="text-right w-20 text-xs font-medium text-gray-600 px-1">Overtime</TableHead>
-              <TableHead className="text-right w-20 text-xs font-medium text-gray-600 px-1">GIF Flex</TableHead>
-              <TableHead className="text-right w-20 text-xs font-medium text-gray-600 px-1">OnCall</TableHead>
-              <TableHead className="text-right w-28 text-xs font-medium text-gray-600 px-1">Gross Pay</TableHead>
-              <TableHead className="text-right w-24 text-xs font-medium text-gray-600 px-1">Net Pay</TableHead>
-              <TableHead className="text-right w-28 text-xs font-medium text-gray-600 px-1">Net Pay Change</TableHead>
-              <TableHead className="w-20 text-xs font-medium text-gray-600 px-1">Action</TableHead>
+      <div className="overflow-x-auto border border-gray-300 rounded-lg bg-white">
+        <Table className="border-separate border-spacing-0">
+          <TableHeader className="sticky top-0 bg-gray-50 z-10">
+            <TableRow className="border-b border-gray-300">
+              <TableHead className="w-40 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="name" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="left"
+                >
+                  Employee
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-24 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="basePay" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  Base Pay
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="bonus" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  Bonus
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-24 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="commission" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  Commission
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="overtime" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  Overtime
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="gifFlex" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  GIF Flex
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="onCall" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  OnCall
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-28 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="totalIncome" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  Gross Pay
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-24 border-r border-gray-300 bg-gray-50 p-0">
+                <SortableHeader 
+                  sortKey="takeHomePay" 
+                  currentSort={sortConfig} 
+                  onSort={handleSort}
+                  className="h-8 text-xs font-semibold text-gray-700"
+                  align="right"
+                >
+                  Net Pay
+                </SortableHeader>
+              </TableHead>
+              <TableHead className="text-right w-28 border-r border-gray-300 bg-gray-50 p-0">
+                <div className="h-8 flex items-center justify-end px-2 text-xs font-semibold text-gray-700">
+                  Net Pay Change
+                </div>
+              </TableHead>
+              <TableHead className="w-20 border-gray-300 bg-gray-50 p-0">
+                <div className="h-8 flex items-center justify-center px-2 text-xs font-semibold text-gray-700">
+                  Action
+                </div>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {/* Total row */}
-            <TableRow className="bg-gray-50/60 font-medium h-8 border-b border-gray-200">
-              <TableCell className="font-semibold text-gray-900 text-xs px-2">Total</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+            <TableRow className="bg-gray-100 font-medium h-10 border-b border-gray-300">
+              <TableCell className="font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">Total</TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(totalBasePay)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(totalBonus)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(totalCommission)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(totalOvertime)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(totalGifFlex)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(totalOnCall)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(summary.totalIncome)}
               </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 border-r border-gray-300">
                 {formatCurrency(summary.totalTakeHomePay)}
               </TableCell>
-              <TableCell className="text-right text-xs px-1">
+              <TableCell className="text-right text-xs px-2 border-r border-gray-300">
                 <span className="text-green-600 font-medium">+2.3%</span>
               </TableCell>
-              <TableCell className="px-1"></TableCell>
+              <TableCell className="px-2"></TableCell>
             </TableRow>
             
             {/* Employee rows */}
-            {filteredEmployees.map((employee) => {
+            {sortedEmployees.map((employee) => {
               const netPayChange = getNetPayChange(employee);
               return (
-                <TableRow key={employee.id} className="h-8 border-b border-gray-100 hover:bg-gray-50/30">
-                  <TableCell className="px-2">
+                <TableRow key={employee.id} className="h-10 border-b border-gray-200 hover:bg-blue-50/30 transition-colors">
+                  <TableCell className="px-2 border-r border-gray-200">
                     <div className="flex items-center gap-2">
                       <EmployeeAvatar 
                         name={employee.name}
@@ -102,7 +242,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 border-r border-gray-200">
                     <EditableCell
                       value={employee.basePay}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
@@ -111,7 +251,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       className="font-medium"
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
                     <EditableCell
                       value={employee.bonus}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
@@ -119,7 +259,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
                     <EditableCell
                       value={employee.commission}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
@@ -127,7 +267,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
                     <EditableCell
                       value={employee.overtime}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
@@ -135,7 +275,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
                     <EditableCell
                       value={employee.gifFlex}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
@@ -143,7 +283,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1">
+                  <TableCell className="text-right text-gray-900 text-xs px-2 border-r border-gray-200">
                     <EditableCell
                       value={employee.onCall}
                       onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
@@ -151,13 +291,13 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       employeeName={employee.name}
                     />
                   </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 border-r border-gray-200">
                     {formatCurrency(employee.totalIncome)}
                   </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-2 border-r border-gray-200">
                     {formatCurrency(employee.takeHomePay)}
                   </TableCell>
-                  <TableCell className="text-right text-xs px-1">
+                  <TableCell className="text-right text-xs px-2 border-r border-gray-200">
                     {netPayChange.amount !== 0 && (
                       <div className="flex flex-col">
                         <span className={`${netPayChange.amount > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
@@ -169,13 +309,13 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="px-1">
+                  <TableCell className="px-2">
                     <Button
                       size="sm"
                       variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
                       onClick={() => onApproveEmployee(employee.id)}
                       disabled={approvedEmployees.has(employee.id)}
-                      className="h-5 px-2 text-xs"
+                      className="h-6 px-2 text-xs"
                     >
                       {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
                     </Button>
