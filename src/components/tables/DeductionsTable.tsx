@@ -18,7 +18,7 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
   const totalPostgradLoan = employees.reduce((sum, emp) => sum + emp.postgradLoan, 0);
 
   return (
-    <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
@@ -34,7 +34,7 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
         </TableHeader>
         <TableBody>
           {/* Total row */}
-          <TableRow className="bg-blue-50/50 font-medium">
+          <TableRow className="bg-blue-50/30 font-medium">
             <TableCell className="font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
@@ -122,10 +122,6 @@ export const DeductionsTable = ({ employees, summary }: DeductionsTableProps) =>
           ))}
         </TableBody>
       </Table>
-      
-      <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
-        1 - {employees.length} of {employees.length} records
-      </div>
     </div>
   );
 };

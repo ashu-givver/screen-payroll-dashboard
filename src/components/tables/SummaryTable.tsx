@@ -11,7 +11,7 @@ interface SummaryTableProps {
 
 export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
   return (
-    <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
@@ -25,7 +25,7 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
         </TableHeader>
         <TableBody>
           {/* Total row */}
-          <TableRow className="bg-blue-50/50 font-medium">
+          <TableRow className="bg-blue-50/30 font-medium">
             <TableCell className="font-semibold text-gray-900">Total</TableCell>
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
@@ -82,7 +82,7 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
               <TableCell className="text-right">
                 <Badge 
                   variant="outline" 
-                  className="bg-green-50 text-green-700 border-green-200 text-xs"
+                  className="bg-green-50 text-green-700 border-green-200 text-xs font-medium"
                 >
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                   {employee.status}
@@ -92,10 +92,6 @@ export const SummaryTable = ({ employees, summary }: SummaryTableProps) => {
           ))}
         </TableBody>
       </Table>
-      
-      <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
-        1 - {employees.length} of {employees.length} records
-      </div>
     </div>
   );
 };
