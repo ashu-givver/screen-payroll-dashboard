@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, Plus, X, Save, FolderOpen } from 'lucide-react';
+import { ChevronDown, Plus, X, Save, FolderOpen, Bookmark, Zap } from 'lucide-react';
 import { AdvancedFilter, SavedFilterView } from '@/types/payroll';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -21,23 +22,45 @@ interface AdvancedFilterPanelProps {
   };
 }
 
-const PAY_ELEMENTS = [
-  { value: 'basePay', label: 'Base Pay' },
-  { value: 'bonus', label: 'Bonus' },
-  { value: 'commission', label: 'Commission' },
-  { value: 'overtime', label: 'Overtime' },
-  { value: 'gifFlex', label: 'GIF Flex' },
-  { value: 'onCall', label: 'OnCall' },
-  { value: 'totalIncome', label: 'Gross Pay' },
-  { value: 'deductions', label: 'Total Deductions' },
-  { value: 'takeHomePay', label: 'Take Home Pay' },
-  { value: 'employerCost', label: 'Employer Cost' },
+const PAY_ELEMENTS_GROUPED = {
+  'Incomes': [
+    { value: 'basePay', label: 'Base Pay' },
+    { value: 'bonus', label: 'Bonus' },
+    { value: 'commission', label: 'Commission' },
+    { value: 'overtime', label: 'Overtime' },
+    { value: 'gifFlex', label: 'GIF Flex' },
+    { value: 'onCall', label: 'OnCall' },
+    { value: 'totalIncome', label: 'Gross Pay' },
+  ],
+  'Deductions': [
+    { value: 'paye', label: 'PAYE' },
+    { value: 'ni', label: 'NI' },
+    { value: 'pension', label: 'Pension' },
+    { value: 'studentLoan', label: 'Student Loan' },
+    { value: 'postgradLoan', label: 'Postgraduate Loan' },
+    { value: 'deductions', label: 'Total Deductions' },
+  ],
+  'Employer Costs': [
+    { value: 'employerNI', label: 'Employer NI' },
+    { value: 'employerPension', label: 'Employer Pension' },
+    { value: 'employerCost', label: 'Total Employer Cost' },
+  ],
+  'Net Pay': [
+    { value: 'takeHomePay', label: 'Take Home Pay' },
+  ]
+};
+
+const QUICK_PRESETS = [
+  { id: 'bonus-increase', label: 'Bonus increase > 5%', filter: { payElement: 'bonus', condition: 'greater' as const, value: 5, isPercentage: true, compareToLastMonth: true } },
+  { id: 'commission-500', label: 'Commission > £500', filter: { payElement: 'commission', condition: 'greater' as const, value: 500, isPercentage: false, compareToLastMonth: false } },
+  { id: 'overtime-exists', label: 'Has overtime pay', filter: { payElement: 'overtime', condition: 'greater' as const, value: 0, isPercentage: false, compareToLastMonth: false } },
+  { id: 'pay-changes', label: 'Take home pay changed', filter: { payElement: 'takeHomePay', condition: 'greater' as const, value: 0.01, isPercentage: true, compareToLastMonth: true } },
 ];
 
 const CONDITIONS = [
-  { value: 'greater', label: '>' },
-  { value: 'less', label: '<' },
-  { value: 'equal', label: '=' },
+  { value: 'greater', label: 'greater than' },
+  { value: 'less', label: 'less than' },
+  { value: 'equal', label: 'equal to' },
 ];
 
 export const AdvancedFilterPanel = ({ 
@@ -52,16 +75,34 @@ export const AdvancedFilterPanel = ({
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [viewName, setViewName] = useState('');
 
-  const addFilter = () => {
+  const addFilter = (preset?: Partial<AdvancedFilter>) => {
     const newFilter: AdvancedFilter = {
       id: Math.random().toString(36).substr(2, 9),
-      payElement: 'basePay',
-      condition: 'greater',
-      value: 0,
-      isPercentage: false,
-      compareToLastMonth: false,
+      payElement: preset?.payElement || 'basePay',
+      condition: preset?.condition || 'greater',
+      value: preset?.value || 0,
+      isPercentage: preset?.isPercentage || false,
+      compareToLastMonth: preset?.compareToLastMonth || false,
     };
     onFiltersChange([...filters, newFilter]);
+  };
+
+  const addPresetFilter = (presetId: string) => {
+    const preset = QUICK_PRESETS.find(p => p.id === presetId);
+    if (preset) {
+      addFilter(preset.filter);
+    }
+  };
+
+  const getFilterDescription = (filter: AdvancedFilter) => {
+    const payElement = Object.values(PAY_ELEMENTS_GROUPED)
+      .flat()
+      .find(el => el.value === filter.payElement)?.label || filter.payElement;
+    const condition = CONDITIONS.find(c => c.value === filter.condition)?.label || filter.condition;
+    const valueStr = filter.isPercentage ? `${filter.value}%` : `£${filter.value}`;
+    const comparison = filter.compareToLastMonth ? ' vs last month' : '';
+    
+    return `${payElement} ${condition} ${valueStr}${comparison}`;
   };
 
   const updateFilter = (id: string, updates: Partial<AdvancedFilter>) => {
@@ -91,125 +132,57 @@ export const AdvancedFilterPanel = ({
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <div className="bg-white border-b border-gray-200 px-6 py-3">
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2 p-0 h-auto font-medium text-gray-700">
-            <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-            Advanced Filters
-            {filters.length > 0 && (
-              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                {filters.length}
-              </span>
-            )}
-          </Button>
-        </CollapsibleTrigger>
-        
-        <CollapsibleContent className="space-y-4 mt-4">
-          <div className="space-y-3">
-            {filters.map((filter) => (
-              <div key={filter.id} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                <Select
-                  value={filter.payElement}
-                  onValueChange={(value) => updateFilter(filter.id, { payElement: value })}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PAY_ELEMENTS.map((element) => (
-                      <SelectItem key={element.value} value={element.value}>
-                        {element.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select
-                  value={filter.condition}
-                  onValueChange={(value: 'greater' | 'less' | 'equal') => 
-                    updateFilter(filter.id, { condition: value })
-                  }
-                >
-                  <SelectTrigger className="w-16">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CONDITIONS.map((condition) => (
-                      <SelectItem key={condition.value} value={condition.value}>
-                        {condition.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <div className="flex items-center gap-1">
-                  <Input
-                    type="number"
-                    value={filter.value}
-                    onChange={(e) => updateFilter(filter.id, { value: Number(e.target.value) })}
-                    className="w-24"
-                    placeholder="0"
-                  />
-                  <Select
-                    value={filter.isPercentage ? 'percentage' : 'currency'}
-                    onValueChange={(value) => 
-                      updateFilter(filter.id, { isPercentage: value === 'percentage' })
-                    }
-                  >
-                    <SelectTrigger className="w-16">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="currency">£</SelectItem>
-                      <SelectItem value="percentage">%</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Label className="flex items-center gap-2 text-sm whitespace-nowrap">
-                  <input
-                    type="checkbox"
-                    checked={filter.compareToLastMonth}
-                    onChange={(e) => updateFilter(filter.id, { compareToLastMonth: e.target.checked })}
-                    className="rounded"
-                  />
-                  vs Last Month
-                </Label>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => removeFilter(filter.id)}
-                  className="p-1 h-auto"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={addFilter}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
+    <div className="bg-white border-b border-border px-6 py-3 space-y-3">
+      {/* Active Filters Pills */}
+      {filters.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
+          {filters.map((filter) => (
+            <Badge 
+              key={filter.id} 
+              variant="secondary" 
+              className="flex items-center gap-1 pr-1"
             >
-              <Plus className="h-4 w-4" />
-              Add Condition
-            </Button>
+              {getFilterDescription(filter)}
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => removeFilter(filter.id)}
+                className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground rounded-full"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          ))}
+        </div>
+      )}
 
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <div className="flex items-center justify-between">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="flex items-center gap-2 p-0 h-auto font-medium text-foreground">
+              <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+              Smart Filters
+              {filters.length > 0 && (
+                <Badge variant="outline" className="ml-2">
+                  {filters.length}
+                </Badge>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+          
+          {/* Save View - Prominent */}
+          <div className="flex items-center gap-2">
             <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
               <DialogTrigger asChild>
                 <Button
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   className="flex items-center gap-2"
                   disabled={filters.length === 0}
                 >
-                  <Save className="h-4 w-4" />
-                  Save View
+                  <Bookmark className="h-4 w-4" />
+                  Save Current View
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -237,39 +210,182 @@ export const AdvancedFilterPanel = ({
                 </div>
               </DialogContent>
             </Dialog>
+          </div>
+        </div>
 
-            {savedViews.length > 0 && (
-              <Select onValueChange={(viewId) => {
-                const view = savedViews.find(v => v.id === viewId);
-                if (view) onLoadView(view);
-              }}>
-                <SelectTrigger className="w-40">
-                  <FolderOpen className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Load View" />
-                </SelectTrigger>
-                <SelectContent>
-                  {savedViews.map((view) => (
-                    <SelectItem key={view.id} value={view.id}>
-                      {view.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+        {/* Saved Views - Quick Access */}
+        {savedViews.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            <span className="text-sm text-muted-foreground">Quick views:</span>
+            {savedViews.map((view) => (
+              <Button
+                key={view.id}
+                variant="outline"
+                size="sm"
+                onClick={() => onLoadView(view)}
+                className="h-7 text-xs"
+              >
+                <FolderOpen className="h-3 w-3 mr-1" />
+                {view.name}
+              </Button>
+            ))}
+          </div>
+        )}
+        
+        <CollapsibleContent className="space-y-4 mt-4">
+          {/* Quick Presets */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Quick Presets</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {QUICK_PRESETS.map((preset) => (
+                <Button
+                  key={preset.id}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addPresetFilter(preset.id)}
+                  className="h-7 text-xs"
+                >
+                  {preset.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+          {/* Custom Filters */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Custom Conditions</span>
+            </div>
+            {filters.map((filter) => (
+              <div key={filter.id} className="p-4 bg-muted/50 rounded-lg border border-border">
+                <div className="flex items-center gap-2 text-sm mb-2">
+                  <span className="text-muted-foreground">Show employees where</span>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Select
+                    value={filter.payElement}
+                    onValueChange={(value) => updateFilter(filter.id, { payElement: value })}
+                  >
+                    <SelectTrigger className="w-48">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border border-border">
+                      {Object.entries(PAY_ELEMENTS_GROUPED).map(([group, elements]) => (
+                        <div key={group}>
+                          <div className="px-2 py-1 text-xs font-semibold text-muted-foreground border-b border-border">
+                            {group}
+                          </div>
+                          {elements.map((element) => (
+                            <SelectItem key={element.value} value={element.value}>
+                              {element.label}
+                            </SelectItem>
+                          ))}
+                        </div>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <span className="text-muted-foreground">is</span>
+
+                  <Select
+                    value={filter.condition}
+                    onValueChange={(value: 'greater' | 'less' | 'equal') => 
+                      updateFilter(filter.id, { condition: value })
+                    }
+                  >
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border border-border">
+                      {CONDITIONS.map((condition) => (
+                        <SelectItem key={condition.value} value={condition.value}>
+                          {condition.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <div className="flex items-center gap-1">
+                    <Input
+                      type="number"
+                      value={filter.value}
+                      onChange={(e) => updateFilter(filter.id, { value: Number(e.target.value) })}
+                      className="w-24"
+                      placeholder="0"
+                    />
+                    <Select
+                      value={filter.isPercentage ? 'percentage' : 'currency'}
+                      onValueChange={(value) => 
+                        updateFilter(filter.id, { isPercentage: value === 'percentage' })
+                      }
+                    >
+                      <SelectTrigger className="w-16">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover border border-border">
+                        <SelectItem value="currency">£</SelectItem>
+                        <SelectItem value="percentage">%</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {filter.compareToLastMonth && (
+                    <span className="text-muted-foreground">vs last month</span>
+                  )}
+
+                  <Label className="flex items-center gap-2 text-sm whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      checked={filter.compareToLastMonth}
+                      onChange={(e) => updateFilter(filter.id, { compareToLastMonth: e.target.checked })}
+                      className="rounded"
+                    />
+                    vs Last Month
+                  </Label>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => removeFilter(filter.id)}
+                    className="p-1 h-auto ml-2"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="mt-2 p-2 bg-background rounded text-sm text-muted-foreground border border-border">
+                  Filter reads: "{getFilterDescription(filter)}"
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3 pt-2 border-t border-border">
+            <Button
+              onClick={() => addFilter()}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Custom Condition
+            </Button>
 
             {filters.length > 0 && (
               <Button
                 onClick={clearAllFilters}
                 variant="ghost"
                 size="sm"
-                className="text-gray-600"
+                className="text-muted-foreground"
               >
                 Clear All Filters
               </Button>
             )}
           </div>
         </CollapsibleContent>
-      </div>
-    </Collapsible>
+      </Collapsible>
+    </div>
   );
 };
