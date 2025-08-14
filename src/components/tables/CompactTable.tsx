@@ -14,12 +14,12 @@ interface CompactTableProps {
 export const CompactTable = ({ employees, summary, approvedEmployees, onApproveEmployee }: CompactTableProps) => {
   const filteredEmployees = employees;
 
-  // Calculate comparison with previous month
-  const getGrossPayChange = (employee: Employee) => {
+  // Calculate comparison with previous month for Net Pay only
+  const getNetPayChange = (employee: Employee) => {
     if (!employee.previousMonth) return { amount: 0, percentage: 0 };
-    const change = employee.totalIncome - employee.previousMonth.totalIncome;
-    const percentage = employee.previousMonth.totalIncome > 0 
-      ? (change / employee.previousMonth.totalIncome) * 100 
+    const change = employee.takeHomePay - employee.previousMonth.takeHomePay;
+    const percentage = employee.previousMonth.takeHomePay > 0 
+      ? (change / employee.previousMonth.takeHomePay) * 100 
       : 0;
     return { amount: change, percentage };
   };
@@ -46,7 +46,8 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <TableHead className="text-right w-20 text-xs font-medium text-gray-600 px-1">GIF Flex</TableHead>
               <TableHead className="text-right w-20 text-xs font-medium text-gray-600 px-1">OnCall</TableHead>
               <TableHead className="text-right w-28 text-xs font-medium text-gray-600 px-1">Gross Pay</TableHead>
-              <TableHead className="text-right w-24 text-xs font-medium text-gray-600 px-1">vs Last Month</TableHead>
+              <TableHead className="text-right w-24 text-xs font-medium text-gray-600 px-1">Net Pay</TableHead>
+              <TableHead className="text-right w-28 text-xs font-medium text-gray-600 px-1">Net Pay Change</TableHead>
               <TableHead className="w-20 text-xs font-medium text-gray-600 px-1">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -75,6 +76,9 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
                 {formatCurrency(summary.totalIncome)}
               </TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1">
+                {formatCurrency(summary.totalTakeHomePay)}
+              </TableCell>
               <TableCell className="text-right text-xs px-1">
                 <span className="text-green-600 font-medium">+2.3%</span>
               </TableCell>
@@ -83,7 +87,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
             
             {/* Employee rows */}
             {filteredEmployees.map((employee) => {
-              const grossPayChange = getGrossPayChange(employee);
+              const netPayChange = getNetPayChange(employee);
               return (
                 <TableRow key={employee.id} className="h-8 border-b border-gray-100 hover:bg-gray-50/30">
                   <TableCell className="px-2">
@@ -117,14 +121,17 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
                     {formatCurrency(employee.totalIncome)}
                   </TableCell>
+                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1">
+                    {formatCurrency(employee.takeHomePay)}
+                  </TableCell>
                   <TableCell className="text-right text-xs px-1">
-                    {grossPayChange.amount !== 0 && (
+                    {netPayChange.amount !== 0 && (
                       <div className="flex flex-col">
-                        <span className={`${grossPayChange.amount > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
-                          {grossPayChange.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(grossPayChange.amount))}
+                        <span className={`${netPayChange.amount > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                          {netPayChange.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(netPayChange.amount))}
                         </span>
-                        <span className={`${grossPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} text-xs`}>
-                          {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
+                        <span className={`${netPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} text-xs`}>
+                          {netPayChange.percentage > 0 ? '+' : ''}{netPayChange.percentage.toFixed(1)}%
                         </span>
                       </div>
                     )}

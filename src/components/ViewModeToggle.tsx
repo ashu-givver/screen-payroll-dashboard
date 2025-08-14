@@ -8,26 +8,26 @@ interface ViewModeToggleProps {
 
 export const ViewModeToggle = ({ viewMode, onViewModeChange }: ViewModeToggleProps) => {
   return (
-    <div className="flex items-center gap-1 bg-muted rounded-md p-1">
+    <div className="flex items-center gap-1 bg-muted rounded-lg p-1 border">
       <Button
         variant={viewMode === 'compact' ? 'default' : 'ghost'}
-        size="sm"
+        size="default"
         onClick={() => onViewModeChange('compact')}
-        className="h-7 px-3 text-xs font-medium"
+        className="h-9 px-4 text-sm font-medium"
       >
-        <List className="h-3 w-3 mr-1.5" />
+        <List className="h-4 w-4 mr-2" />
         Compact
-        <span className="ml-1.5 text-xs text-muted-foreground">(Founders)</span>
+        <span className="ml-2 text-sm text-muted-foreground">(Founders)</span>
       </Button>
       <Button
         variant={viewMode === 'detailed' ? 'default' : 'ghost'}
-        size="sm"
+        size="default"
         onClick={() => onViewModeChange('detailed')}
-        className="h-7 px-3 text-xs font-medium"
+        className="h-9 px-4 text-sm font-medium"
       >
-        <Grid className="h-3 w-3 mr-1.5" />
+        <Grid className="h-4 w-4 mr-2" />
         Detailed
-        <span className="ml-1.5 text-xs text-muted-foreground">(Finance)</span>
+        <span className="ml-2 text-sm text-muted-foreground">(Finance)</span>
       </Button>
     </div>
   );
