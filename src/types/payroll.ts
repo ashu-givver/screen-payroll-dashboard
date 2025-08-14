@@ -20,6 +20,9 @@ export interface Employee {
   postgradLoan: number;
   deductionVariance?: number;
   netPaymentVariance?: number;
+  // Employer cost breakdown
+  employerNI: number;
+  employerPension: number;
 }
 
 export interface PayrollPeriod {

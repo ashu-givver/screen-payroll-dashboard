@@ -20,7 +20,9 @@ export const employees: Employee[] = [
     studentLoan: 0.00,
     postgradLoan: 0.00,
     deductionVariance: -0.20,
-    netPaymentVariance: 0.20
+    netPaymentVariance: 0.20,
+    employerNI: 417.80,
+    employerPension: 179.06
   },
   {
     id: '2', 
@@ -41,7 +43,9 @@ export const employees: Employee[] = [
     studentLoan: 0.00,
     postgradLoan: 0.00,
     deductionVariance: -0.20,
-    netPaymentVariance: 0.20
+    netPaymentVariance: 0.20,
+    employerNI: 417.80,
+    employerPension: 179.06
   },
   {
     id: '3',
@@ -62,7 +66,9 @@ export const employees: Employee[] = [
     studentLoan: 0.00,
     postgradLoan: 0.00,
     deductionVariance: 0.39,
-    netPaymentVariance: -0.39
+    netPaymentVariance: -0.39,
+    employerNI: 497.01,
+    employerPension: 213.01
   },
   {
     id: '4',
@@ -83,7 +89,9 @@ export const employees: Employee[] = [
     studentLoan: 0.00,
     postgradLoan: 0.00,
     deductionVariance: 72.25,
-    netPaymentVariance: -72.25
+    netPaymentVariance: -72.25,
+    employerNI: 689.55,
+    employerPension: 295.52
   },
   {
     id: '5',
@@ -102,7 +110,9 @@ export const employees: Employee[] = [
     ni: 236.16,
     pension: 139.20,
     studentLoan: 0.00,
-    postgradLoan: 0.00
+    postgradLoan: 0.00,
+    employerNI: 449.30,
+    employerPension: 192.56
   },
   {
     id: '6',
@@ -123,7 +133,9 @@ export const employees: Employee[] = [
     studentLoan: 0.00,
     postgradLoan: 0.00,
     deductionVariance: -0.41,
-    netPaymentVariance: 0.41
+    netPaymentVariance: 0.41,
+    employerNI: 482.14,
+    employerPension: 206.63
   },
   {
     id: '7',
@@ -144,7 +156,9 @@ export const employees: Employee[] = [
     studentLoan: 0.00,
     postgradLoan: 0.00,
     deductionVariance: 72.25,
-    netPaymentVariance: -72.25
+    netPaymentVariance: -72.25,
+    employerNI: 689.55,
+    employerPension: 295.52
   }
 ];
 

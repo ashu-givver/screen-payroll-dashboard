@@ -7,6 +7,7 @@ import { PayrollActions } from '@/components/PayrollActions';
 import { SummaryTable } from '@/components/tables/SummaryTable';
 import { IncomeTable } from '@/components/tables/IncomeTable';
 import { DeductionsTable } from '@/components/tables/DeductionsTable';
+import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
 import { useToast } from '@/hooks/use-toast';
 
 export const PayrollDashboard = () => {
@@ -51,12 +52,7 @@ export const PayrollDashboard = () => {
       case 'deductions':
         return <DeductionsTable employees={filteredEmployees} summary={payrollSummary} />;
       case 'employer-cost':
-        return (
-          <div className="p-12 text-center text-muted-foreground">
-            <h3 className="text-lg font-medium mb-2">Employer Cost View</h3>
-            <p>This view would show employer costs and contributions.</p>
-          </div>
-        );
+        return <EmployerCostTable employees={filteredEmployees} summary={payrollSummary} />;
       default:
         return null;
     }
