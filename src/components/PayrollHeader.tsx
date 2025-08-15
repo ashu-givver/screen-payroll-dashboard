@@ -19,8 +19,8 @@ interface PayrollHeaderProps {
   onConfirm: () => void;
   searchValue: string;
   onSearchChange: (value: string) => void;
-  viewMode: 'compact' | 'detailed';
-  onViewModeChange: (mode: 'compact' | 'detailed') => void;
+  viewMode: 'compact' | 'detailed' | 'simple';
+  onViewModeChange: (mode: 'compact' | 'detailed' | 'simple') => void;
   activeFilters: string[];
   onFilterChange: (filterId: string, active: boolean) => void;
   onAdvancedFilters: () => void;
@@ -194,6 +194,14 @@ export const PayrollHeader = ({
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuLabel>View Options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => onViewModeChange('simple')}
+                  className={viewMode === 'simple' ? 'bg-accent' : ''}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span>Simple View</span>
+                  </div>
+                </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => onViewModeChange('compact')}
                   className={viewMode === 'compact' ? 'bg-accent' : ''}

@@ -7,7 +7,7 @@ import { formatCurrency } from '@/lib/formatters';
 interface DeductionsTableProps {
   employees: Employee[];
   summary: PayrollSummary;
-  viewMode: 'compact' | 'detailed';
+  viewMode: 'compact' | 'detailed' | 'simple';
   approvedEmployees: Set<string>;
   onApproveEmployee: (employeeId: string) => void;
 }

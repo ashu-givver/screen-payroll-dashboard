@@ -17,7 +17,7 @@ export const PayrollDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showChangesOnly, setShowChangesOnly] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
-  const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
+  const [viewMode, setViewMode] = useState<'compact' | 'detailed' | 'simple'>('simple');
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
@@ -272,6 +272,11 @@ export const PayrollDashboard = () => {
       onEmployeeUpdate: handleEmployeeUpdate,
     };
 
+    // In simple view, always show gross pay table
+    if (viewMode === 'simple') {
+      return <CompactTable {...incomeProps} />;
+    }
+
     switch (currentView) {
       case 'deductions':
         return <DeductionsTable {...commonProps} />;
@@ -319,17 +324,19 @@ export const PayrollDashboard = () => {
           onAdvancedFilters={handleAdvancedFilters}
         />
         
-        <StaticTopSection
-          summary={payrollSummary}
-          employees={employees}
-          filteredEmployeeCount={filteredEmployees.length}
-          totalEmployeeCount={employees.length}
-          onCardClick={handleCardClick}
-          activeCard={activeCard}
-          approvedEmployees={approvedEmployees}
-          currentView={currentView}
-          viewMode={viewMode}
-        />
+        {viewMode !== 'simple' && (
+          <StaticTopSection
+            summary={payrollSummary}
+            employees={employees}
+            filteredEmployeeCount={filteredEmployees.length}
+            totalEmployeeCount={employees.length}
+            onCardClick={handleCardClick}
+            activeCard={activeCard}
+            approvedEmployees={approvedEmployees}
+            currentView={currentView}
+            viewMode={viewMode}
+          />
+        )}
         
 
         {showAdvancedFilters && (
