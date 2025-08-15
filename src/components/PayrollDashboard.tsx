@@ -302,14 +302,6 @@ export const PayrollDashboard = () => {
             {currentView === 'gross-pay' && (
               <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
             )}
-            <Button 
-              onClick={handleApproveAll}
-              disabled={filteredEmployees.length === 0}
-              size="sm"
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              Approve All ({filteredEmployees.length})
-            </Button>
           </div>
         </div>
 

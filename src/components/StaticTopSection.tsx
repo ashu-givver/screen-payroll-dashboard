@@ -127,9 +127,9 @@ export const StaticTopSection = ({
       id: 'pending-approval',
       title: 'Pending Approval',
       value: pendingApprovalCount.toString(),
-      change: pendingApprovalCount > 0 ? `-${pendingApprovalCount}` : '0',
+      change: '',
       icon: Clock,
-      type: pendingApprovalCount > 0 ? 'negative' as const : 'neutral' as const
+      type: 'neutral' as const
     }
   ];
 
@@ -160,18 +160,20 @@ export const StaticTopSection = ({
                 <p className="text-xl font-semibold text-gray-900">{card.value}</p>
               </div>
             </div>
-            <div className="text-right">
-              <div className={`text-sm font-medium ${
-                card.change.startsWith('+') && card.type === 'positive' ? 'text-green-600' :
-                card.change.startsWith('+') && card.type === 'negative' ? 'text-red-600' :
-                card.change.startsWith('-') && card.type === 'positive' ? 'text-red-600' :
-                card.change.startsWith('-') && card.type === 'negative' ? 'text-green-600' :
-                'text-gray-600'
-              }`}>
-                {card.change}
+            {card.change && (
+              <div className="text-right">
+                <div className={`text-sm font-medium ${
+                  card.change.startsWith('+') && card.type === 'positive' ? 'text-green-600' :
+                  card.change.startsWith('+') && card.type === 'negative' ? 'text-red-600' :
+                  card.change.startsWith('-') && card.type === 'positive' ? 'text-red-600' :
+                  card.change.startsWith('-') && card.type === 'negative' ? 'text-green-600' :
+                  'text-gray-600'
+                }`}>
+                  {card.change}
+                </div>
+                <div className="text-xs text-gray-500">vs last month</div>
               </div>
-              <div className="text-xs text-gray-500">vs last month</div>
-            </div>
+            )}
           </div>
         </CardContent>
       </Card>
