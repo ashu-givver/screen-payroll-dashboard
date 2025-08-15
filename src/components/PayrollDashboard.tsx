@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
 export const PayrollDashboard = () => {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [showChangesOnly, setShowChangesOnly] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
@@ -30,7 +30,7 @@ export const PayrollDashboard = () => {
   const filteredEmployees = useMemo(() => {
     return employeeData.filter(employee => {
       // Search filter
-      if (searchValue && !employee.name.toLowerCase().includes(searchValue.toLowerCase())) {
+      if (searchTerm && !employee.name.toLowerCase().includes(searchTerm.toLowerCase())) {
         return false;
       }
       
@@ -118,7 +118,7 @@ export const PayrollDashboard = () => {
       
       return true;
     });
-  }, [searchValue, showChangesOnly, selectedDepartment, advancedFilters, employeeData, activeCard, activeFilters]);
+  }, [searchTerm, showChangesOnly, selectedDepartment, advancedFilters, employeeData, activeCard, activeFilters]);
 
   const handleConfirm = () => {
     toast({
@@ -237,7 +237,7 @@ export const PayrollDashboard = () => {
       // Clear other filters when card is selected for clarity
       setShowChangesOnly(false);
       setSelectedDepartment('all');
-      setSearchValue('');
+      setSearchTerm('');
     }
   };
 
@@ -302,7 +302,17 @@ export const PayrollDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto">
-        <PayrollHeader period={payrollPeriod} onConfirm={handleConfirm} />
+        <PayrollHeader 
+          period={payrollPeriod} 
+          onConfirm={handleConfirm}
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          activeFilters={activeFilters}
+          onFilterChange={handleFilterChange}
+          onAdvancedFilters={handleAdvancedFilters}
+        />
         
         <StaticTopSection
           summary={payrollSummary}
@@ -315,15 +325,6 @@ export const PayrollDashboard = () => {
           currentView={currentView}
         />
         
-        <TableToolbar
-          searchValue={searchValue}
-          onSearchChange={setSearchValue}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          activeFilters={activeFilters}
-          onFilterChange={handleFilterChange}
-          onAdvancedFilters={handleAdvancedFilters}
-        />
 
         {showAdvancedFilters && (
           <AdvancedFilterPanel
