@@ -7,6 +7,7 @@ import { SmartFilterPanel } from '@/components/SmartFilterPanel';
 import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
 import { TotalsSummaryBar } from '@/components/TotalsSummaryBar';
 import { ViewModeToggle } from '@/components/ViewModeToggle';
+import { PayrollInsights } from '@/components/PayrollInsights';
 import { CompactTable } from '@/components/tables/CompactTable';
 import { DetailedTable } from '@/components/tables/DetailedTable';
 import { useToast } from '@/hooks/use-toast';
@@ -23,6 +24,7 @@ export const PayrollDashboard = () => {
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
   const [employeeData, setEmployeeData] = useState(employees);
+  const [activeInsight, setActiveInsight] = useState<string>();
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
@@ -45,6 +47,32 @@ export const PayrollDashboard = () => {
       // Employment type filter
       if (selectedEmploymentType !== 'all' && employee.employmentType !== selectedEmploymentType) {
         return false;
+      }
+      
+      // Insight-based filtering
+      if (activeInsight) {
+        switch (activeInsight) {
+          case 'new-joiners':
+            // Filter to show only new joiners (employees 1, 2, 3 based on mock data)
+            if (!['1', '2', '3'].includes(employee.id)) return false;
+            break;
+          case 'leavers':
+            // Filter to show only leavers (employee 4 based on mock data)
+            if (!['4'].includes(employee.id)) return false;
+            break;
+          case 'pension-enrolled':
+            // Filter to show employees newly enrolled in pension (employees 5, 6 based on mock data)
+            if (!['5', '6'].includes(employee.id)) return false;
+            break;
+          case 'pension-opted-out':
+            // Filter to show employees who opted out of pension (none in current mock data)
+            return false;
+            break;
+          case 'salary-changes':
+            // Filter to show employees with salary changes (employees 1, 3, 5, 7 based on mock data)
+            if (!['1', '3', '5', '7'].includes(employee.id)) return false;
+            break;
+        }
       }
       
       // Advanced filters
@@ -83,7 +111,7 @@ export const PayrollDashboard = () => {
       
       return true;
     });
-  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType, advancedFilters, employeeData]);
+  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType, advancedFilters, employeeData, activeInsight]);
 
   const handleConfirm = () => {
     toast({
@@ -185,6 +213,21 @@ export const PayrollDashboard = () => {
     });
   };
 
+  const handleInsightClick = (insightId: string) => {
+    if (activeInsight === insightId) {
+      // Clicking the same insight deactivates it
+      setActiveInsight(undefined);
+    } else {
+      // Clicking a different insight activates it
+      setActiveInsight(insightId);
+      // Clear other filters when insight is selected for clarity
+      setShowChangesOnly(false);
+      setSelectedDepartment('all');
+      setSelectedEmploymentType('all');
+      setSearchValue('');
+    }
+  };
+
   const renderTabContent = () => {
     const commonProps = {
       employees: filteredEmployees,
@@ -244,6 +287,11 @@ export const PayrollDashboard = () => {
             department: selectedDepartment,
             employmentType: selectedEmploymentType
           }}
+        />
+
+        <PayrollInsights 
+          onInsightClick={handleInsightClick}
+          activeInsight={activeInsight}
         />
 
         <TotalsSummaryBar 
