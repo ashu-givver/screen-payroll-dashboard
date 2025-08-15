@@ -3,9 +3,8 @@ import { TabType, AdvancedFilter, SavedFilterView } from '@/types/payroll';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
 import { PayrollTabs } from '@/components/PayrollTabs';
-import { SmartFilterPanel } from '@/components/SmartFilterPanel';
 import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
-import { TotalsSummaryBar } from '@/components/TotalsSummaryBar';
+import { PayrollSummaryCards } from '@/components/PayrollSummaryCards';
 import { ViewModeToggle } from '@/components/ViewModeToggle';
 import { PayrollInsights } from '@/components/PayrollInsights';
 import { CompactTable } from '@/components/tables/CompactTable';
@@ -18,13 +17,12 @@ export const PayrollDashboard = () => {
   const [searchValue, setSearchValue] = useState('');
   const [showChangesOnly, setShowChangesOnly] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
-  const [selectedEmploymentType, setSelectedEmploymentType] = useState('all');
   const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
   const [employeeData, setEmployeeData] = useState(employees);
-  const [activeInsight, setActiveInsight] = useState<string>();
+  const [activeCard, setActiveCard] = useState<string>();
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
@@ -44,14 +42,9 @@ export const PayrollDashboard = () => {
         return false;
       }
       
-      // Employment type filter
-      if (selectedEmploymentType !== 'all' && employee.employmentType !== selectedEmploymentType) {
-        return false;
-      }
-      
-      // Insight-based filtering
-      if (activeInsight) {
-        switch (activeInsight) {
+      // Card-based filtering
+      if (activeCard) {
+        switch (activeCard) {
           case 'total-headcount':
             // Show all employees for total headcount
             break;
@@ -74,6 +67,13 @@ export const PayrollDashboard = () => {
           case 'salary-changes':
             // Filter to show employees with salary changes (employees 1, 3, 5, 7 based on mock data)
             if (!['1', '3', '5', '7'].includes(employee.id)) return false;
+            break;
+          case 'gross-pay':
+          case 'deductions':
+          case 'take-home-pay':
+          case 'employer-cost':
+          case 'net-differences':
+            // For pay metrics, show all employees with their data
             break;
         }
       }
@@ -114,7 +114,7 @@ export const PayrollDashboard = () => {
       
       return true;
     });
-  }, [searchValue, showChangesOnly, selectedDepartment, selectedEmploymentType, advancedFilters, employeeData, activeInsight]);
+  }, [searchValue, showChangesOnly, selectedDepartment, advancedFilters, employeeData, activeCard]);
 
   const handleConfirm = () => {
     toast({
@@ -209,24 +209,22 @@ export const PayrollDashboard = () => {
     setAdvancedFilters([...view.filters]);
     setShowChangesOnly(view.basicFilters.showChangesOnly);
     setSelectedDepartment(view.basicFilters.department);
-    setSelectedEmploymentType(view.basicFilters.employmentType);
     toast({
       title: "View Loaded",
       description: `Applied filter view "${view.name}".`,
     });
   };
 
-  const handleInsightClick = (insightId: string) => {
-    if (activeInsight === insightId) {
-      // Clicking the same insight deactivates it
-      setActiveInsight(undefined);
+  const handleCardClick = (cardId: string) => {
+    if (activeCard === cardId) {
+      // Clicking the same card deactivates it
+      setActiveCard(undefined);
     } else {
-      // Clicking a different insight activates it
-      setActiveInsight(insightId);
-      // Clear other filters when insight is selected for clarity
+      // Clicking a different card activates it
+      setActiveCard(cardId);
+      // Clear other filters when card is selected for clarity
       setShowChangesOnly(false);
       setSelectedDepartment('all');
-      setSelectedEmploymentType('all');
       setSearchValue('');
     }
   };
@@ -258,15 +256,12 @@ export const PayrollDashboard = () => {
         <div className="max-w-7xl mx-auto">
           <PayrollHeader period={payrollPeriod} onConfirm={handleConfirm} />
           
-          <PayrollInsights 
-            onInsightClick={handleInsightClick}
-            activeInsight={activeInsight}
-          />
-
-          <TotalsSummaryBar 
-            summary={payrollSummary} 
+          <PayrollSummaryCards
+            summary={payrollSummary}
             filteredEmployeeCount={filteredEmployees.length}
             totalEmployeeCount={employees.length}
+            onCardClick={handleCardClick}
+            activeCard={activeCard}
           />
 
           <div className="px-6 py-6 bg-white">
@@ -314,17 +309,6 @@ export const PayrollDashboard = () => {
           </div>
         </div>
 
-        <SmartFilterPanel
-          searchValue={searchValue}
-          onSearchChange={setSearchValue}
-          showChangesOnly={showChangesOnly}
-          onToggleChangesOnly={setShowChangesOnly}
-          selectedDepartment={selectedDepartment}
-          onDepartmentChange={setSelectedDepartment}
-          selectedEmploymentType={selectedEmploymentType}
-          onEmploymentTypeChange={setSelectedEmploymentType}
-        />
-
         <AdvancedFilterPanel
           filters={advancedFilters}
           onFiltersChange={setAdvancedFilters}
@@ -334,7 +318,7 @@ export const PayrollDashboard = () => {
           currentBasicFilters={{
             showChangesOnly,
             department: selectedDepartment,
-            employmentType: selectedEmploymentType
+            employmentType: 'all'
           }}
         />
 
