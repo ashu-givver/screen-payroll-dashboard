@@ -130,8 +130,8 @@ export const PayrollDashboard = () => {
 
   const handleExport = () => {
     toast({
-      title: "Export Started",
-      description: "Your payroll data is being exported.",
+      title: "Excel Download Started",
+      description: "Your payroll report is being downloaded as Excel file.",
     });
   };
 
@@ -327,6 +327,7 @@ export const PayrollDashboard = () => {
           activeFilters={activeFilters}
           onFilterChange={handleFilterChange}
           onAdvancedFilters={handleAdvancedFilters}
+          onDownload={handleExport}
         />
         
         <StaticTopSection

@@ -24,6 +24,7 @@ interface PayrollHeaderProps {
   activeFilters: string[];
   onFilterChange: (filterId: string, active: boolean) => void;
   onAdvancedFilters: () => void;
+  onDownload?: () => void;
 }
 
 const filterOptions = [
@@ -45,6 +46,7 @@ export const PayrollHeader = ({
   activeFilters,
   onFilterChange,
   onAdvancedFilters,
+  onDownload,
 }: PayrollHeaderProps) => {
   const [searchExpanded, setSearchExpanded] = useState(false);
 
@@ -179,6 +181,17 @@ export const PayrollHeader = ({
                 </Button>
               )}
             </div>
+
+            {/* Download */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDownload}
+              className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+              title="Download Excel Report"
+            >
+              <Download className="h-4 w-4" />
+            </Button>
 
             {/* Settings Menu */}
             <DropdownMenu>
