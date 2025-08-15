@@ -2,7 +2,7 @@ import { formatCurrency } from '@/lib/formatters';
 import { PayrollSummary } from '@/types/payroll';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, Users, UserCheck, DollarSign, Coins, Building, PiggyBank } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Coins, PiggyBank, Building, UserCheck } from 'lucide-react';
 
 interface TotalsSummaryBarProps {
   summary: PayrollSummary;
@@ -72,13 +72,7 @@ export const TotalsSummaryBar = ({
       icon: Building,
     },
     {
-      title: 'Total Headcount',
-      value: totalEmployeeCount.toString(),
-      change: headcountChange,
-      icon: Users,
-    },
-    {
-      title: 'Pay Differences',
+      title: 'Net Differences',
       value: payDifferencesCount.toString(),
       change: payDifferencesChange,
       icon: UserCheck,
@@ -87,18 +81,7 @@ export const TotalsSummaryBar = ({
 
   return (
     <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200">
-      <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-sm font-medium text-gray-900">
-          Totals for {isFiltered ? `${filteredEmployeeCount} of ${totalEmployeeCount}` : filteredEmployeeCount} employees
-        </h3>
-        {isFiltered && (
-          <Badge variant="secondary" className="text-xs">
-            Filtered
-          </Badge>
-        )}
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {summaryCards.map((card) => {
           const Icon = card.icon;
           

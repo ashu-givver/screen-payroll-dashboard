@@ -18,6 +18,14 @@ interface PayrollInsightsProps {
 export const PayrollInsights = ({ onInsightClick, activeInsight }: PayrollInsightsProps) => {
   const insights: InsightCard[] = [
     {
+      id: 'total-headcount',
+      title: 'Total Headcount',
+      value: 10,
+      change: 25.0,
+      changeType: 'increase',
+      icon: Users,
+    },
+    {
       id: 'new-joiners',
       title: 'New Joiners',
       value: 3,
@@ -29,7 +37,7 @@ export const PayrollInsights = ({ onInsightClick, activeInsight }: PayrollInsigh
       id: 'leavers',
       title: 'Leavers',
       value: 1,
-      change: -12.5,
+      change: 12.5,
       changeType: 'decrease',
       icon: UserMinus,
     },
@@ -45,7 +53,7 @@ export const PayrollInsights = ({ onInsightClick, activeInsight }: PayrollInsigh
       id: 'pension-opted-out',
       title: 'Pension Opted Out',
       value: 0,
-      change: -100,
+      change: 100,
       changeType: 'decrease',
       icon: UserX,
     },
@@ -74,7 +82,7 @@ export const PayrollInsights = ({ onInsightClick, activeInsight }: PayrollInsigh
 
   return (
     <div className="px-6 py-4 bg-gray-50/50">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         {insights.map((insight) => {
           const Icon = insight.icon;
           const isActive = activeInsight === insight.id;

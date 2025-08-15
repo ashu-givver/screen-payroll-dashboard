@@ -34,30 +34,7 @@ export const SmartFilterPanel = ({
       {/* Basic Filters */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Button
-              variant={showChangesOnly ? "default" : "outline"}
-              size="sm"
-              onClick={() => onToggleChangesOnly(!showChangesOnly)}
-              className="h-7 text-xs"
-            >
-              <Users className="h-3 w-3 mr-1" />
-              Only show changes
-            </Button>
-            <Button
-              variant={!showChangesOnly ? "default" : "outline"}
-              size="sm"
-              onClick={() => onToggleChangesOnly(false)}
-              className="h-7 text-xs"
-            >
-              All employees
-            </Button>
-          </div>
-          {showChangesOnly && (
-            <Badge variant="secondary" className="text-xs">
-              7 with changes
-            </Badge>
-          )}
+          {/* Removed Only Show Changes and All Employees buttons */}
         </div>
         
         <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
