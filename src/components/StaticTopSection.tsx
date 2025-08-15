@@ -15,6 +15,7 @@ interface StaticTopSectionProps {
   onCardClick: (cardId: string) => void;
   activeCard?: string;
   approvedEmployees: Set<string>;
+  currentView: 'gross-pay' | 'deductions' | 'employer-cost';
 }
 
 export const StaticTopSection = ({ 
@@ -24,7 +25,8 @@ export const StaticTopSection = ({
   totalEmployeeCount,
   onCardClick,
   activeCard,
-  approvedEmployees
+  approvedEmployees,
+  currentView
 }: StaticTopSectionProps) => {
   const [showMoreInsights, setShowMoreInsights] = useState(false);
 
@@ -133,15 +135,16 @@ export const StaticTopSection = ({
     }
   ];
 
-  const renderCard = (card: any, isClickable = true) => {
+  const renderCard = (card: any, isClickable = true, isMainCard = false) => {
     const IconComponent = card.icon;
     const isActive = activeCard === card.id;
+    const isCurrentView = isMainCard && currentView === card.id;
     
     return (
       <Card 
         key={card.id}
         className={`transition-all duration-200 cursor-pointer hover:shadow-md ${
-          isActive ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-gray-50'
+          isActive || isCurrentView ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-gray-50'
         } ${!isClickable ? 'cursor-default' : ''}`}
         onClick={() => isClickable && onCardClick(card.id)}
       >
@@ -185,7 +188,7 @@ export const StaticTopSection = ({
       <div className="px-6 py-4">
         {/* Main Cards Row */}
         <div className="grid grid-cols-3 gap-4 mb-4">
-          {mainCards.map(card => renderCard(card))}
+          {mainCards.map(card => renderCard(card, true, true))}
         </div>
 
         {/* More Insights Button */}

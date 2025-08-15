@@ -29,6 +29,7 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
             <TableHead className="text-right w-40">National Insurance</TableHead>
             <TableHead className="text-right w-28">Pension</TableHead>
             <TableHead className="text-right w-40">Total Employer Cost</TableHead>
+            <TableHead className="text-right w-40">Total Employer Costs Change</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -47,10 +48,21 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalEmployerCost)}
             </TableCell>
+            <TableCell className="text-right font-semibold text-green-600">
+              +2.3%
+            </TableCell>
           </TableRow>
           
           {/* Employee rows */}
-          {filteredEmployees.map((employee) => (
+          {filteredEmployees.map((employee) => {
+            // Calculate total employer cost change percentage
+            const currentEmployerCost = employee.employerCost;
+            const previousEmployerCost = employee.previousMonth?.employerCost || currentEmployerCost;
+            const employerCostChangePercentage = previousEmployerCost > 0 
+              ? ((currentEmployerCost - previousEmployerCost) / previousEmployerCost) * 100 
+              : 0;
+            
+            return (
             <TableRow key={employee.id} className="h-9">
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -74,8 +86,16 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.employerCost)}
               </TableCell>
+              <TableCell className="text-right">
+                {employerCostChangePercentage !== 0 && (
+                  <span className={`font-medium ${employerCostChangePercentage > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    {employerCostChangePercentage > 0 ? '+' : ''}{employerCostChangePercentage.toFixed(1)}%
+                  </span>
+                )}
+              </TableCell>
             </TableRow>
-          ))}
+          );
+          })}
         </TableBody>
       </Table>
     </div>
