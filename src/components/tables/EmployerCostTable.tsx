@@ -1,7 +1,7 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
 import { formatCurrency } from '@/lib/formatters';
 
 interface EmployerCostTableProps {
@@ -20,84 +20,82 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
   const totalEmployerPension = employees.reduce((sum, emp) => sum + emp.employerPension, 0);
 
   return (
-    <div className="space-y-0">
-      <Table>
-        <TableHeader>
-          <TableRow className="h-9">
-            <TableHead className="w-48">Employee</TableHead>
-            <TableHead className="text-right w-32">Gross Pay</TableHead>
-            <TableHead className="text-right w-40">National Insurance</TableHead>
-            <TableHead className="text-right w-28">Pension</TableHead>
-            <TableHead className="text-right w-40">Total Employer Cost</TableHead>
-            <TableHead className="text-right w-40">Total Employer Costs Change</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {/* Total row */}
-          <TableRow className="bg-gray-50/60 font-medium h-9">
-            <TableCell className="font-semibold text-gray-900">Total</TableCell>
-            <TableCell className="text-right font-semibold text-gray-900">
-              {formatCurrency(summary.totalIncome)}
-            </TableCell>
-            <TableCell className="text-right font-semibold text-gray-900">
-              {formatCurrency(totalEmployerNI)}
-            </TableCell>
-            <TableCell className="text-right font-semibold text-gray-900">
-              {formatCurrency(totalEmployerPension)}
-            </TableCell>
-            <TableCell className="text-right font-semibold text-gray-900">
-              {formatCurrency(summary.totalEmployerCost)}
-            </TableCell>
-            <TableCell className="text-right font-semibold text-green-600">
-              +2.3%
-            </TableCell>
-          </TableRow>
+    <NotionTable>
+      <NotionTableHeader>
+        <NotionTableRow>
+          <NotionTableHead width="192px">Employee</NotionTableHead>
+          <NotionTableHead width="128px" align="right">Gross Pay</NotionTableHead>
+          <NotionTableHead width="160px" align="right">National Insurance</NotionTableHead>
+          <NotionTableHead width="112px" align="right">Pension</NotionTableHead>
+          <NotionTableHead width="160px" align="right">Total Employer Cost</NotionTableHead>
+          <NotionTableHead width="160px" align="right">Total Employer Costs Change</NotionTableHead>
+        </NotionTableRow>
+      </NotionTableHeader>
+      <NotionTableBody>
+        {/* Total row */}
+        <NotionTableRow className="bg-muted/40 font-medium">
+          <NotionTableCell className="font-semibold">Total</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">
+            {formatCurrency(summary.totalIncome)}
+          </NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">
+            {formatCurrency(totalEmployerNI)}
+          </NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">
+            {formatCurrency(totalEmployerPension)}
+          </NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">
+            {formatCurrency(summary.totalEmployerCost)}
+          </NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold text-green-600">
+            +2.3%
+          </NotionTableCell>
+        </NotionTableRow>
           
-          {/* Employee rows */}
-          {filteredEmployees.map((employee) => {
-            // Calculate total employer cost change percentage
-            const currentEmployerCost = employee.employerCost;
-            const previousEmployerCost = employee.previousMonth?.employerCost || currentEmployerCost;
-            const employerCostChangePercentage = previousEmployerCost > 0 
-              ? ((currentEmployerCost - previousEmployerCost) / previousEmployerCost) * 100 
-              : 0;
-            
-            return (
-            <TableRow key={employee.id} className="h-9">
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <EmployeeAvatar 
-                    name={employee.name}
-                    initials={employee.initials}
-                    size="sm"
-                  />
-                  <span className="font-medium text-gray-900 text-sm">{employee.name}</span>
-                </div>
-              </TableCell>
-              <TableCell className="text-right font-medium text-gray-900">
-                {formatCurrency(employee.totalIncome)}
-              </TableCell>
-              <TableCell className="text-right font-medium text-gray-900">
-                {formatCurrency(employee.employerNI)}
-              </TableCell>
-              <TableCell className="text-right font-medium text-gray-900">
-                {formatCurrency(employee.employerPension)}
-              </TableCell>
-              <TableCell className="text-right font-medium text-gray-900">
-                {formatCurrency(employee.employerCost)}
-              </TableCell>
-              <TableCell className="text-right">
-                {employerCostChangePercentage !== 0 && (
-                  <span className={`font-medium ${employerCostChangePercentage > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                    {employerCostChangePercentage > 0 ? '+' : ''}{employerCostChangePercentage.toFixed(1)}%
-                  </span>
-                )}
-              </TableCell>
-            </TableRow>
-          );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+        {/* Employee rows */}
+        {filteredEmployees.map((employee) => {
+          // Calculate total employer cost change percentage
+          const currentEmployerCost = employee.employerCost;
+          const previousEmployerCost = employee.previousMonth?.employerCost || currentEmployerCost;
+          const employerCostChangePercentage = previousEmployerCost > 0 
+            ? ((currentEmployerCost - previousEmployerCost) / previousEmployerCost) * 100 
+            : 0;
+          
+          return (
+          <NotionTableRow key={employee.id}>
+            <NotionTableCell>
+              <div className="flex items-center gap-2">
+                <EmployeeAvatar 
+                  name={employee.name}
+                  initials={employee.initials}
+                  size="sm"
+                />
+                <span className="font-medium text-sm">{employee.name}</span>
+              </div>
+            </NotionTableCell>
+            <NotionTableCell align="right" className="font-medium">
+              {formatCurrency(employee.totalIncome)}
+            </NotionTableCell>
+            <NotionTableCell align="right" className="font-medium">
+              {formatCurrency(employee.employerNI)}
+            </NotionTableCell>
+            <NotionTableCell align="right" className="font-medium">
+              {formatCurrency(employee.employerPension)}
+            </NotionTableCell>
+            <NotionTableCell align="right" className="font-medium">
+              {formatCurrency(employee.employerCost)}
+            </NotionTableCell>
+            <NotionTableCell align="right">
+              {employerCostChangePercentage !== 0 && (
+                <span className={`font-medium ${employerCostChangePercentage > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  {employerCostChangePercentage > 0 ? '+' : ''}{employerCostChangePercentage.toFixed(1)}%
+                </span>
+              )}
+            </NotionTableCell>
+          </NotionTableRow>
+        );
+        })}
+      </NotionTableBody>
+    </NotionTable>
   );
 };

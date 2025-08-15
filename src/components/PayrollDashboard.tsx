@@ -4,7 +4,7 @@ import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
 import { StaticTopSection } from '@/components/StaticTopSection';
 import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
-import { ViewModeToggle } from '@/components/ViewModeToggle';
+import { TableToolbar } from '@/components/TableToolbar';
 import { CompactTable } from '@/components/tables/CompactTable';
 import { DetailedTable } from '@/components/tables/DetailedTable';
 import { DeductionsTable } from '@/components/tables/DeductionsTable';
@@ -23,6 +23,8 @@ export const PayrollDashboard = () => {
   const [employeeData, setEmployeeData] = useState(employees);
   const [activeCard, setActiveCard] = useState<string>();
   const [currentView, setCurrentView] = useState<'gross-pay' | 'deductions' | 'employer-cost'>('gross-pay');
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
@@ -42,9 +44,11 @@ export const PayrollDashboard = () => {
         return false;
       }
       
-      // Card-based filtering
-      if (activeCard) {
-        switch (activeCard) {
+      // Card-based filtering and active filters
+      const allActiveFilters = activeCard ? [activeCard, ...activeFilters] : activeFilters;
+      
+      for (const filterId of allActiveFilters) {
+        switch (filterId) {
           case 'total-headcount':
             // Show all employees for total headcount
             break;
@@ -114,7 +118,7 @@ export const PayrollDashboard = () => {
       
       return true;
     });
-  }, [searchValue, showChangesOnly, selectedDepartment, advancedFilters, employeeData, activeCard]);
+  }, [searchValue, showChangesOnly, selectedDepartment, advancedFilters, employeeData, activeCard, activeFilters]);
 
   const handleConfirm = () => {
     toast({
@@ -237,6 +241,22 @@ export const PayrollDashboard = () => {
     }
   };
 
+  const handleFilterChange = (filterId: string, active: boolean) => {
+    if (active) {
+      setActiveFilters(prev => [...prev, filterId]);
+    } else {
+      setActiveFilters(prev => prev.filter(id => id !== filterId));
+    }
+    // Clear basic filters for clarity
+    setShowChangesOnly(false);
+    setSelectedDepartment('all');
+    setActiveCard(undefined);
+  };
+
+  const handleAdvancedFilters = () => {
+    setShowAdvancedFilters(true);
+  };
+
   const renderCurrentTable = () => {
     const commonProps = {
       employees: filteredEmployees,
@@ -295,31 +315,32 @@ export const PayrollDashboard = () => {
           currentView={currentView}
         />
         
-        <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-medium">{getViewTitle()}</h2>
-          </div>
-          <div className="flex items-center gap-3">
-            {currentView === 'gross-pay' && (
-              <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-            )}
-          </div>
-        </div>
-
-        <AdvancedFilterPanel
-          filters={advancedFilters}
-          onFiltersChange={setAdvancedFilters}
-          savedViews={savedViews}
-          onSaveView={handleSaveView}
-          onLoadView={handleLoadView}
-          currentBasicFilters={{
-            showChangesOnly,
-            department: selectedDepartment,
-            employmentType: 'all'
-          }}
+        <TableToolbar
+          searchValue={searchValue}
+          onSearchChange={setSearchValue}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          activeFilters={activeFilters}
+          onFilterChange={handleFilterChange}
+          onAdvancedFilters={handleAdvancedFilters}
         />
 
-        <div className="bg-white">
+        {showAdvancedFilters && (
+          <AdvancedFilterPanel
+            filters={advancedFilters}
+            onFiltersChange={setAdvancedFilters}
+            savedViews={savedViews}
+            onSaveView={handleSaveView}
+            onLoadView={handleLoadView}
+            currentBasicFilters={{
+              showChangesOnly,
+              department: selectedDepartment,
+              employmentType: 'all'
+            }}
+          />
+        )}
+
+        <div className="bg-background border border-border rounded-lg">
           {renderCurrentTable()}
         </div>
       </div>

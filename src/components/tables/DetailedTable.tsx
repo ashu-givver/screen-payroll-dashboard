@@ -4,7 +4,7 @@ import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { EditableCell } from '@/components/EditableCell';
 import { SortableHeader, SortDirection } from '@/components/SortableHeader';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
 import { formatCurrency } from '@/lib/formatters';
 
 interface DetailedTableProps {
@@ -81,337 +81,331 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
   const totalEmployerPension = employees.reduce((sum, emp) => sum + emp.employerPension, 0);
 
   return (
-    <div className="space-y-0">
-      <div className="overflow-x-auto border border-gray-300 rounded-lg bg-white">
-        <Table className="border-separate border-spacing-0">
-          <TableHeader className="sticky top-0 bg-gray-50 z-10">
-            <TableRow className="border-b border-gray-300">
-              <TableHead className="w-32 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="name" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="left"
-                >
-                  Employee
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="w-16 border-r border-gray-300 bg-gray-50 p-0">
-                <div className="h-8 flex items-center justify-center px-2 text-xs font-semibold text-gray-700">
-                  Action
+    <NotionTable>
+      <NotionTableHeader>
+        <NotionTableRow>
+          <NotionTableHead width="128px">
+            <SortableHeader 
+              sortKey="name" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="left"
+            >
+              Employee
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="64px" align="center">
+            Action
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <SortableHeader 
+              sortKey="basePay" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Base Pay
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="72px" align="right">
+            <SortableHeader 
+              sortKey="bonus" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Bonus
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <SortableHeader 
+              sortKey="commission" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Commission
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="72px" align="right">
+            <SortableHeader 
+              sortKey="overtime" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Overtime
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="72px" align="right">
+            <SortableHeader 
+              sortKey="gifFlex" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              GIF Flex
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="64px" align="right">
+            <SortableHeader 
+              sortKey="onCall" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              OnCall
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <SortableHeader 
+              sortKey="totalIncome" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Gross Pay
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="64px" align="right">
+            <SortableHeader 
+              sortKey="paye" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              PAYE
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="56px" align="right">
+            <SortableHeader 
+              sortKey="ni" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              NI
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="72px" align="right">
+            <SortableHeader 
+              sortKey="pension" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Pension
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <SortableHeader 
+              sortKey="studentLoan" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Student Loan
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <SortableHeader 
+              sortKey="postgradLoan" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Postgrad Loan
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="72px" align="right">
+            <SortableHeader 
+              sortKey="employerNI" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Emp NI
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <SortableHeader 
+              sortKey="employerPension" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="right"
+            >
+              Emp Pension
+            </SortableHeader>
+          </NotionTableHead>
+        </NotionTableRow>
+      </NotionTableHeader>
+      <NotionTableBody>
+        {/* Total row */}
+        <NotionTableRow className="bg-muted/40 font-medium">
+          <NotionTableCell className="font-semibold">Total</NotionTableCell>
+          <NotionTableCell align="center">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled
+              className="h-6 px-2 text-xs opacity-50"
+            >
+              -
+            </Button>
+          </NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalBasePay)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalBonus)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalCommission)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalOvertime)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalGifFlex)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalOnCall)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(summary.totalIncome)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalPaye)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalNI)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalPension)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalStudentLoan)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalPostgradLoan)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalEmployerNI)}</NotionTableCell>
+          <NotionTableCell align="right" className="font-semibold">{formatCurrency(totalEmployerPension)}</NotionTableCell>
+        </NotionTableRow>
+        
+        {/* Employee rows */}
+        {sortedEmployees.map((employee, index) => {
+          return (
+            <NotionTableRow key={employee.id}>
+              <NotionTableCell>
+                <div className="flex items-center gap-1">
+                  <EmployeeAvatar 
+                    name={employee.name}
+                    initials={employee.initials}
+                    size="sm"
+                  />
+                  <span className="font-medium text-xs truncate">{employee.name}</span>
                 </div>
-              </TableHead>
-              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="basePay" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Base Pay
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-18 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="bonus" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Bonus
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="commission" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Commission
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-18 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="overtime" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Overtime
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-18 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="gifFlex" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  GIF Flex
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-16 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="onCall" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  OnCall
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="totalIncome" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Gross Pay
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-16 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="paye" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  PAYE
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-14 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="ni" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  NI
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-18 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="pension" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Pension
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="studentLoan" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Student Loan
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="postgradLoan" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Postgrad Loan
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-18 border-r border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="employerNI" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Emp NI
-                </SortableHeader>
-              </TableHead>
-              <TableHead className="text-right w-20 border-gray-300 bg-gray-50 p-0">
-                <SortableHeader 
-                  sortKey="employerPension" 
-                  currentSort={sortConfig} 
-                  onSort={handleSort}
-                  className="h-8 text-xs font-semibold text-gray-700"
-                  align="right"
-                >
-                  Emp Pension
-                </SortableHeader>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* Total row */}
-            <TableRow className="bg-gray-200/80 font-medium h-12 border-b border-gray-300">
-              <TableCell className="font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">Total</TableCell>
-              <TableCell className="px-1 py-3 border-r border-gray-300">
+              </NotionTableCell>
+              <NotionTableCell align="center">
                 <Button
                   size="sm"
-                  variant="outline"
-                  disabled
-                  className="h-6 px-2 text-xs opacity-50"
+                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                  onClick={() => onApproveEmployee(employee.id)}
+                  disabled={approvedEmployees.has(employee.id)}
+                  className="h-6 px-2 text-xs"
                 >
-                  -
+                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
                 </Button>
-              </TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBasePay)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBonus)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalCommission)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalOvertime)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalGifFlex)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalOnCall)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(summary.totalIncome)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPaye)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalNI)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPension)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalStudentLoan)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPostgradLoan)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalEmployerNI)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3">{formatCurrency(totalEmployerPension)}</TableCell>
-            </TableRow>
-            
-            {/* Employee rows */}
-            {sortedEmployees.map((employee, index) => {
-              return (
-                <TableRow key={employee.id} className="h-12 border-b border-gray-300 hover:bg-blue-50/30 transition-colors">
-                  <TableCell className="px-2 py-3 border-r border-gray-300">
-                    <div className="flex items-center gap-1">
-                      <EmployeeAvatar 
-                        name={employee.name}
-                        initials={employee.initials}
-                        size="sm"
-                      />
-                      <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-1 py-3 border-r border-gray-300">
-                    <Button
-                      size="sm"
-                      variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                      onClick={() => onApproveEmployee(employee.id)}
-                      disabled={approvedEmployees.has(employee.id)}
-                      className="h-6 px-2 text-xs"
-                    >
-                      {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-                    </Button>
-                  </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <div className="flex flex-col">
-                      <EditableCell
-                        value={employee.basePay}
-                        onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
-                        field="basePay"
-                        employeeName={employee.name}
-                        className="font-medium"
-                        showZeroAs={formatCurrency(0)}
-                      />
-                      {employee.previousMonth && (
-                        <span className="text-xs text-gray-500">
-                          {getElementChange(employee.basePay, employee.previousMonth.basePay).amount !== 0 && (
-                            <>
-                              {getElementChange(employee.basePay, employee.previousMonth.basePay).amount > 0 ? '+' : ''}
-                              {getElementChange(employee.basePay, employee.previousMonth.basePay).percentage.toFixed(1)}%
-                            </>
-                          )}
-                        </span>
+              </NotionTableCell>
+              <NotionTableCell align="right" className="font-medium">
+                <div className="flex flex-col">
+                  <EditableCell
+                    value={employee.basePay}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
+                    field="basePay"
+                    employeeName={employee.name}
+                    className="font-medium"
+                    showZeroAs={formatCurrency(0)}
+                  />
+                  {employee.previousMonth && (
+                    <span className="text-xs text-gray-500">
+                      {getElementChange(employee.basePay, employee.previousMonth.basePay).amount !== 0 && (
+                        <>
+                          {getElementChange(employee.basePay, employee.previousMonth.basePay).amount > 0 ? '+' : ''}
+                          {getElementChange(employee.basePay, employee.previousMonth.basePay).percentage.toFixed(1)}%
+                        </>
                       )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <div className="flex flex-col">
-                      <EditableCell
-                        value={employee.bonus}
-                        onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
-                        field="bonus"
-                        employeeName={employee.name}
-                      />
-                      {employee.previousMonth && employee.bonus !== employee.previousMonth.bonus && (
-                        <span className={`text-xs ${employee.bonus > employee.previousMonth.bonus ? 'text-green-600' : 'text-red-600'}`}>
-                          {employee.bonus > employee.previousMonth.bonus ? '+' : ''}{formatCurrency(Math.abs(employee.bonus - employee.previousMonth.bonus))}
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <EditableCell
-                      value={employee.commission}
-                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
-                      field="commission"
-                      employeeName={employee.name}
-                    />
-                  </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <EditableCell
-                      value={employee.overtime}
-                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
-                      field="overtime"
-                      employeeName={employee.name}
-                    />
-                  </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <EditableCell
-                      value={employee.gifFlex}
-                      onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
-                      field="gifFlex"
-                      employeeName={employee.name}
-                    />
-                  </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <div className="flex flex-col">
-                      <EditableCell
-                        value={employee.onCall}
-                        onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
-                        field="onCall"
-                        employeeName={employee.name}
-                      />
-                      {employee.previousMonth && employee.onCall !== employee.previousMonth.onCall && (
-                        <span className={`text-xs ${employee.onCall > employee.previousMonth.onCall ? 'text-green-600' : 'text-red-600'}`}>
-                          {employee.onCall > employee.previousMonth.onCall ? '+' : ''}{formatCurrency(Math.abs(employee.onCall - employee.previousMonth.onCall))}
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right font-medium text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
-                    <div className="flex flex-col">
-                      <span>{formatCurrency(employee.totalIncome)}</span>
-                      {employee.previousMonth && (
-                        <span className={`text-xs ${employee.totalIncome > employee.previousMonth.totalIncome ? 'text-green-600' : 'text-red-600'}`}>
-                          {employee.totalIncome > employee.previousMonth.totalIncome ? '+' : ''}{formatCurrency(Math.abs(employee.totalIncome - employee.previousMonth.totalIncome))}
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.paye)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.ni)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.pension)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.studentLoan)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.postgradLoan)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.employerNI)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3">{formatCurrency(employee.employerPension)}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+                    </span>
+                  )}
+                </div>
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                <div className="flex flex-col">
+                  <EditableCell
+                    value={employee.bonus}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
+                    field="bonus"
+                    employeeName={employee.name}
+                  />
+                  {employee.previousMonth && employee.bonus !== employee.previousMonth.bonus && (
+                    <span className={`text-xs ${employee.bonus > employee.previousMonth.bonus ? 'text-green-600' : 'text-red-600'}`}>
+                      {employee.bonus > employee.previousMonth.bonus ? '+' : ''}{formatCurrency(Math.abs(employee.bonus - employee.previousMonth.bonus))}
+                    </span>
+                  )}
+                </div>
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                <EditableCell
+                  value={employee.commission}
+                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
+                  field="commission"
+                  employeeName={employee.name}
+                />
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                <EditableCell
+                  value={employee.overtime}
+                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
+                  field="overtime"
+                  employeeName={employee.name}
+                />
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                <EditableCell
+                  value={employee.gifFlex}
+                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
+                  field="gifFlex"
+                  employeeName={employee.name}
+                />
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                <EditableCell
+                  value={employee.onCall}
+                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
+                  field="onCall"
+                  employeeName={employee.name}
+                />
+              </NotionTableCell>
+              <NotionTableCell align="right" className="font-medium">
+                {formatCurrency(employee.totalIncome)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.paye)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.ni)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.pension)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.studentLoan)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.postgradLoan)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.employerNI)}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {formatCurrency(employee.employerPension)}
+              </NotionTableCell>
+            </NotionTableRow>
+          );
+        })}
+      </NotionTableBody>
+    </NotionTable>
   );
 };
