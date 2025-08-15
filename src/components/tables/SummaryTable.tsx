@@ -20,7 +20,7 @@ export const SummaryTable = ({ employees, summary, viewMode, approvedEmployees, 
       <Table>
         <TableHeader>
           <TableRow className="h-9">
-            <TableHead className="w-48">Employee</TableHead>
+            <TableHead className="w-48" sticky>Employee</TableHead>
             <TableHead className="text-right w-32">Gross Up</TableHead>
             <TableHead className="text-right w-32">Deductions</TableHead>
             <TableHead className="text-right w-36">Take Home Pay</TableHead>
@@ -31,7 +31,7 @@ export const SummaryTable = ({ employees, summary, viewMode, approvedEmployees, 
         <TableBody>
           {/* Total row */}
           <TableRow className="bg-gray-50/60 font-medium h-9">
-            <TableCell className="font-semibold text-gray-900">Total</TableCell>
+            <TableCell className="font-semibold text-gray-900" sticky>Total</TableCell>
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalIncome)}
             </TableCell>
@@ -56,7 +56,7 @@ export const SummaryTable = ({ employees, summary, viewMode, approvedEmployees, 
           {/* Employee rows */}
           {filteredEmployees.map((employee) => (
             <TableRow key={employee.id} className="h-9">
-              <TableCell>
+              <TableCell sticky>
                 <div className="flex items-center gap-2">
                   <EmployeeAvatar 
                     name={employee.name}

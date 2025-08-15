@@ -68,12 +68,13 @@ TableRow.displayName = "TableRow"
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+  React.ThHTMLAttributes<HTMLTableCellElement> & { sticky?: boolean }
+>(({ className, sticky = false, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
       "h-9 px-3 text-left align-middle font-medium text-gray-600 text-xs uppercase tracking-wide bg-gray-50 border-b border-gray-200 whitespace-nowrap",
+      sticky && "sticky left-0 z-20 border-r border-gray-200",
       className
     )}
     {...props}
@@ -83,11 +84,15 @@ TableHead.displayName = "TableHead"
 
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+  React.TdHTMLAttributes<HTMLTableCellElement> & { sticky?: boolean }
+>(({ className, sticky = false, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("px-3 py-2 align-middle text-sm text-gray-900 whitespace-nowrap", className)}
+    className={cn(
+      "px-3 py-2 align-middle text-sm text-gray-900 whitespace-nowrap",
+      sticky && "sticky left-0 z-10 bg-white border-r border-gray-200",
+      className
+    )}
     {...props}
   />
 ))

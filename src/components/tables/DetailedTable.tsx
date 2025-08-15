@@ -84,7 +84,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="128px">
+          <NotionTableHead width="128px" sticky>
             <SortableHeader 
               sortKey="name" 
               currentSort={sortConfig} 
@@ -257,7 +257,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
       <NotionTableBody>
         {/* Total row */}
         <NotionTableRow className="bg-muted/40 font-medium">
-          <NotionTableCell className="font-semibold">Total</NotionTableCell>
+          <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
           <NotionTableCell align="center">
             <Button
               size="sm"
@@ -288,7 +288,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
         {sortedEmployees.map((employee, index) => {
           return (
             <NotionTableRow key={employee.id}>
-              <NotionTableCell>
+              <NotionTableCell sticky>
                 <div className="flex items-center gap-1">
                   <EmployeeAvatar 
                     name={employee.name}

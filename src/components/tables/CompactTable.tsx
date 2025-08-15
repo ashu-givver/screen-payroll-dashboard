@@ -80,7 +80,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="160px">
+          <NotionTableHead width="160px" sticky>
             <SortableHeader 
               sortKey="name" 
               currentSort={sortConfig} 
@@ -190,7 +190,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
       <NotionTableBody>
         {/* Total row */}
         <NotionTableRow className="bg-muted/40 font-medium">
-          <NotionTableCell className="font-semibold">Total</NotionTableCell>
+          <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
           <NotionTableCell align="center">
             <Button
               size="sm"
@@ -235,7 +235,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           const netPayChange = getNetPayChange(employee);
           return (
             <NotionTableRow key={employee.id}>
-              <NotionTableCell>
+              <NotionTableCell sticky>
                 <div className="flex items-center gap-2">
                   <EmployeeAvatar 
                     name={employee.name}

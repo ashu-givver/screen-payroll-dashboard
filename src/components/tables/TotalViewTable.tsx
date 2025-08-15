@@ -98,7 +98,7 @@ export const TotalViewTable = ({
         <NotionTableRow>
           <NotionTableHead className="w-8"> </NotionTableHead>
           <NotionTableHead className="w-12">Actions</NotionTableHead>
-          <NotionTableHead className="w-64">
+          <NotionTableHead className="w-64" sticky>
             <SortableHeader
               sortKey="name"
               currentSort={currentSort}
@@ -202,7 +202,7 @@ export const TotalViewTable = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </NotionTableCell>
-              <NotionTableCell>
+              <NotionTableCell sticky>
                 <div className="flex items-center gap-3">
                   <EmployeeAvatar 
                     name={employee.name}

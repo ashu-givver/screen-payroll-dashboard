@@ -27,6 +27,7 @@ interface NotionTableCellProps {
   className?: string;
   align?: 'left' | 'center' | 'right';
   width?: string;
+  sticky?: boolean;
 }
 
 interface NotionTableHeadProps {
@@ -34,6 +35,7 @@ interface NotionTableHeadProps {
   className?: string;
   align?: 'left' | 'center' | 'right';
   width?: string;
+  sticky?: boolean;
 }
 
 export const NotionTable = ({ children, className }: NotionTableProps) => {
@@ -79,7 +81,7 @@ export const NotionTableRow = ({ children, className, onClick }: NotionTableRowP
   );
 };
 
-export const NotionTableHead = ({ children, className, align = 'left', width }: NotionTableHeadProps) => {
+export const NotionTableHead = ({ children, className, align = 'left', width, sticky = false }: NotionTableHeadProps) => {
   return (
     <th 
       className={cn(
@@ -87,6 +89,7 @@ export const NotionTableHead = ({ children, className, align = 'left', width }: 
         align === 'left' && "text-left",
         align === 'center' && "text-center", 
         align === 'right' && "text-right",
+        sticky && "sticky left-0 z-10 bg-gray-50/50 border-r border-gray-200/60",
         className
       )}
       style={width ? { width } : undefined}
@@ -96,14 +99,15 @@ export const NotionTableHead = ({ children, className, align = 'left', width }: 
   );
 };
 
-export const NotionTableCell = ({ children, className, align = 'left', width }: NotionTableCellProps) => {
+export const NotionTableCell = ({ children, className, align = 'left', width, sticky = false }: NotionTableCellProps) => {
   return (
     <td 
       className={cn(
         "px-8 py-4 text-sm text-gray-900 font-medium",
         align === 'left' && "text-left",
         align === 'center' && "text-center",
-        align === 'right' && "text-right", 
+        align === 'right' && "text-right",
+        sticky && "sticky left-0 z-10 bg-background border-r border-gray-100/80",
         className
       )}
       style={width ? { width } : undefined}

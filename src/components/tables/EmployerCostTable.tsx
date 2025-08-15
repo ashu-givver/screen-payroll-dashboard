@@ -23,7 +23,7 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="192px">Employee</NotionTableHead>
+          <NotionTableHead width="192px" sticky>Employee</NotionTableHead>
           <NotionTableHead width="128px" align="right">Gross Pay</NotionTableHead>
           <NotionTableHead width="160px" align="right">National Insurance</NotionTableHead>
           <NotionTableHead width="112px" align="right">Pension</NotionTableHead>
@@ -34,7 +34,7 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
       <NotionTableBody>
         {/* Total row */}
         <NotionTableRow className="bg-muted/40 font-medium">
-          <NotionTableCell className="font-semibold">Total</NotionTableCell>
+          <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
@@ -63,7 +63,7 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
           
           return (
           <NotionTableRow key={employee.id}>
-            <NotionTableCell>
+            <NotionTableCell sticky>
               <div className="flex items-center gap-2">
                 <EmployeeAvatar 
                   name={employee.name}
