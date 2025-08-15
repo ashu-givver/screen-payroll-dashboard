@@ -38,9 +38,9 @@ interface NotionTableHeadProps {
 
 export const NotionTable = ({ children, className }: NotionTableProps) => {
   return (
-    <div className={cn("overflow-x-auto bg-background", className)}>
+    <div className={cn("overflow-x-auto bg-background rounded-lg border border-border/20", className)}>
       <div className="min-w-full">
-        <table className="w-full">
+        <table className="w-full border-collapse">
           {children}
         </table>
       </div>
@@ -50,7 +50,7 @@ export const NotionTable = ({ children, className }: NotionTableProps) => {
 
 export const NotionTableHeader = ({ children, className }: NotionTableHeaderProps) => {
   return (
-    <thead className={cn("bg-muted/30", className)}>
+    <thead className={cn("bg-muted/10 border-b border-border/20", className)}>
       {children}
     </thead>
   );
@@ -68,7 +68,7 @@ export const NotionTableRow = ({ children, className, onClick }: NotionTableRowP
   return (
     <tr 
       className={cn(
-        "border-b border-border hover:bg-muted/20 transition-colors",
+        "border-b border-border/10 hover:bg-muted/30 transition-all duration-150 ease-in-out",
         onClick && "cursor-pointer",
         className
       )}
@@ -83,7 +83,7 @@ export const NotionTableHead = ({ children, className, align = 'left', width }: 
   return (
     <th 
       className={cn(
-        "px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border",
+        "px-6 py-4 text-xs font-medium text-muted-foreground/80 uppercase tracking-wider",
         align === 'left' && "text-left",
         align === 'center' && "text-center", 
         align === 'right' && "text-right",
@@ -100,7 +100,7 @@ export const NotionTableCell = ({ children, className, align = 'left', width }: 
   return (
     <td 
       className={cn(
-        "px-4 py-3 text-sm text-foreground",
+        "px-6 py-4 text-sm text-foreground/90 whitespace-nowrap",
         align === 'left' && "text-left",
         align === 'center' && "text-center",
         align === 'right' && "text-right", 
