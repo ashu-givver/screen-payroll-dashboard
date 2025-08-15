@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 27% 15%;
 
-    --primary: 213 94% 68%;
+    --primary: 165 100% 45%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 213 16% 95%;
@@ -29,7 +29,7 @@ All colors MUST be HSL.
     --accent: 213 16% 95%;
     --accent-foreground: 215 27% 25%;
 
-    --success: 140 85% 35%;
+    --success: 165 100% 45%;
     --success-foreground: 0 0% 100%;
     
     --warning: 38 95% 65%;
@@ -40,14 +40,14 @@ All colors MUST be HSL.
 
     --border: 213 16% 91%;
     --input: 213 16% 95%;
-    --ring: 213 94% 68%;
+    --ring: 165 100% 45%;
 
     /* Payroll specific tokens */
     --payroll-header: 215 27% 25%;
     --payroll-draft: 38 95% 65%;
-    --payroll-confirm: 213 94% 68%;
+    --payroll-confirm: 165 100% 45%;
     --payroll-total: 215 27% 15%;
-    --payroll-positive: 140 85% 35%;
+    --payroll-positive: 165 100% 45%;
     --payroll-negative: 0 84% 60%;
 
     --radius: 0.5rem;
@@ -79,8 +79,8 @@ All colors MUST be HSL.
     --popover: 215 27% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 213 94% 68%;
-    --primary-foreground: 215 27% 15%;
+    --primary: 165 100% 45%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 215 16% 20%;
     --secondary-foreground: 0 0% 98%;
@@ -91,7 +91,7 @@ All colors MUST be HSL.
     --accent: 215 16% 20%;
     --accent-foreground: 0 0% 98%;
 
-    --success: 140 85% 35%;
+    --success: 165 100% 45%;
     --success-foreground: 0 0% 100%;
     
     --warning: 38 95% 65%;
@@ -102,14 +102,14 @@ All colors MUST be HSL.
 
     --border: 215 16% 25%;
     --input: 215 16% 20%;
-    --ring: 213 94% 68%;
+    --ring: 165 100% 45%;
 
     /* Dark payroll specific tokens */
     --payroll-header: 0 0% 98%;
     --payroll-draft: 38 95% 65%;
-    --payroll-confirm: 213 94% 68%;
+    --payroll-confirm: 165 100% 45%;
     --payroll-total: 0 0% 98%;
-    --payroll-positive: 140 85% 35%;
+    --payroll-positive: 165 100% 45%;
     --payroll-negative: 0 84% 60%;
   }
 }

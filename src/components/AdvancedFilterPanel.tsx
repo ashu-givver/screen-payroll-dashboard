@@ -162,45 +162,18 @@ export const AdvancedFilterPanel = ({
               </Button>
             </CollapsibleTrigger>
             
-            {/* Save View - Prominent */}
+            {/* Removed Save Current View CTA as requested */}
             <div className="flex items-center gap-2">
-              <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="flex items-center gap-2"
-                    disabled={filters.length === 0}
-                  >
-                    <Bookmark className="h-4 w-4" />
-                    Save Current View
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Save Filter View</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="viewName">View Name</Label>
-                      <Input
-                        id="viewName"
-                        value={viewName}
-                        onChange={(e) => setViewName(e.target.value)}
-                        placeholder="Enter view name..."
-                      />
-                    </div>
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
-                        Cancel
-                      </Button>
-                      <Button onClick={handleSaveView} disabled={!viewName.trim()}>
-                        Save
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              {filters.length > 0 && (
+                <Button
+                  onClick={clearAllFilters}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                >
+                  Clear All Filters
+                </Button>
+              )}
             </div>
           </div>
 

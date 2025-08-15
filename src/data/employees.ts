@@ -313,7 +313,7 @@ export const payrollPeriod: PayrollPeriod = {
   endDate: '31 Jul 2025',
   status: 'Draft',
   employeeCount: 7,
-  companyName: 'NEW WAVE BIOTECH LTD'
+  companyName: 'Company Name'
 };
 
 export const payrollSummary: PayrollSummary = {
