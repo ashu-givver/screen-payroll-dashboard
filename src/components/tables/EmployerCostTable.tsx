@@ -29,7 +29,6 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
             <TableHead className="text-right w-40">National Insurance</TableHead>
             <TableHead className="text-right w-28">Pension</TableHead>
             <TableHead className="text-right w-40">Total Employer Cost</TableHead>
-            <TableHead className="w-20">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -48,7 +47,6 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(summary.totalEmployerCost)}
             </TableCell>
-            <TableCell></TableCell>
           </TableRow>
           
           {/* Employee rows */}
@@ -75,17 +73,6 @@ export const EmployerCostTable = ({ employees, summary, viewMode, approvedEmploy
               </TableCell>
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.employerCost)}
-              </TableCell>
-              <TableCell>
-                <Button
-                  size="sm"
-                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                  onClick={() => onApproveEmployee(employee.id)}
-                  disabled={approvedEmployees.has(employee.id)}
-                  className="h-6 px-2 text-xs"
-                >
-                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-                </Button>
               </TableCell>
             </TableRow>
           ))}

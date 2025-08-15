@@ -36,7 +36,6 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
             <TableHead className="text-right w-36">Postgraduate Loan</TableHead>
             <TableHead className="text-right w-36">Total Deductions</TableHead>
             <TableHead className="text-right w-28">Net Pay</TableHead>
-            <TableHead className="w-20">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,7 +72,6 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
                 <span className="text-xs text-red-600">-144.08</span>
               </div>
             </TableCell>
-            <TableCell></TableCell>
           </TableRow>
           
           {/* Employee rows */}
@@ -126,17 +124,6 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
                     </span>
                   )}
                 </div>
-              </TableCell>
-              <TableCell>
-                <Button
-                  size="sm"
-                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                  onClick={() => onApproveEmployee(employee.id)}
-                  disabled={approvedEmployees.has(employee.id)}
-                  className="h-6 px-2 text-xs"
-                >
-                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-                </Button>
               </TableCell>
             </TableRow>
           ))}

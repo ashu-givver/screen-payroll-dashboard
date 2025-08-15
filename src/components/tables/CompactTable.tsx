@@ -93,6 +93,11 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   Employee
                 </SortableHeader>
               </TableHead>
+              <TableHead className="w-20 border-r border-gray-300 bg-gray-50 p-0">
+                <div className="h-8 flex items-center justify-center px-2 text-xs font-semibold text-gray-700">
+                  Action
+                </div>
+              </TableHead>
               <TableHead className="text-right w-24 border-r border-gray-300 bg-gray-50 p-0">
                 <SortableHeader 
                   sortKey="basePay" 
@@ -181,14 +186,9 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   Net Pay
                 </SortableHeader>
               </TableHead>
-              <TableHead className="text-right w-28 border-r border-gray-300 bg-gray-50 p-0">
+              <TableHead className="text-right w-28 border-gray-300 bg-gray-50 p-0">
                 <div className="h-8 flex items-center justify-end px-2 text-xs font-semibold text-gray-700">
                   Net Pay Change
-                </div>
-              </TableHead>
-              <TableHead className="w-20 border-gray-300 bg-gray-50 p-0">
-                <div className="h-8 flex items-center justify-center px-2 text-xs font-semibold text-gray-700">
-                  Action
                 </div>
               </TableHead>
             </TableRow>
@@ -197,6 +197,16 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
             {/* Total row */}
             <TableRow className="bg-gray-200/80 font-medium h-12 border-b border-gray-300">
               <TableCell className="font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">Total</TableCell>
+              <TableCell className="px-2 py-3 border-r border-gray-300">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled
+                  className="h-6 px-2 text-xs opacity-50"
+                >
+                  -
+                </Button>
+              </TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(totalBasePay)}
               </TableCell>
@@ -221,10 +231,9 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                 {formatCurrency(summary.totalTakeHomePay)}
               </TableCell>
-              <TableCell className="text-right text-xs px-2 py-3 border-r border-gray-300">
+              <TableCell className="text-right text-xs px-2 py-3">
                 <span className="text-green-600 font-medium">+2.3%</span>
               </TableCell>
-              <TableCell className="px-2 py-3 border-r border-gray-300"></TableCell>
             </TableRow>
             
             {/* Employee rows */}
@@ -241,6 +250,17 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                       />
                       <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
                     </div>
+                  </TableCell>
+                  <TableCell className="px-2 py-3 border-r border-gray-300">
+                    <Button
+                      size="sm"
+                      variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                      onClick={() => onApproveEmployee(employee.id)}
+                      disabled={approvedEmployees.has(employee.id)}
+                      className="h-6 px-2 text-xs"
+                    >
+                      {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                    </Button>
                   </TableCell>
                   <TableCell className="text-right font-medium text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     <EditableCell
@@ -297,28 +317,12 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   <TableCell className="text-right font-medium text-gray-900 text-xs px-2 py-3 border-r border-gray-300">
                     {formatCurrency(employee.takeHomePay)}
                   </TableCell>
-                  <TableCell className="text-right text-xs px-2 py-3 border-r border-gray-300">
-                    {netPayChange.amount !== 0 && (
-                      <div className="flex flex-col">
-                        <span className={`${netPayChange.amount > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
-                          {netPayChange.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(netPayChange.amount))}
-                        </span>
-                        <span className={`${netPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} text-xs`}>
-                          {netPayChange.percentage > 0 ? '+' : ''}{netPayChange.percentage.toFixed(1)}%
-                        </span>
-                      </div>
+                  <TableCell className="text-right text-xs px-2 py-3">
+                    {netPayChange.percentage !== 0 && (
+                      <span className={`${netPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                        {netPayChange.percentage > 0 ? '+' : ''}{netPayChange.percentage.toFixed(1)}%
+                      </span>
                     )}
-                  </TableCell>
-                  <TableCell className="px-2 py-3 border-r border-gray-300">
-                    <Button
-                      size="sm"
-                      variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                      onClick={() => onApproveEmployee(employee.id)}
-                      disabled={approvedEmployees.has(employee.id)}
-                      className="h-6 px-2 text-xs"
-                    >
-                      {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-                    </Button>
                   </TableCell>
                 </TableRow>
               );

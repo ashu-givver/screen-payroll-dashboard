@@ -97,6 +97,11 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                   Employee
                 </SortableHeader>
               </TableHead>
+              <TableHead className="w-16 border-r border-gray-300 bg-gray-50 p-0">
+                <div className="h-8 flex items-center justify-center px-2 text-xs font-semibold text-gray-700">
+                  Action
+                </div>
+              </TableHead>
               <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
                 <SortableHeader 
                   sortKey="basePay" 
@@ -240,7 +245,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                   Emp NI
                 </SortableHeader>
               </TableHead>
-              <TableHead className="text-right w-20 border-r border-gray-300 bg-gray-50 p-0">
+              <TableHead className="text-right w-20 border-gray-300 bg-gray-50 p-0">
                 <SortableHeader 
                   sortKey="employerPension" 
                   currentSort={sortConfig} 
@@ -251,17 +256,22 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                   Emp Pension
                 </SortableHeader>
               </TableHead>
-              <TableHead className="w-16 border-gray-300 bg-gray-50 p-0">
-                <div className="h-8 flex items-center justify-center px-2 text-xs font-semibold text-gray-700">
-                  Action
-                </div>
-              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {/* Total row */}
             <TableRow className="bg-gray-200/80 font-medium h-12 border-b border-gray-300">
               <TableCell className="font-semibold text-gray-900 text-xs px-2 py-3 border-r border-gray-300">Total</TableCell>
+              <TableCell className="px-1 py-3 border-r border-gray-300">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled
+                  className="h-6 px-2 text-xs opacity-50"
+                >
+                  -
+                </Button>
+              </TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBasePay)}</TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalBonus)}</TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalCommission)}</TableCell>
@@ -275,8 +285,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalStudentLoan)}</TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalPostgradLoan)}</TableCell>
               <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalEmployerNI)}</TableCell>
-              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(totalEmployerPension)}</TableCell>
-              <TableCell className="px-1 py-3 border-r border-gray-300"></TableCell>
+              <TableCell className="text-right font-semibold text-gray-900 text-xs px-1 py-3">{formatCurrency(totalEmployerPension)}</TableCell>
             </TableRow>
             
             {/* Employee rows */}
@@ -292,6 +301,17 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                       />
                       <span className="font-medium text-gray-900 text-xs truncate">{employee.name}</span>
                     </div>
+                  </TableCell>
+                  <TableCell className="px-1 py-3 border-r border-gray-300">
+                    <Button
+                      size="sm"
+                      variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                      onClick={() => onApproveEmployee(employee.id)}
+                      disabled={approvedEmployees.has(employee.id)}
+                      className="h-6 px-2 text-xs"
+                    >
+                      {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                    </Button>
                   </TableCell>
                   <TableCell className="text-right font-medium text-gray-900 text-xs px-1 py-3 border-r border-gray-300">
                     <div className="flex flex-col">
@@ -385,18 +405,7 @@ export const DetailedTable = ({ employees, summary, approvedEmployees, onApprove
                   <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.studentLoan)}</TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.postgradLoan)}</TableCell>
                   <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.employerNI)}</TableCell>
-                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3 border-r border-gray-300">{formatCurrency(employee.employerPension)}</TableCell>
-                  <TableCell className="px-1 py-3 border-r border-gray-300">
-                    <Button
-                      size="sm"
-                      variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                      onClick={() => onApproveEmployee(employee.id)}
-                      disabled={approvedEmployees.has(employee.id)}
-                      className="h-6 px-2 text-xs"
-                    >
-                      {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-                    </Button>
-                  </TableCell>
+                  <TableCell className="text-right text-gray-900 text-xs px-1 py-3">{formatCurrency(employee.employerPension)}</TableCell>
                 </TableRow>
               );
             })}
