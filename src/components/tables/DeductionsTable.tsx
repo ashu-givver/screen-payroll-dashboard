@@ -35,7 +35,7 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
             <TableHead className="text-right w-32">Student Loan</TableHead>
             <TableHead className="text-right w-36">Postgraduate Loan</TableHead>
             <TableHead className="text-right w-36">Total Deductions</TableHead>
-            <TableHead className="text-right w-28">Net Pay</TableHead>
+            <TableHead className="text-right w-40">Total Deductions Change</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -60,22 +60,24 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
             <TableCell className="text-right font-semibold text-gray-900">
               {formatCurrency(totalPostgradLoan)}
             </TableCell>
-            <TableCell className="text-right font-semibold">
-              <div className="flex flex-col items-end">
-                <span className="text-gray-900">{formatCurrency(summary.totalDeductions)}</span>
-                <span className="text-xs text-green-600">+144.08</span>
-              </div>
+            <TableCell className="text-right font-semibold text-gray-900">
+              {formatCurrency(summary.totalDeductions)}
             </TableCell>
-            <TableCell className="text-right font-semibold">
-              <div className="flex flex-col items-end">
-                <span className="text-gray-900">{formatCurrency(summary.totalTakeHomePay)}</span>
-                <span className="text-xs text-red-600">-144.08</span>
-              </div>
+            <TableCell className="text-right font-semibold text-green-600">
+              +6.2%
             </TableCell>
           </TableRow>
           
           {/* Employee rows */}
-          {filteredEmployees.map((employee) => (
+          {filteredEmployees.map((employee) => {
+            // Calculate total deductions change percentage
+            const currentDeductions = employee.deductions;
+            const previousDeductions = employee.previousMonth?.deductions || currentDeductions;
+            const deductionsChangePercentage = previousDeductions > 0 
+              ? ((currentDeductions - previousDeductions) / previousDeductions) * 100 
+              : 0;
+            
+            return (
             <TableRow key={employee.id} className="h-9">
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -105,28 +107,19 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
               <TableCell className="text-right font-medium text-gray-900">
                 {formatCurrency(employee.postgradLoan)}
               </TableCell>
-              <TableCell className="text-right">
-                <div className="flex flex-col items-end">
-                  <span className="font-medium text-gray-900">{formatCurrency(employee.deductions)}</span>
-                  {employee.deductionVariance && (
-                    <span className={`text-xs ${employee.deductionVariance > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {employee.deductionVariance > 0 ? '+' : ''}{employee.deductionVariance.toFixed(2)}
-                    </span>
-                  )}
-                </div>
+              <TableCell className="text-right font-medium text-gray-900">
+                {formatCurrency(employee.deductions)}
               </TableCell>
               <TableCell className="text-right">
-                <div className="flex flex-col items-end">
-                  <span className="font-medium text-gray-900">{formatCurrency(employee.takeHomePay)}</span>
-                  {employee.netPaymentVariance && (
-                    <span className={`text-xs ${employee.netPaymentVariance > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {employee.netPaymentVariance > 0 ? '+' : ''}{employee.netPaymentVariance.toFixed(2)}
-                    </span>
-                  )}
-                </div>
+                {deductionsChangePercentage !== 0 && (
+                  <span className={`font-medium ${deductionsChangePercentage > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    {deductionsChangePercentage > 0 ? '+' : ''}{deductionsChangePercentage.toFixed(1)}%
+                  </span>
+                )}
               </TableCell>
             </TableRow>
-          ))}
+          );
+          })}
         </TableBody>
       </Table>
     </div>
