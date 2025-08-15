@@ -16,7 +16,7 @@ interface StaticTopSectionProps {
   activeCard?: string;
   approvedEmployees: Set<string>;
   currentView: 'gross-pay' | 'deductions' | 'employer-cost' | 'total';
-  viewMode: 'compact' | 'detailed';
+  viewMode: 'compact' | 'detailed' | 'simple';
 }
 
 export const StaticTopSection = ({ 
@@ -142,13 +142,22 @@ export const StaticTopSection = ({
     const isActive = activeCard === card.id;
     const isCurrentView = isMainCard && currentView === card.id;
     
+    // In Simple View, only Gross Pay card is clickable
+    const isCardClickable = viewMode === 'simple' ? (card.id === 'gross-pay') : isClickable;
+    const isDisabled = viewMode === 'simple' && card.id !== 'gross-pay' && isMainCard;
+    
     return (
       <Card 
         key={card.id}
-        className={`transition-all duration-200 cursor-pointer hover:shadow-md ${
-          isActive || isCurrentView ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-gray-50'
-        } ${!isClickable ? 'cursor-default' : ''}`}
-        onClick={() => isClickable && onCardClick(card.id)}
+        className={`transition-all duration-200 ${
+          isCardClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
+        } ${
+          isActive || isCurrentView ? 'ring-2 ring-primary bg-primary/5' : 
+          isCardClickable ? 'hover:bg-gray-50' : ''
+        } ${
+          isDisabled ? 'opacity-50' : ''
+        }`}
+        onClick={() => isCardClickable && onCardClick(card.id)}
       >
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
@@ -204,7 +213,7 @@ export const StaticTopSection = ({
             }, true, true)}
           </div>
         ) : (
-          // Compact View: Show original 3 cards
+          // Compact and Simple View: Show original 3 cards
           <div className="grid grid-cols-3 gap-4 mb-4">
             {mainCards.map(card => renderCard(card, true, true))}
           </div>

@@ -221,6 +221,11 @@ export const PayrollDashboard = () => {
   };
 
   const handleCardClick = (cardId: string) => {
+    // In Simple View, only allow Gross Pay interaction
+    if (viewMode === 'simple' && cardId !== 'gross-pay') {
+      return; // Disable interaction with other cards in Simple View
+    }
+
     // Handle main cards that switch table views
     if (['gross-pay', 'deductions', 'employer-cost', 'total'].includes(cardId)) {
       setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost' | 'total');
@@ -324,19 +329,17 @@ export const PayrollDashboard = () => {
           onAdvancedFilters={handleAdvancedFilters}
         />
         
-        {viewMode !== 'simple' && (
-          <StaticTopSection
-            summary={payrollSummary}
-            employees={employees}
-            filteredEmployeeCount={filteredEmployees.length}
-            totalEmployeeCount={employees.length}
-            onCardClick={handleCardClick}
-            activeCard={activeCard}
-            approvedEmployees={approvedEmployees}
-            currentView={currentView}
-            viewMode={viewMode}
-          />
-        )}
+        <StaticTopSection
+          summary={payrollSummary}
+          employees={employees}
+          filteredEmployeeCount={filteredEmployees.length}
+          totalEmployeeCount={employees.length}
+          onCardClick={handleCardClick}
+          activeCard={activeCard}
+          approvedEmployees={approvedEmployees}
+          currentView={currentView}
+          viewMode={viewMode}
+        />
         
 
         {showAdvancedFilters && (
