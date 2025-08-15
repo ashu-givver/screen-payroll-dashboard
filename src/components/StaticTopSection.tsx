@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronDown, ChevronUp, Users, TrendingUp, TrendingDown, 
          Shield, ShieldOff, PoundSterling, Minus, Calculator, 
-         Banknote, TrendingUpDown } from 'lucide-react';
+         Banknote, TrendingUpDown, Clock } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 import { PayrollSummary, Employee } from '@/types/payroll';
 
@@ -14,6 +14,7 @@ interface StaticTopSectionProps {
   totalEmployeeCount: number;
   onCardClick: (cardId: string) => void;
   activeCard?: string;
+  approvedEmployees: Set<string>;
 }
 
 export const StaticTopSection = ({ 
@@ -22,7 +23,8 @@ export const StaticTopSection = ({
   filteredEmployeeCount, 
   totalEmployeeCount,
   onCardClick,
-  activeCard 
+  activeCard,
+  approvedEmployees
 }: StaticTopSectionProps) => {
   const [showMoreInsights, setShowMoreInsights] = useState(false);
 
@@ -32,6 +34,7 @@ export const StaticTopSection = ({
   const pensionEnrolledCount = employees.filter(emp => ['5', '6'].includes(emp.id)).length;
   const pensionOptedOutCount = 0; // Based on mock data
   const salaryChangesCount = employees.filter(emp => ['1', '3', '5', '7'].includes(emp.id)).length;
+  const pendingApprovalCount = employees.length - approvedEmployees.size;
   
   // Calculate net differences (simplified - would be based on previous month data)
   const netDifferences = 1250.50; // Mock calculation
@@ -119,6 +122,14 @@ export const StaticTopSection = ({
       change: '+5.2%',
       icon: TrendingUpDown,
       type: 'positive' as const
+    },
+    {
+      id: 'pending-approval',
+      title: 'Pending Approval',
+      value: pendingApprovalCount.toString(),
+      change: pendingApprovalCount > 0 ? `-${pendingApprovalCount}` : '0',
+      icon: Clock,
+      type: pendingApprovalCount > 0 ? 'negative' as const : 'neutral' as const
     }
   ];
 
