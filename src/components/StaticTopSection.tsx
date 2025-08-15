@@ -15,7 +15,8 @@ interface StaticTopSectionProps {
   onCardClick: (cardId: string) => void;
   activeCard?: string;
   approvedEmployees: Set<string>;
-  currentView: 'gross-pay' | 'deductions' | 'employer-cost';
+  currentView: 'gross-pay' | 'deductions' | 'employer-cost' | 'total';
+  viewMode: 'compact' | 'detailed';
 }
 
 export const StaticTopSection = ({ 
@@ -26,7 +27,8 @@ export const StaticTopSection = ({
   onCardClick,
   activeCard,
   approvedEmployees,
-  currentView
+  currentView,
+  viewMode
 }: StaticTopSectionProps) => {
   const [showMoreInsights, setShowMoreInsights] = useState(false);
 
@@ -187,9 +189,26 @@ export const StaticTopSection = ({
     <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
       <div className="px-6 py-4">
         {/* Main Cards Row */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          {mainCards.map(card => renderCard(card, true, true))}
-        </div>
+        {viewMode === 'detailed' ? (
+          // Detailed View: Show 4 cards including Total View
+          <div className="grid grid-cols-4 gap-4 mb-4">
+            {mainCards.map(card => renderCard(card, true, true))}
+            {/* Add Total View card */}
+            {renderCard({
+              id: 'total',
+              title: 'Total View',
+              value: 'All Details',
+              change: '',
+              icon: TrendingUpDown,
+              type: 'neutral' as const
+            }, true, true)}
+          </div>
+        ) : (
+          // Compact View: Show original 3 cards
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            {mainCards.map(card => renderCard(card, true, true))}
+          </div>
+        )}
 
         {/* More Insights Button */}
         <div className="flex justify-center">

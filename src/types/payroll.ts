@@ -90,4 +90,4 @@ export interface PayrollSummary {
   employeeCount: number;
 }
 
-export type TabType = 'summary' | 'income' | 'deductions' | 'employer-cost';
+export type TabType = 'summary' | 'income' | 'deductions' | 'employer-cost' | 'total';

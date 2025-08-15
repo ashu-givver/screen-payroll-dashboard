@@ -9,6 +9,7 @@ import { CompactTable } from '@/components/tables/CompactTable';
 import { DetailedTable } from '@/components/tables/DetailedTable';
 import { DeductionsTable } from '@/components/tables/DeductionsTable';
 import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
+import { TotalViewTable } from '@/components/tables/TotalViewTable';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -22,7 +23,7 @@ export const PayrollDashboard = () => {
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
   const [employeeData, setEmployeeData] = useState(employees);
   const [activeCard, setActiveCard] = useState<string>();
-  const [currentView, setCurrentView] = useState<'gross-pay' | 'deductions' | 'employer-cost'>('gross-pay');
+  const [currentView, setCurrentView] = useState<'gross-pay' | 'deductions' | 'employer-cost' | 'total'>('gross-pay');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const { toast } = useToast();
@@ -221,8 +222,8 @@ export const PayrollDashboard = () => {
 
   const handleCardClick = (cardId: string) => {
     // Handle main cards that switch table views
-    if (['gross-pay', 'deductions', 'employer-cost'].includes(cardId)) {
-      setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost');
+    if (['gross-pay', 'deductions', 'employer-cost', 'total'].includes(cardId)) {
+      setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost' | 'total');
       setActiveCard(undefined); // Clear filter when switching views
       return;
     }
@@ -276,6 +277,8 @@ export const PayrollDashboard = () => {
         return <DeductionsTable {...commonProps} />;
       case 'employer-cost':
         return <EmployerCostTable {...commonProps} />;
+      case 'total':
+        return <TotalViewTable {...incomeProps} />;
       case 'gross-pay':
       default:
         // For the gross pay view, we render different tables based on view mode
@@ -293,6 +296,8 @@ export const PayrollDashboard = () => {
         return 'Deductions Breakdown';
       case 'employer-cost':
         return 'Employer Cost Breakdown';
+      case 'total':
+        return 'Total View - All Payroll Details';
       case 'gross-pay':
       default:
         return 'Income Details';
@@ -323,6 +328,7 @@ export const PayrollDashboard = () => {
           activeCard={activeCard}
           approvedEmployees={approvedEmployees}
           currentView={currentView}
+          viewMode={viewMode}
         />
         
 
