@@ -1,4 +1,7 @@
-export const formatCurrency = (amount: number, currency = 'GBP'): string => {
+export const formatCurrency = (amount: number | null | undefined, currency = 'GBP'): string => {
+  // Ensure we always display a value, defaulting to 0 for null/undefined
+  const value = amount ?? 0;
+  
   const formatter = new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency,
@@ -6,5 +9,5 @@ export const formatCurrency = (amount: number, currency = 'GBP'): string => {
     maximumFractionDigits: 2,
   });
   
-  return formatter.format(amount);
+  return formatter.format(value);
 };

@@ -50,7 +50,7 @@ export const NotionTable = ({ children, className }: NotionTableProps) => {
 
 export const NotionTableHeader = ({ children, className }: NotionTableHeaderProps) => {
   return (
-    <thead className={cn("bg-muted/10 border-b border-border/20", className)}>
+    <thead className={cn("bg-gray-50/50 border-b border-gray-200/60", className)}>
       {children}
     </thead>
   );
@@ -68,7 +68,7 @@ export const NotionTableRow = ({ children, className, onClick }: NotionTableRowP
   return (
     <tr 
       className={cn(
-        "border-b border-border/10 hover:bg-muted/30 transition-all duration-150 ease-in-out",
+        "border-b border-gray-100/80 hover:bg-gray-50/50 transition-colors duration-150",
         onClick && "cursor-pointer",
         className
       )}
@@ -83,7 +83,7 @@ export const NotionTableHead = ({ children, className, align = 'left', width }: 
   return (
     <th 
       className={cn(
-        "px-6 py-4 text-xs font-medium text-muted-foreground/80 uppercase tracking-wider",
+        "px-8 py-5 text-sm font-semibold text-gray-700 tracking-normal",
         align === 'left' && "text-left",
         align === 'center' && "text-center", 
         align === 'right' && "text-right",
@@ -100,7 +100,7 @@ export const NotionTableCell = ({ children, className, align = 'left', width }: 
   return (
     <td 
       className={cn(
-        "px-6 py-4 text-sm text-foreground/90 whitespace-nowrap",
+        "px-8 py-4 text-sm text-gray-900 font-medium",
         align === 'left' && "text-left",
         align === 'center' && "text-center",
         align === 'right' && "text-right", 
