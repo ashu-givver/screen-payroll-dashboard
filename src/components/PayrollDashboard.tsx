@@ -13,7 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
 export const PayrollDashboard = () => {
-  const [currentView, setCurrentView] = useState<'summary' | 'income'>('summary');
   const [searchValue, setSearchValue] = useState('');
   const [showChangesOnly, setShowChangesOnly] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
@@ -246,40 +245,6 @@ export const PayrollDashboard = () => {
     }
   };
 
-  const handleProceedToIncome = () => {
-    setCurrentView('income');
-  };
-
-  if (currentView === 'summary') {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="max-w-7xl mx-auto">
-          <PayrollHeader period={payrollPeriod} onConfirm={handleConfirm} />
-          
-          <PayrollSummaryCards
-            summary={payrollSummary}
-            filteredEmployeeCount={filteredEmployees.length}
-            totalEmployeeCount={employees.length}
-            onCardClick={handleCardClick}
-            activeCard={activeCard}
-          />
-
-          <div className="px-6 py-6 bg-white">
-            <div className="flex justify-center">
-              <Button 
-                onClick={handleProceedToIncome}
-                size="lg"
-                className="px-8 py-3"
-              >
-                OK - Review Income Details
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto">
@@ -287,13 +252,6 @@ export const PayrollDashboard = () => {
         
         <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Button 
-              variant="outline"
-              onClick={() => setCurrentView('summary')}
-              size="sm"
-            >
-              ← Back to Summary
-            </Button>
             <h2 className="text-lg font-medium">Income Details</h2>
           </div>
           <div className="flex items-center gap-3">
@@ -320,6 +278,11 @@ export const PayrollDashboard = () => {
             department: selectedDepartment,
             employmentType: 'all'
           }}
+          summary={payrollSummary}
+          filteredEmployeeCount={filteredEmployees.length}
+          totalEmployeeCount={employees.length}
+          onCardClick={handleCardClick}
+          activeCard={activeCard}
         />
 
         <div className="bg-white">
