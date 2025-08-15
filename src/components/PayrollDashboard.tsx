@@ -2,13 +2,13 @@ import { useState, useMemo } from 'react';
 import { TabType, AdvancedFilter, SavedFilterView } from '@/types/payroll';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
-import { PayrollTabs } from '@/components/PayrollTabs';
+import { StaticTopSection } from '@/components/StaticTopSection';
 import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
-import { PayrollSummaryCards } from '@/components/PayrollSummaryCards';
 import { ViewModeToggle } from '@/components/ViewModeToggle';
-import { PayrollInsights } from '@/components/PayrollInsights';
 import { CompactTable } from '@/components/tables/CompactTable';
 import { DetailedTable } from '@/components/tables/DetailedTable';
+import { DeductionsTable } from '@/components/tables/DeductionsTable';
+import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -22,6 +22,7 @@ export const PayrollDashboard = () => {
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
   const [employeeData, setEmployeeData] = useState(employees);
   const [activeCard, setActiveCard] = useState<string>();
+  const [currentView, setCurrentView] = useState<'gross-pay' | 'deductions' | 'employer-cost'>('gross-pay');
   const { toast } = useToast();
 
   const filteredEmployees = useMemo(() => {
@@ -215,6 +216,14 @@ export const PayrollDashboard = () => {
   };
 
   const handleCardClick = (cardId: string) => {
+    // Handle main cards that switch table views
+    if (['gross-pay', 'deductions', 'employer-cost'].includes(cardId)) {
+      setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost');
+      setActiveCard(undefined); // Clear filter when switching views
+      return;
+    }
+
+    // Handle filter cards
     if (activeCard === cardId) {
       // Clicking the same card deactivates it
       setActiveCard(undefined);
@@ -228,20 +237,45 @@ export const PayrollDashboard = () => {
     }
   };
 
-  const renderTabContent = () => {
+  const renderCurrentTable = () => {
     const commonProps = {
       employees: filteredEmployees,
       summary: payrollSummary,
       approvedEmployees,
       onApproveEmployee: handleApproveEmployee,
+      viewMode,
+    };
+
+    const incomeProps = {
+      ...commonProps,
       onEmployeeUpdate: handleEmployeeUpdate,
     };
 
-    // For the new view modes, we render different tables regardless of tab
-    if (viewMode === 'compact') {
-      return <CompactTable {...commonProps} />;
-    } else {
-      return <DetailedTable {...commonProps} />;
+    switch (currentView) {
+      case 'deductions':
+        return <DeductionsTable {...commonProps} />;
+      case 'employer-cost':
+        return <EmployerCostTable {...commonProps} />;
+      case 'gross-pay':
+      default:
+        // For the gross pay view, we render different tables based on view mode
+        if (viewMode === 'compact') {
+          return <CompactTable {...incomeProps} />;
+        } else {
+          return <DetailedTable {...incomeProps} />;
+        }
+    }
+  };
+
+  const getViewTitle = () => {
+    switch (currentView) {
+      case 'deductions':
+        return 'Deductions Breakdown';
+      case 'employer-cost':
+        return 'Employer Cost Breakdown';
+      case 'gross-pay':
+      default:
+        return 'Income Details';
     }
   };
 
@@ -250,12 +284,23 @@ export const PayrollDashboard = () => {
       <div className="max-w-7xl mx-auto">
         <PayrollHeader period={payrollPeriod} onConfirm={handleConfirm} />
         
+        <StaticTopSection
+          summary={payrollSummary}
+          employees={employees}
+          filteredEmployeeCount={filteredEmployees.length}
+          totalEmployeeCount={employees.length}
+          onCardClick={handleCardClick}
+          activeCard={activeCard}
+        />
+        
         <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-medium">Income Details</h2>
+            <h2 className="text-lg font-medium">{getViewTitle()}</h2>
           </div>
           <div className="flex items-center gap-3">
-            <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            {currentView === 'gross-pay' && (
+              <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            )}
             <Button 
               onClick={handleApproveAll}
               disabled={filteredEmployees.length === 0}
@@ -286,7 +331,7 @@ export const PayrollDashboard = () => {
         />
 
         <div className="bg-white">
-          {renderTabContent()}
+          {renderCurrentTable()}
         </div>
       </div>
     </div>
