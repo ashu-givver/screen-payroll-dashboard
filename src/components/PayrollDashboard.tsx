@@ -323,11 +323,6 @@ export const PayrollDashboard = () => {
             department: selectedDepartment,
             employmentType: 'all'
           }}
-          summary={payrollSummary}
-          filteredEmployeeCount={filteredEmployees.length}
-          totalEmployeeCount={employees.length}
-          onCardClick={handleCardClick}
-          activeCard={activeCard}
         />
 
         <div className="bg-white">

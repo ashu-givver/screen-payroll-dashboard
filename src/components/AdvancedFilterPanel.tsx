@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ChevronDown, Plus, X, Save, FolderOpen, Bookmark, Zap } from 'lucide-react';
 import { AdvancedFilter, SavedFilterView, PayrollSummary } from '@/types/payroll';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { PayrollSummaryCards } from '@/components/PayrollSummaryCards';
+
 
 interface AdvancedFilterPanelProps {
   filters: AdvancedFilter[];
@@ -21,11 +21,6 @@ interface AdvancedFilterPanelProps {
     department: string;
     employmentType: string;
   };
-  summary: PayrollSummary;
-  filteredEmployeeCount: number;
-  totalEmployeeCount: number;
-  onCardClick: (cardId: string) => void;
-  activeCard?: string;
 }
 
 const PAY_ELEMENTS_GROUPED = {
@@ -69,12 +64,7 @@ export const AdvancedFilterPanel = ({
   savedViews, 
   onSaveView, 
   onLoadView, 
-  currentBasicFilters,
-  summary,
-  filteredEmployeeCount,
-  totalEmployeeCount,
-  onCardClick,
-  activeCard
+  currentBasicFilters
 }: AdvancedFilterPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
@@ -132,15 +122,6 @@ export const AdvancedFilterPanel = ({
 
   return (
     <div className="bg-white border-b border-border space-y-3">
-      {/* Summary Cards as Filters */}
-      <PayrollSummaryCards
-        summary={summary}
-        filteredEmployeeCount={filteredEmployeeCount}
-        totalEmployeeCount={totalEmployeeCount}
-        onCardClick={onCardClick}
-        activeCard={activeCard}
-      />
-
       {/* Active Filters Pills */}
       {filters.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 px-6">
