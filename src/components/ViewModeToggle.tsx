@@ -2,22 +2,13 @@ import { Button } from '@/components/ui/button';
 import { List, Grid } from 'lucide-react';
 
 interface ViewModeToggleProps {
-  viewMode: 'compact' | 'detailed' | 'simple';
-  onViewModeChange: (mode: 'compact' | 'detailed' | 'simple') => void;
+  viewMode: 'compact' | 'detailed';
+  onViewModeChange: (mode: 'compact' | 'detailed') => void;
 }
 
 export const ViewModeToggle = ({ viewMode, onViewModeChange }: ViewModeToggleProps) => {
   return (
     <div className="flex items-center gap-1 bg-muted rounded-lg p-1 border">
-      <Button
-        variant={viewMode === 'simple' ? 'default' : 'ghost'}
-        size="default"
-        onClick={() => onViewModeChange('simple')}
-        className="h-9 px-3 text-sm font-medium"
-      >
-        <List className="h-4 w-4 mr-1" />
-        Simple
-      </Button>
       <Button
         variant={viewMode === 'compact' ? 'default' : 'ghost'}
         size="default"

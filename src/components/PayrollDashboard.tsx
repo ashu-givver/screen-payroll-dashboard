@@ -17,7 +17,18 @@ export const PayrollDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showChangesOnly, setShowChangesOnly] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
-  const [viewMode, setViewMode] = useState<'compact' | 'detailed' | 'simple'>('simple');
+  const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
+
+  // Handle view mode changes
+  const handleViewModeChange = (mode: 'compact' | 'detailed') => {
+    setViewMode(mode);
+    // When switching to detailed view, default to 'total' (All Details)
+    if (mode === 'detailed') {
+      setCurrentView('total');
+    } else {
+      setCurrentView('gross-pay');
+    }
+  };
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
@@ -221,11 +232,6 @@ export const PayrollDashboard = () => {
   };
 
   const handleCardClick = (cardId: string) => {
-    // In Simple View, only allow Gross Pay interaction
-    if (viewMode === 'simple' && cardId !== 'gross-pay') {
-      return; // Disable interaction with other cards in Simple View
-    }
-
     // Handle main cards that switch table views
     if (['gross-pay', 'deductions', 'employer-cost', 'total'].includes(cardId)) {
       setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost' | 'total');
@@ -277,11 +283,6 @@ export const PayrollDashboard = () => {
       onEmployeeUpdate: handleEmployeeUpdate,
     };
 
-    // In simple view, always show gross pay table
-    if (viewMode === 'simple') {
-      return <CompactTable {...incomeProps} />;
-    }
-
     switch (currentView) {
       case 'deductions':
         return <DeductionsTable {...commonProps} />;
@@ -323,7 +324,7 @@ export const PayrollDashboard = () => {
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
           viewMode={viewMode}
-          onViewModeChange={setViewMode}
+          onViewModeChange={handleViewModeChange}
           activeFilters={activeFilters}
           onFilterChange={handleFilterChange}
           onAdvancedFilters={handleAdvancedFilters}

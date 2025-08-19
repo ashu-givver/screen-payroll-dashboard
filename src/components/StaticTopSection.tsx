@@ -16,7 +16,7 @@ interface StaticTopSectionProps {
   activeCard?: string;
   approvedEmployees: Set<string>;
   currentView: 'gross-pay' | 'deductions' | 'employer-cost' | 'total';
-  viewMode: 'compact' | 'detailed' | 'simple';
+  viewMode: 'compact' | 'detailed';
 }
 
 export const StaticTopSection = ({ 
@@ -142,9 +142,7 @@ export const StaticTopSection = ({
     const isActive = activeCard === card.id;
     const isCurrentView = isMainCard && currentView === card.id;
     
-    // In Simple View, only Gross Pay card is clickable
-    const isCardClickable = viewMode === 'simple' ? (card.id === 'gross-pay') : isClickable;
-    const isDisabled = viewMode === 'simple' && card.id !== 'gross-pay' && isMainCard;
+    const isCardClickable = isClickable;
     
     return (
       <Card 
@@ -154,8 +152,6 @@ export const StaticTopSection = ({
         } ${
           isActive || isCurrentView ? 'ring-2 ring-primary bg-primary/5' : 
           isCardClickable ? 'hover:bg-gray-50' : ''
-        } ${
-          isDisabled ? 'opacity-50' : ''
         }`}
         onClick={() => isCardClickable && onCardClick(card.id)}
       >
@@ -213,7 +209,7 @@ export const StaticTopSection = ({
             }, true, true)}
           </div>
         ) : (
-          // Compact and Simple View: Show original 3 cards
+          // Compact View: Show original 3 cards
           <div className="grid grid-cols-3 gap-4 mb-4">
             {mainCards.map(card => renderCard(card, true, true))}
           </div>

@@ -58,14 +58,43 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
   };
   const filteredEmployees = employees;
 
-  // Calculate comparison with previous month for Net Pay only
-  const getNetPayChange = (employee: Employee) => {
+  // Calculate comparison with previous month for Gross Pay only
+  const getGrossPayChange = (employee: Employee) => {
     if (!employee.previousMonth) return { amount: 0, percentage: 0 };
-    const change = employee.takeHomePay - employee.previousMonth.takeHomePay;
-    const percentage = employee.previousMonth.takeHomePay > 0 
-      ? (change / employee.previousMonth.takeHomePay) * 100 
+    const change = employee.totalIncome - employee.previousMonth.totalIncome;
+    const percentage = employee.previousMonth.totalIncome > 0 
+      ? (change / employee.previousMonth.totalIncome) * 100 
       : 0;
     return { amount: change, percentage };
+  };
+
+  // Get additional information about pay differences
+  const getAdditionalInfo = (employee: Employee) => {
+    if (!employee.previousMonth) return '';
+    
+    const sources = [];
+    
+    // Check for significant changes in different components
+    if (Math.abs(employee.basePay - employee.previousMonth.basePay) > 100) {
+      sources.push('Salary Change');
+    }
+    if (employee.bonus > 0 && employee.previousMonth.bonus === 0) {
+      sources.push('New Bonus');
+    }
+    if (employee.overtime > employee.previousMonth.overtime) {
+      sources.push('Additional Overtime');
+    }
+    if (employee.commission > employee.previousMonth.commission) {
+      sources.push('Commission Increase');
+    }
+    
+    // Mock some additional scenarios based on employee ID
+    if (employee.id === '1') sources.push('New Tax Code');
+    if (employee.id === '3') sources.push('Maternity Leave Adjustment');
+    if (employee.id === '5') sources.push('Sickness Pay Recovery');
+    if (employee.id === '7') sources.push('Performance Bonus');
+    
+    return sources.length > 0 ? sources.join(', ') : '';
   };
 
   // Calculate summary totals for all pay elements
@@ -171,19 +200,11 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               Gross Pay
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="100px" align="right">
-            <SortableHeader 
-              sortKey="takeHomePay" 
-              currentSort={sortConfig} 
-              onSort={handleSort}
-              className="text-xs font-medium"
-              align="right"
-            >
-              Net Pay
-            </SortableHeader>
-          </NotionTableHead>
           <NotionTableHead width="120px" align="right">
-            Net Pay Change
+            Gross Pay Difference
+          </NotionTableHead>
+          <NotionTableHead width="150px" align="right">
+            Additional Information
           </NotionTableHead>
         </NotionTableRow>
       </NotionTableHeader>
@@ -222,17 +243,18 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
-            {formatCurrency(summary.totalTakeHomePay)}
-          </NotionTableCell>
           <NotionTableCell align="right">
             <span className="text-green-600 font-medium">+2.3%</span>
+          </NotionTableCell>
+          <NotionTableCell align="right">
+            <span className="text-sm text-gray-600">Various sources</span>
           </NotionTableCell>
         </NotionTableRow>
             
         {/* Employee rows */}
         {sortedEmployees.map((employee, index) => {
-          const netPayChange = getNetPayChange(employee);
+          const grossPayChange = getGrossPayChange(employee);
+          const additionalInfo = getAdditionalInfo(employee);
           return (
             <NotionTableRow key={employee.id}>
               <NotionTableCell sticky>
@@ -308,15 +330,15 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <NotionTableCell align="right" className="font-medium">
                 {formatCurrency(employee.totalIncome)}
               </NotionTableCell>
-              <NotionTableCell align="right" className="font-medium">
-                {formatCurrency(employee.takeHomePay)}
-              </NotionTableCell>
               <NotionTableCell align="right">
-                {netPayChange.percentage !== 0 && (
-                  <span className={`${netPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
-                    {netPayChange.percentage > 0 ? '+' : ''}{netPayChange.percentage.toFixed(1)}%
+                {grossPayChange.percentage !== 0 && (
+                  <span className={`${grossPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                    {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
                   </span>
                 )}
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                <span className="text-sm text-gray-600">{additionalInfo}</span>
               </NotionTableCell>
             </NotionTableRow>
           );
