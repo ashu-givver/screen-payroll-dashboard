@@ -1,7 +1,7 @@
 import { PersonaBasedDashboard } from '@/components/PersonaBasedDashboard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Download } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { payrollCycles } from '@/data/payrollCycles';
 import {
@@ -62,14 +62,24 @@ const PreviewIndex = () => {
                 {currentCycle?.status === 'Current' ? 'In Progress' : currentCycle?.status || 'In Progress'}
               </Badge>
             </div>
-            <Button 
-              variant="default" 
-              size="sm"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={handleConfirmClick}
-            >
-              Confirm
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Download Report
+              </Button>
+              <Button 
+                variant="default" 
+                size="sm"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={handleConfirmClick}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
         </div>
       </div>
