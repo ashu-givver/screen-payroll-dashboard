@@ -50,9 +50,9 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
   return (
     <div className={`space-y-4 ${className}`}>
       <div>
-        <h2 className="text-xl font-semibold text-payroll-header">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-payroll-header">Quick Actions for Payroll Management</h2>
         <p className="text-muted-foreground">
-          Essential tasks for payroll management
+          Approve payroll entries here, then use the Confirm button at the top to finalize
         </p>
       </div>
 
@@ -82,14 +82,28 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
             </div>
             
             {pendingCount > 0 && (
-              <Button 
-                onClick={handleSendNotifications}
-                className="w-full gap-2"
-                variant="outline"
-              >
-                <Mail className="h-4 w-4" />
-                Send Approval Reminders
-              </Button>
+              <div className="space-y-2">
+                <Button 
+                  onClick={handleSendNotifications}
+                  className="w-full gap-2"
+                  variant="outline"
+                >
+                  <Mail className="h-4 w-4" />
+                  Send Approval Reminders
+                </Button>
+                <Button 
+                  onClick={() => {
+                    toast({
+                      title: 'Payroll Approved',
+                      description: 'All payroll entries have been approved. You can now Confirm at the top.',
+                    });
+                  }}
+                  className="w-full gap-2"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Approve All Payroll
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>

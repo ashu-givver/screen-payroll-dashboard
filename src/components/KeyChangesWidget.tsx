@@ -103,7 +103,7 @@ export const KeyChangesWidget = () => {
       <div className="space-y-4">
         <div>
           <h2 className="text-xl font-semibold text-payroll-header">Employees with Gross Pay Changes vs Previous Month</h2>
-          <p className="text-muted-foreground">Employees with significant gross pay differences (±5%)</p>
+          <p className="text-muted-foreground">Employees with gross pay differences compared to the previous month</p>
         </div>
         
         <Card>
