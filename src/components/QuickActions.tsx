@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { FileText, Download, Mail, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { employees, payrollPeriod } from '@/data/employees';
 import { useToast } from '@/hooks/use-toast';
@@ -57,31 +58,23 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Approval Status Card */}
+        {/* Unified Approval Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" />
-              Approval Status
+              Approval
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="bg-success/10 text-success border-success/30">
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  Approved: {approvedCount}
-                </Badge>
-                {pendingCount > 0 && (
-                  <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30">
-                    <Clock className="h-3 w-3 mr-1" />
-                    Pending: {pendingCount}
-                  </Badge>
-                )}
+            <div className="space-y-3">
+              <div className="text-sm text-foreground">
+                {approvedCount} of {employees.length} employees approved
               </div>
+              <Progress value={(approvedCount / employees.length) * 100} className="h-2" />
             </div>
             
-            {pendingCount > 0 && (
+            {pendingCount > 0 ? (
               <div className="space-y-2">
                 <Button 
                   onClick={handleSendNotifications}
@@ -101,12 +94,21 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
                   className="w-full gap-2"
                 >
                   <CheckCircle className="h-4 w-4" />
-                  Approve All Payroll
+                  Approve All Employees
                 </Button>
               </div>
+            ) : (
+              <Button 
+                disabled
+                className="w-full gap-2 bg-success text-white"
+                variant="default"
+              >
+                <CheckCircle className="h-4 w-4" />
+                ✓ All Employees Approved
+              </Button>
             )}
           </CardContent>
-         </Card>
+        </Card>
 
         {/* Export & Reports Card */}
         <Card>

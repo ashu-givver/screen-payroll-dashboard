@@ -101,17 +101,19 @@ export const ExecutiveSummary = () => {
           </CardContent>
         </Card>
 
-        {/* Approval Status */}
+        {/* Time Until Payment Day */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">✅ Approval Progress</CardTitle>
+            <CardTitle className="text-sm font-medium">📅 Time Until Payment Day</CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{approvedCount}/{employees.length}</div>
-            <Progress value={approvalProgress} className="mt-2" />
+            <div className="text-2xl font-bold">3 days remaining</div>
+            <div className="text-sm text-muted-foreground mt-2">
+              Payment scheduled for 31 Jul 2025
+            </div>
             <div className="text-xs text-muted-foreground mt-1">
-              {approvalProgress.toFixed(0)}% approved
+              Payslips and submissions will be sent automatically on this date.
             </div>
           </CardContent>
         </Card>
