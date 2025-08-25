@@ -73,7 +73,7 @@ export const PayrollDashboard = () => {
         return false;
       }
       
-      // Card-based filtering and active filters
+      // Active filters - now includes tag-based filtering  
       const allActiveFilters = activeCard ? [activeCard, ...activeFilters] : activeFilters;
       
       for (const filterId of allActiveFilters) {
@@ -82,30 +82,65 @@ export const PayrollDashboard = () => {
             // Show all employees for total headcount
             break;
           case 'new-joiners':
-            // Filter to show only new joiners (employees 1, 2, 3 based on mock data)
-            if (!['1', '2', '3'].includes(employee.id)) return false;
+            // Filter to show only new joiners
+            if (!employee.tags?.some(tag => tag.category === 'new-joiners')) return false;
             break;
           case 'leavers':
-            // Filter to show only leavers (employee 4 based on mock data)
-            if (!['4'].includes(employee.id)) return false;
+            // Filter to show only leavers
+            if (!employee.tags?.some(tag => tag.category === 'leavers')) return false;
             break;
           case 'pension-enrolled':
-            // Filter to show employees newly enrolled in pension (employees 5, 6 based on mock data)
-            if (!['5', '6'].includes(employee.id)) return false;
+            // Filter to show employees newly enrolled in pension
+            if (!employee.tags?.some(tag => tag.category === 'pension-enrolled')) return false;
             break;
           case 'pension-opted-out':
-            // Filter to show employees who opted out of pension (none in current mock data)
-            return false;
+            // Filter to show employees who opted out of pension
+            if (!employee.tags?.some(tag => tag.category === 'pension-opted-out')) return false;
             break;
           case 'salary-changes':
-            // Filter to show employees with salary changes (employees 1, 3, 5, 7 based on mock data)
-            if (!['1', '3', '5', '7'].includes(employee.id)) return false;
+            // Filter to show employees with salary changes
+            if (!employee.tags?.some(tag => tag.category === 'salary-changes')) return false;
+            break;
+          case 'bonus':
+            // Filter to show employees with bonus
+            if (!employee.tags?.some(tag => tag.category === 'bonus')) return false;
+            break;
+          case 'commission':
+            // Filter to show employees with commission
+            if (!employee.tags?.some(tag => tag.category === 'commission')) return false;
+            break;
+          case 'overtime':
+            // Filter to show employees with overtime
+            if (!employee.tags?.some(tag => tag.category === 'overtime')) return false;
+            break;
+          case 'tax-code-change':
+            // Filter to show employees with tax code changes
+            if (!employee.tags?.some(tag => tag.category === 'tax-code-change')) return false;
+            break;
+          case 'student-loan':
+            // Filter to show employees with student loan changes
+            if (!employee.tags?.some(tag => tag.category === 'student-loan')) return false;
+            break;
+          case 'maternity':
+            // Filter to show employees with maternity
+            if (!employee.tags?.some(tag => tag.category === 'maternity')) return false;
+            break;
+          case 'sickness':
+            // Filter to show employees with sickness
+            if (!employee.tags?.some(tag => tag.category === 'sickness')) return false;
+            break;
+          case 'net-differences':
+            // Filter to show employees with net differences
+            if (!employee.tags?.some(tag => tag.category === 'net-differences')) return false;
+            break;
+          case 'pending-approval':
+            // Filter to show employees pending approval
+            if (approvedEmployees.has(employee.id)) return false;
             break;
           case 'gross-pay':
           case 'deductions':
           case 'take-home-pay':
           case 'employer-cost':
-          case 'net-differences':
             // For pay metrics, show all employees with their data
             break;
         }
@@ -282,6 +317,17 @@ export const PayrollDashboard = () => {
     setActiveCard(undefined);
   };
 
+  const handleTagClick = (tagCategory: string) => {
+    // Add the tag category to active filters if not already present
+    if (!activeFilters.includes(tagCategory)) {
+      setActiveFilters(prev => [...prev, tagCategory]);
+    }
+    // Clear other filters for clarity
+    setShowChangesOnly(false);
+    setSelectedDepartment('all');
+    setActiveCard(undefined);
+  };
+
   const handleAdvancedFilters = () => {
     setShowAdvancedFilters(true);
   };
@@ -330,11 +376,13 @@ export const PayrollDashboard = () => {
       approvedEmployees,
       onApproveEmployee: handleApproveEmployee,
       viewMode: 'compact' as const,
+      onTagClick: handleTagClick,
     };
 
     const incomeProps = {
       ...commonProps,
       onEmployeeUpdate: handleEmployeeUpdate,
+      onTagClick: handleTagClick,
     };
 
     switch (currentView) {

@@ -12,8 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FilterGroup } from '@/types/payroll';
 
 interface TableControlBarProps {
   searchValue: string;
@@ -30,14 +34,45 @@ interface TableControlBarProps {
   onDepartmentChange?: (value: string) => void;
 }
 
-const filterOptions = [
-  { id: 'new-joiners', label: 'New Joiners' },
-  { id: 'leavers', label: 'Leavers' },
-  { id: 'pension-enrolled', label: 'Pension Enrolled' },
-  { id: 'pension-opted-out', label: 'Pension Opted Out' },
-  { id: 'salary-changes', label: 'Salary Changes' },
-  { id: 'net-differences', label: 'Net Differences' },
-  { id: 'pending-approval', label: 'Pending Approval' },
+const filterGroups: FilterGroup[] = [
+  {
+    id: 'employment',
+    label: 'Employment Status Changes',
+    filters: [
+      { id: 'new-joiners', label: 'New Joiners', type: 'employment' },
+      { id: 'leavers', label: 'Leavers', type: 'employment' },
+      { id: 'pending-approval', label: 'Pending Approval', type: 'employment' },
+    ]
+  },
+  {
+    id: 'compensation',
+    label: 'Compensation Changes',
+    filters: [
+      { id: 'salary-changes', label: 'Salary Changes', type: 'compensation' },
+      { id: 'bonus', label: 'Bonus', type: 'compensation' },
+      { id: 'commission', label: 'Commission', type: 'compensation' },
+      { id: 'overtime', label: 'Overtime', type: 'compensation' },
+    ]
+  },
+  {
+    id: 'statutory',
+    label: 'Statutory Changes',
+    filters: [
+      { id: 'tax-code-change', label: 'Tax Code Change', type: 'statutory' },
+      { id: 'student-loan', label: 'Student Loan', type: 'statutory' },
+      { id: 'pension-enrolled', label: 'Pension Enrolled', type: 'statutory' },
+      { id: 'pension-opted-out', label: 'Pension Opted Out', type: 'statutory' },
+      { id: 'maternity', label: 'Maternity', type: 'statutory' },
+      { id: 'sickness', label: 'Sickness', type: 'statutory' },
+    ]
+  },
+  {
+    id: 'other',
+    label: 'Other',
+    filters: [
+      { id: 'net-differences', label: 'Net Differences', type: 'other' },
+    ]
+  }
 ];
 
 export const TableControlBar = ({ 
@@ -150,7 +185,7 @@ export const TableControlBar = ({
             </Select>
           )}
 
-          {/* Filters Dropdown */}
+          {/* Grouped Filters Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 text-sm text-muted-foreground hover:text-foreground">
@@ -165,17 +200,28 @@ export const TableControlBar = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 bg-background border z-50">
-              <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+              <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {filterOptions.map((filter) => (
-                <DropdownMenuCheckboxItem
-                  key={filter.id}
-                  checked={activeFilters.includes(filter.id)}
-                  onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
-                >
-                  {filter.label}
-                </DropdownMenuCheckboxItem>
+              
+              {filterGroups.map((group) => (
+                <DropdownMenuSub key={group.id}>
+                  <DropdownMenuSubTrigger>
+                    {group.label}
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {group.filters.map((filter) => (
+                      <DropdownMenuCheckboxItem
+                        key={filter.id}
+                        checked={activeFilters.includes(filter.id)}
+                        onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
+                      >
+                        {filter.label}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
               ))}
+              
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={onAdvancedFilters}>
                 <Settings className="h-4 w-4 mr-2" />
@@ -188,7 +234,8 @@ export const TableControlBar = ({
           {activeFilters.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               {activeFilters.map((filterId) => {
-                const filter = filterOptions.find(f => f.id === filterId);
+                // Find the filter across all groups
+                const filter = filterGroups.flatMap(g => g.filters).find(f => f.id === filterId);
                 return (
                   <Badge 
                     key={filterId}

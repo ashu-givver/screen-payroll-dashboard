@@ -3,6 +3,7 @@ import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { EditableCell } from '@/components/EditableCell';
 import { SortableHeader, SortDirection } from '@/components/SortableHeader';
+import { TagsCell } from '@/components/TagsCell';
 import { Button } from '@/components/ui/button';
 import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
 import { formatCurrency } from '@/lib/formatters';
@@ -13,9 +14,10 @@ interface CompactTableProps {
   approvedEmployees: Set<string>;
   onApproveEmployee: (employeeId: string) => void;
   onEmployeeUpdate: (employeeId: string, field: string, value: number) => void;
+  onTagClick?: (tagCategory: string) => void;
 }
 
-export const CompactTable = ({ employees, summary, approvedEmployees, onApproveEmployee, onEmployeeUpdate }: CompactTableProps) => {
+export const CompactTable = ({ employees, summary, approvedEmployees, onApproveEmployee, onEmployeeUpdate, onTagClick }: CompactTableProps) => {
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: SortDirection }>({ 
     key: '', 
     direction: null 
@@ -338,7 +340,11 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 )}
               </NotionTableCell>
               <NotionTableCell align="right">
-                <span className="text-sm text-gray-600">{additionalInfo}</span>
+                <TagsCell 
+                  tags={employee.tags || []}
+                  onTagClick={onTagClick}
+                  maxVisible={2}
+                />
               </NotionTableCell>
             </NotionTableRow>
           );

@@ -19,6 +19,7 @@ interface TotalViewTableProps {
   onEmployeeUpdate: (employeeId: string, field: string, value: number) => void;
   onApproveEmployee: (employeeId: string) => void;
   approvedEmployees: Set<string>;
+  onTagClick?: (tagCategory: string) => void;
 }
 
 type SortField = 'name' | 'basePay' | 'totalIncome' | 'takeHomePay' | 'employerCost';
@@ -27,7 +28,8 @@ export const TotalViewTable = ({
   employees, 
   onEmployeeUpdate, 
   onApproveEmployee,
-  approvedEmployees 
+  approvedEmployees,
+  onTagClick
 }: TotalViewTableProps) => {
   const [currentSort, setCurrentSort] = useState<{ key: string; direction: SortDirection }>({
     key: 'name',

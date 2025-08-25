@@ -19,6 +19,8 @@ export interface Employee {
   status: 'Current' | 'Terminated' | 'On Leave';
   department: string;
   employmentType: 'Full-time' | 'Part-time' | 'Contractor';
+  // Tags for additional information
+  tags?: PayrollTag[];
   // Deduction breakdown
   paye: number;
   ni: number;
@@ -50,6 +52,25 @@ export interface Employee {
     employerNI: number;
     employerPension: number;
   };
+}
+
+export interface PayrollTag {
+  id: string;
+  label: string;
+  type: 'employment' | 'compensation' | 'statutory' | 'other';
+  category: string; // More specific category for filtering
+}
+
+export interface FilterGroup {
+  id: string;
+  label: string;
+  filters: FilterOption[];
+}
+
+export interface FilterOption {
+  id: string;
+  label: string;
+  type: 'employment' | 'compensation' | 'statutory' | 'other';
 }
 
 export interface AdvancedFilter {

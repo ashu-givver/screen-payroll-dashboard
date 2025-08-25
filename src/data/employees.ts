@@ -1,4 +1,5 @@
 import { Employee, PayrollPeriod, PayrollSummary } from '@/types/payroll';
+import { generateTagsForEmployee } from '@/lib/tagGenerator';
 
 export const employees: Employee[] = [
   {
@@ -305,6 +306,11 @@ export const employees: Employee[] = [
     }
   }
 ];
+
+// Generate tags for all employees
+employees.forEach(employee => {
+  employee.tags = generateTagsForEmployee(employee);
+});
 
 export const payrollPeriod: PayrollPeriod = {
   month: 'July',
