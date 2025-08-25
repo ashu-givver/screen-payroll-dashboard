@@ -1,13 +1,13 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, Users, Calendar, DollarSign } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ChevronRight, Search, Calendar } from 'lucide-react';
 import { payrollCycles, PayrollCycle } from '@/data/payrollCycles';
 import { useNavigate } from 'react-router-dom';
 
 const PayrollCycles = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-GB', {
@@ -29,126 +29,170 @@ const PayrollCycles = () => {
     }
   };
 
+  const getStatusColor = (status: PayrollCycle['status']) => {
+    switch (status) {
+      case 'Current':
+        return 'text-muted-foreground bg-muted';
+      case 'Submitted':
+        return 'text-warning-foreground bg-warning';
+      case 'Completed':
+        return 'text-success-foreground bg-success';
+      default:
+        return 'text-muted-foreground bg-muted';
+    }
+  };
+
   const handleCycleClick = (cycle: PayrollCycle) => {
     if (cycle.status === 'Current') {
       navigate('/preview');
     }
   };
 
-  const currentCycles = payrollCycles.filter(cycle => cycle.status === 'Current');
-  const submittedCycles = payrollCycles.filter(cycle => cycle.status === 'Submitted');
-  const completedCycles = payrollCycles.filter(cycle => cycle.status === 'Completed');
-
-  const CycleCard = ({ cycle }: { cycle: PayrollCycle }) => (
-    <Card 
-      className={`transition-all hover:shadow-sm ${cycle.status === 'Current' ? 'cursor-pointer hover:border-primary/50' : ''}`}
-      onClick={() => handleCycleClick(cycle)}
-    >
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <h3 className="font-semibold text-card-foreground">{cycle.period}</h3>
-              <Badge variant={getStatusVariant(cycle.status)}>
-                {cycle.status}
-              </Badge>
-            </div>
-            
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                <span>{cycle.startDate} - {cycle.endDate}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>{cycle.employeeCount} employees</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                <span>{formatCurrency(cycle.totalPay)}</span>
-              </div>
-            </div>
-
-            {cycle.status === 'Submitted' && cycle.submittedDate && (
-              <div className="text-sm text-muted-foreground">
-                Submitted: {cycle.submittedDate}
-              </div>
-            )}
-
-            {cycle.status === 'Completed' && cycle.completedDate && (
-              <div className="text-sm text-muted-foreground">
-                Completed: {cycle.completedDate}
-              </div>
-            )}
-          </div>
-
-          {cycle.status === 'Current' && (
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
-          )}
-        </div>
-      </CardContent>
-    </Card>
+  const filteredCycles = payrollCycles.filter(cycle =>
+    cycle.period.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cycle.month.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cycle.status.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const currentCycles = filteredCycles.filter(cycle => cycle.status === 'Current');
+  const submittedCycles = filteredCycles.filter(cycle => cycle.status === 'Submitted');
+  const completedCycles = filteredCycles.filter(cycle => cycle.status === 'Completed');
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-7xl mx-auto p-6">
-          <div>
-            <h1 className="text-2xl font-semibold text-card-foreground">Payroll Cycles</h1>
-            <p className="text-muted-foreground mt-1">
-              Manage and review your payroll cycles across different stages
-            </p>
-          </div>
+          <h1 className="text-2xl font-semibold text-card-foreground">Payroll</h1>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6 space-y-8">
-        {/* Current Section */}
-        {currentCycles.length > 0 && (
-          <section>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Current</h2>
-              <p className="text-sm text-muted-foreground">Active payroll cycle currently being processed</p>
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Pay run section with search */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-foreground">Pay run</h2>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by date, month or status"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 w-64"
+              />
             </div>
-            <div className="space-y-3">
-              {currentCycles.map(cycle => (
-                <CycleCard key={cycle.id} cycle={cycle} />
-              ))}
-            </div>
-          </section>
-        )}
+          </div>
+        </div>
 
-        {/* Submitted Section */}
-        {submittedCycles.length > 0 && (
-          <section>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Submitted</h2>
-              <p className="text-sm text-muted-foreground">Payroll cycles submitted for approval</p>
+        {/* Table */}
+        <div className="space-y-6">
+          {/* Current Section */}
+          {currentCycles.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Current</h3>
+              <div className="space-y-1">
+                {currentCycles.map(cycle => (
+                  <div
+                    key={cycle.id}
+                    className={`flex items-center justify-between p-4 rounded-lg border bg-card transition-all ${
+                      cycle.status === 'Current' ? 'cursor-pointer hover:shadow-sm hover:border-primary/50' : ''
+                    }`}
+                    onClick={() => handleCycleClick(cycle)}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-card-foreground">{cycle.month} {cycle.year}</div>
+                        <div className="text-sm text-muted-foreground">Monthly pay</div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-sm text-muted-foreground">
+                      {cycle.endDate}
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Badge className={getStatusColor(cycle.status)}>
+                        {cycle.status.toUpperCase()}
+                      </Badge>
+                      {cycle.status === 'Current' && (
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="space-y-3">
-              {submittedCycles.map(cycle => (
-                <CycleCard key={cycle.id} cycle={cycle} />
-              ))}
-            </div>
-          </section>
-        )}
+          )}
 
-        {/* Completed Section */}
-        {completedCycles.length > 0 && (
-          <section>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Completed</h2>
-              <p className="text-sm text-muted-foreground">Finalized payroll cycles</p>
+          {/* Submitted Section */}
+          {submittedCycles.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Submitted</h3>
+              <div className="space-y-1">
+                {submittedCycles.map(cycle => (
+                  <div
+                    key={cycle.id}
+                    className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-warning/20">
+                        <Calendar className="h-4 w-4 text-warning" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-card-foreground">{cycle.month} {cycle.year}</div>
+                        <div className="text-sm text-muted-foreground">Monthly pay</div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-sm text-muted-foreground">
+                      {cycle.endDate}
+                    </div>
+                    
+                    <Badge className={getStatusColor(cycle.status)}>
+                      {cycle.status.toUpperCase()}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="space-y-3">
-              {completedCycles.map(cycle => (
-                <CycleCard key={cycle.id} cycle={cycle} />
-              ))}
+          )}
+
+          {/* Completed Section */}
+          {completedCycles.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Completed</h3>
+              <div className="space-y-1">
+                {completedCycles.map(cycle => (
+                  <div
+                    key={cycle.id}
+                    className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-success/20">
+                        <Calendar className="h-4 w-4 text-success" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-card-foreground">{cycle.month} {cycle.year}</div>
+                        <div className="text-sm text-muted-foreground">Monthly pay</div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-sm text-muted-foreground">
+                      {cycle.endDate}
+                    </div>
+                    
+                    <Badge className={getStatusColor(cycle.status)}>
+                      {cycle.status.toUpperCase()}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
             </div>
-          </section>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
