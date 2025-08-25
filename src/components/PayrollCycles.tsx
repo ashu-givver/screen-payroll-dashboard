@@ -70,7 +70,7 @@ const PayrollCycles = () => {
       <div className="max-w-7xl mx-auto p-6">
         {/* Pay run section with search */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-foreground">Pay run</h2>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -82,24 +82,30 @@ const PayrollCycles = () => {
               />
             </div>
           </div>
+
+          {/* Table Headers */}
+          <div className="grid grid-cols-3 gap-4 px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border">
+            <div>Current</div>
+            <div>Pay Date</div>
+            <div>Status</div>
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="space-y-6">
+        {/* Table Content */}
+        <div className="space-y-8">
           {/* Current Section */}
           {currentCycles.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Current</h3>
               <div className="space-y-1">
                 {currentCycles.map(cycle => (
                   <div
                     key={cycle.id}
-                    className={`flex items-center justify-between p-4 rounded-lg border bg-card transition-all ${
-                      cycle.status === 'Current' ? 'cursor-pointer hover:shadow-sm hover:border-primary/50' : ''
+                    className={`grid grid-cols-3 gap-4 p-4 transition-all border-b border-border last:border-b-0 ${
+                      cycle.status === 'Current' ? 'cursor-pointer hover:bg-accent/50' : ''
                     }`}
                     onClick={() => handleCycleClick(cycle)}
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                       </div>
@@ -109,17 +115,14 @@ const PayrollCycles = () => {
                       </div>
                     </div>
                     
-                    <div className="text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm text-muted-foreground">
                       {cycle.endDate}
                     </div>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center">
                       <Badge className={getStatusColor(cycle.status)}>
-                        {cycle.status.toUpperCase()}
+                        IN PROGRESS
                       </Badge>
-                      {cycle.status === 'Current' && (
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      )}
                     </div>
                   </div>
                 ))}
@@ -130,14 +133,14 @@ const PayrollCycles = () => {
           {/* Submitted Section */}
           {submittedCycles.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Submitted</h3>
+              <h3 className="text-sm font-medium text-muted-foreground mb-4 px-4">Submitted</h3>
               <div className="space-y-1">
                 {submittedCycles.map(cycle => (
                   <div
                     key={cycle.id}
-                    className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                    className="grid grid-cols-3 gap-4 p-4 border-b border-border last:border-b-0"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-warning/20">
                         <Calendar className="h-4 w-4 text-warning" />
                       </div>
@@ -147,13 +150,15 @@ const PayrollCycles = () => {
                       </div>
                     </div>
                     
-                    <div className="text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm text-muted-foreground">
                       {cycle.endDate}
                     </div>
                     
-                    <Badge className={getStatusColor(cycle.status)}>
-                      {cycle.status.toUpperCase()}
-                    </Badge>
+                    <div className="flex items-center">
+                      <Badge className={getStatusColor(cycle.status)}>
+                        SUBMITTED
+                      </Badge>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -163,14 +168,14 @@ const PayrollCycles = () => {
           {/* Completed Section */}
           {completedCycles.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Completed</h3>
+              <h3 className="text-sm font-medium text-muted-foreground mb-4 px-4">Completed</h3>
               <div className="space-y-1">
                 {completedCycles.map(cycle => (
                   <div
                     key={cycle.id}
-                    className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                    className="grid grid-cols-3 gap-4 p-4 border-b border-border last:border-b-0"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-success/20">
                         <Calendar className="h-4 w-4 text-success" />
                       </div>
@@ -180,13 +185,15 @@ const PayrollCycles = () => {
                       </div>
                     </div>
                     
-                    <div className="text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm text-muted-foreground">
                       {cycle.endDate}
                     </div>
                     
-                    <Badge className={getStatusColor(cycle.status)}>
-                      {cycle.status.toUpperCase()}
-                    </Badge>
+                    <div className="flex items-center">
+                      <Badge className={getStatusColor(cycle.status)}>
+                        COMPLETED
+                      </Badge>
+                    </div>
                   </div>
                 ))}
               </div>
