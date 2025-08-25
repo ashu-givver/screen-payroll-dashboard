@@ -53,17 +53,31 @@ export const KeyChangesWidget = () => {
       const bonusChange = emp.bonus - (emp.previousMonth.bonus || 0);
       const overtimeChange = emp.overtime - (emp.previousMonth.overtime || 0);
       const basePayChange = emp.basePay - (emp.previousMonth.basePay || 0);
+      const commissionChange = emp.commission - (emp.previousMonth.commission || 0);
       
-      if (Math.abs(bonusChange) > Math.abs(basePayChange) && Math.abs(bonusChange) > Math.abs(overtimeChange)) {
-        reason = bonusChange > 0 ? 'Bonus' : 'Bonus adjustment';
-      } else if (Math.abs(overtimeChange) > Math.abs(basePayChange)) {
-        reason = overtimeChange > 0 ? 'Overtime' : 'Reduced hours';
-      } else if (basePayChange < -100) {
+      // Priority-based reason determination
+      if (Math.abs(bonusChange) > 500) {
+        reason = 'Bonus';
+      } else if (Math.abs(overtimeChange) > 200) {
+        reason = overtimeChange > 0 ? 'Overtime' : 'Reduced overtime';
+      } else if (Math.abs(commissionChange) > 300) {
+        reason = 'Commission';
+      } else if (basePayChange > 200) {
+        reason = 'Salary adjustment';
+      } else if (basePayChange < -500) {
         reason = 'Sickness absence';
-      } else if (basePayChange < -50) {
-        reason = 'Maternity leave';
-      } else if (basePayChange > 100) {
-        reason = 'Salary increase';
+      } else if (basePayChange < -200) {
+        reason = 'Maternity';
+      } else if (percentageChange > 15) {
+        reason = 'Bonus';
+      } else if (percentageChange > 8) {
+        reason = 'Salary adjustment';
+      } else if (percentageChange < -10) {
+        reason = 'Sickness absence';
+      } else if (percentageChange < -5) {
+        reason = 'Maternity';
+      } else {
+        reason = 'Pay adjustment';
       }
       
       return {
