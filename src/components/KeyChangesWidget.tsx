@@ -48,7 +48,7 @@ export const KeyChangesWidget = () => {
       if (Math.abs(percentageChange) < 5) return null;
       
       // Determine reason based on pay component changes
-      let reason = 'Other';
+      let reason = 'Pay Adjustment';
       
       const bonusChange = emp.bonus - (emp.previousMonth.bonus || 0);
       const overtimeChange = emp.overtime - (emp.previousMonth.overtime || 0);
@@ -59,25 +59,25 @@ export const KeyChangesWidget = () => {
       if (Math.abs(bonusChange) > 500) {
         reason = 'Bonus';
       } else if (Math.abs(overtimeChange) > 200) {
-        reason = overtimeChange > 0 ? 'Overtime' : 'Reduced overtime';
+        reason = 'Overtime';
       } else if (Math.abs(commissionChange) > 300) {
         reason = 'Commission';
       } else if (basePayChange > 200) {
-        reason = 'Salary adjustment';
+        reason = 'Salary Adjustment';
       } else if (basePayChange < -500) {
-        reason = 'Sickness absence';
+        reason = 'Sick Leave';
       } else if (basePayChange < -200) {
         reason = 'Maternity';
       } else if (percentageChange > 15) {
         reason = 'Bonus';
       } else if (percentageChange > 8) {
-        reason = 'Salary adjustment';
+        reason = 'Salary Adjustment';
       } else if (percentageChange < -10) {
-        reason = 'Sickness absence';
+        reason = 'Sick Leave';
       } else if (percentageChange < -5) {
         reason = 'Maternity';
       } else {
-        reason = 'Pay adjustment';
+        reason = 'Pay Adjustment';
       }
       
       return {
@@ -148,7 +148,18 @@ export const KeyChangesWidget = () => {
                         {change!.percentageChange >= 0 ? '+' : ''}{change!.percentageChange.toFixed(0)}%
                       </div>
                       <div>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs ${
+                            change!.reason === 'Bonus' ? 'bg-green-50 text-green-700 border-green-200' :
+                            change!.reason === 'Maternity' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                            change!.reason === 'Salary Adjustment' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                            change!.reason === 'Overtime' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                            change!.reason === 'Commission' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
+                            change!.reason === 'Sick Leave' ? 'bg-red-50 text-red-700 border-red-200' :
+                            'bg-gray-50 text-gray-700 border-gray-200'
+                          }`}
+                        >
                           {change!.reason}
                         </Badge>
                       </div>
@@ -274,7 +285,10 @@ export const KeyChangesWidget = () => {
           <CardContent>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <BarChart 
+                  data={chartData} 
+                  margin={{ top: 30, right: 30, left: 20, bottom: 5 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
                   <YAxis tickFormatter={(value) => `£${(value / 1000).toFixed(0)}k`} />

@@ -52,7 +52,7 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
       <div>
         <h2 className="text-xl font-semibold text-payroll-header">Quick Actions for Payroll Management</h2>
         <p className="text-muted-foreground">
-          Approve payroll entries here, then use the Confirm button at the top to finalize
+          Approve payroll entries here, then confirm to finalise.
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
               variant="outline"
             >
               <Download className="h-4 w-4" />
-              Export Gross/Net Report — {currentLabel}
+              Export Gross/Net Report – {currentLabel}
             </Button>
 
             <Button 
@@ -132,7 +132,7 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
               variant="outline"
             >
               <Download className="h-4 w-4" />
-              Export Gross/Net Report — {previousLabel}
+              Export Gross/Net Report – {previousLabel}
             </Button>
           </CardContent>
         </Card>
