@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, AlertCircle, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, DollarSign, Wallet, Building, Shield } from 'lucide-react';
 import { employees } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
@@ -78,12 +78,17 @@ export const KeyChangesWidget = () => {
               Total Changes
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* To Employees (Net Pay) */}
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm font-medium">To Employees (Net Pay)</span>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold">{formatCurrency(currentNetPay)}</span>
+          <CardContent className="space-y-6">
+            {/* To pay employees */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                  <Wallet className="h-5 w-5 text-green-600" />
+                </div>
+                <span className="text-sm font-medium">To pay employees</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xl font-bold">{formatCurrency(currentNetPay)}</span>
                 <div className="flex items-center gap-1">
                   {netPayChange >= 0 ? (
                     <TrendingUp className="h-3 w-3 text-payroll-positive" />
@@ -99,11 +104,16 @@ export const KeyChangesWidget = () => {
               </div>
             </div>
 
-            {/* To HMRC */}
-            <div className="flex items-center justify-between py-2 border-t border-border">
-              <span className="text-sm font-medium">To HMRC</span>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold">{formatCurrency(currentHMRC)}</span>
+            {/* To pay HMRC */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                  <Building className="h-5 w-5 text-red-600" />
+                </div>
+                <span className="text-sm font-medium">To pay HMRC</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xl font-bold">{formatCurrency(currentHMRC)}</span>
                 <div className="flex items-center gap-1">
                   {hmrcChange >= 0 ? (
                     <TrendingUp className="h-3 w-3 text-payroll-positive" />
@@ -119,11 +129,16 @@ export const KeyChangesWidget = () => {
               </div>
             </div>
 
-            {/* To Pension Provider */}
-            <div className="flex items-center justify-between py-2 border-t border-border">
-              <span className="text-sm font-medium">To Pension Provider</span>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold">{formatCurrency(currentPension)}</span>
+            {/* To pay Pension provider */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                  <Shield className="h-5 w-5 text-orange-600" />
+                </div>
+                <span className="text-sm font-medium">To pay Pension provider</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xl font-bold">{formatCurrency(currentPension)}</span>
                 <div className="flex items-center gap-1">
                   {pensionChange >= 0 ? (
                     <TrendingUp className="h-3 w-3 text-payroll-positive" />
