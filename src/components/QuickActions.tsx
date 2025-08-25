@@ -113,28 +113,6 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Status Overview */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-payroll-draft"></div>
-                <span className="text-sm font-medium">
-                  {payrollPeriod.month} {payrollPeriod.year} Payroll
-                </span>
-                <Badge variant="secondary">
-                  {payrollPeriod.status}
-                </Badge>
-              </div>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {payrollPeriod.employeeCount} employees • {payrollPeriod.startDate} - {payrollPeriod.endDate}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
