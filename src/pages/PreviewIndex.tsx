@@ -14,7 +14,7 @@ const PreviewIndex = () => {
             <Link to="/">
               <Button variant="outline" size="sm" className="gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                Back to Current Version
+                Back to Payroll Cycles
               </Button>
             </Link>
             <div>
