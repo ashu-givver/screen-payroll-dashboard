@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Users, DollarSign, Calendar, CheckCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, CheckCircle } from 'lucide-react';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
@@ -123,23 +123,6 @@ export const ExecutiveSummary = () => {
           </CardContent>
         </Card>
 
-        {/* Payroll Status */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Payroll Status</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              <Badge variant="secondary" className="bg-payroll-draft/20 text-payroll-draft border-payroll-draft/30">
-                {payrollPeriod.status}
-              </Badge>
-            </div>
-            <div className="text-xs text-muted-foreground mt-2">
-              {payrollPeriod.startDate} - {payrollPeriod.endDate}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
