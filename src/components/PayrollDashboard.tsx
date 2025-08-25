@@ -415,6 +415,8 @@ export const PayrollDashboard = () => {
           totalCount={filteredEmployees.length}
           onApproveAll={handleApproveAll}
           currentView={currentView}
+          selectedDepartment={selectedDepartment}
+          onDepartmentChange={setSelectedDepartment}
         />
         {renderCurrentTable()}
       </div>

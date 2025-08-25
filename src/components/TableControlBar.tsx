@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';  
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Settings } from 'lucide-react';
+import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Settings, Building } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface TableControlBarProps {
   searchValue: string;
@@ -25,6 +26,8 @@ interface TableControlBarProps {
   totalCount: number;
   onApproveAll: () => void;
   currentView: string;
+  selectedDepartment?: string;
+  onDepartmentChange?: (value: string) => void;
 }
 
 const filterOptions = [
@@ -48,6 +51,8 @@ export const TableControlBar = ({
   totalCount,
   onApproveAll,
   currentView,
+  selectedDepartment = 'all',
+  onDepartmentChange,
 }: TableControlBarProps) => {
   const [searchExpanded, setSearchExpanded] = useState(false);
   
@@ -126,6 +131,25 @@ export const TableControlBar = ({
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 flex-wrap">
+          {/* Department Filter */}
+          {onDepartmentChange && (
+            <Select value={selectedDepartment} onValueChange={onDepartmentChange}>
+              <SelectTrigger className="w-36 h-8 text-sm">
+                <Building className="h-3 w-3 mr-1" />
+                <SelectValue placeholder="Department" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border z-50">
+                <SelectItem value="all">All Departments</SelectItem>
+                <SelectItem value="Engineering">Engineering</SelectItem>
+                <SelectItem value="Sales">Sales</SelectItem>
+                <SelectItem value="Marketing">Marketing</SelectItem>
+                <SelectItem value="Finance">Finance</SelectItem>
+                <SelectItem value="Operations">Operations</SelectItem>
+                <SelectItem value="HR">HR</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+
           {/* Filters Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
