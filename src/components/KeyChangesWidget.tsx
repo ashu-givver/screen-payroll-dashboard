@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, AlertCircle, DollarSign, Wallet, Building, Shield } from 'lucide-react';
+import { BarChart as BarChartIcon } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import { employees } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
@@ -73,13 +75,94 @@ export const KeyChangesWidget = () => {
     })
     .filter(change => change && change.hasSignificantChange);
 
+  // Prepare chart data
+  const chartData = [
+    {
+      category: 'Employees',
+      current: currentNetPay,
+      previous: previousNetPay,
+      color: '#10b981' // green
+    },
+    {
+      category: 'HMRC',
+      current: currentHMRC,
+      previous: previousHMRC,
+      color: '#ef4444' // red
+    },
+    {
+      category: 'Pension',
+      current: currentPension,
+      previous: previousPension,
+      color: '#f97316' // orange
+    }
+  ];
+
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-semibold text-payroll-header">Total Changes</h2>
+    <div className="space-y-6">
+      {/* Employees with Gross Pay Changes - Dedicated Section */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-payroll-header">Employees with Gross Pay Changes vs Previous Month</h2>
+          <p className="text-muted-foreground">Employees with significant gross pay differences (±5%)</p>
+        </div>
+        
+        <Card>
+          <CardContent className="pt-6">
+            {significantChanges.length === 0 ? (
+              <p className="text-muted-foreground text-sm">
+                No significant changes detected
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {/* Table Header */}
+                <div className="grid grid-cols-4 gap-4 text-xs font-medium text-muted-foreground border-b border-border pb-2">
+                  <div>Employee Name</div>
+                  <div>Department</div>
+                  <div>% Change</div>
+                  <div>Reason</div>
+                </div>
+                
+                {/* Table Rows */}
+                <div className="space-y-2">
+                  {significantChanges.slice(0, 5).map((change) => (
+                    <div key={change!.employee.id} className="grid grid-cols-4 gap-4 text-sm items-center py-1">
+                      <div className="font-medium">{change!.employee.name}</div>
+                      <div className="text-muted-foreground">{change!.employee.department}</div>
+                      <div className={`font-medium ${
+                        change!.percentageChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
+                      }`}>
+                        {change!.percentageChange >= 0 ? '+' : ''}{change!.percentageChange.toFixed(0)}%
+                      </div>
+                      <div>
+                        <Badge variant="outline" className="text-xs">
+                          {change!.reason}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {significantChanges.length > 5 && (
+                  <div className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
+                    <span className="cursor-pointer hover:text-foreground transition-colors">
+                      View More in Detailed Analysis • +{significantChanges.length - 5} more employees
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Total Changes Section */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-payroll-header">Total Changes</h2>
+          <p className="text-muted-foreground">Payroll distribution breakdown with month-over-month comparison</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Overall Changes Summary */}
         <Card>
           <CardHeader>
@@ -166,60 +249,40 @@ export const KeyChangesWidget = () => {
           </CardContent>
         </Card>
 
-        {/* Employees with Significant Changes */}
+        {/* Comparative Bar Chart */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5" />
-              Employees with Gross Pay Changes vs Previous Month
+              <BarChartIcon className="h-5 w-5" />
+              Current vs Previous Month
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {significantChanges.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
-                No significant changes detected
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {/* Table Header */}
-                <div className="grid grid-cols-4 gap-4 text-xs font-medium text-muted-foreground border-b border-border pb-2">
-                  <div>Employee Name</div>
-                  <div>Department</div>
-                  <div>% Change</div>
-                  <div>Reason</div>
-                </div>
-                
-                {/* Table Rows */}
-                <div className="space-y-2">
-                  {significantChanges.slice(0, 5).map((change) => (
-                    <div key={change!.employee.id} className="grid grid-cols-4 gap-4 text-sm items-center py-1">
-                      <div className="font-medium">{change!.employee.name}</div>
-                      <div className="text-muted-foreground">{change!.employee.department}</div>
-                      <div className={`font-medium ${
-                        change!.percentageChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
-                      }`}>
-                        {change!.percentageChange >= 0 ? '+' : ''}{change!.percentageChange.toFixed(0)}%
-                      </div>
-                      <div>
-                        <Badge variant="outline" className="text-xs">
-                          {change!.reason}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                {significantChanges.length > 5 && (
-                  <div className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
-                    <span className="cursor-pointer hover:text-foreground transition-colors">
-                      +{significantChanges.length - 5} more employees with changes • View All in Detailed Analysis
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="category" />
+                  <YAxis tickFormatter={(value) => `£${(value / 1000).toFixed(0)}k`} />
+                  <Legend />
+                  <Bar 
+                    dataKey="current" 
+                    name="Current Month" 
+                    fill="#3b82f6"
+                    radius={[2, 2, 0, 0]}
+                  />
+                  <Bar 
+                    dataKey="previous" 
+                    name="Previous Month" 
+                    fill="#9ca3af"
+                    radius={[2, 2, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );
