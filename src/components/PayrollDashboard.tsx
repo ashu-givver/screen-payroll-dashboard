@@ -6,7 +6,6 @@ import { StaticTopSection } from '@/components/StaticTopSection';
 import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
 import { TableControlBar } from '@/components/TableControlBar';
 import { CompactTable } from '@/components/tables/CompactTable';
-import { DetailedTable } from '@/components/tables/DetailedTable';
 import { DeductionsTable } from '@/components/tables/DeductionsTable';
 import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
 import { TotalViewTable } from '@/components/tables/TotalViewTable';
@@ -19,18 +18,7 @@ export const PayrollDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showChangesOnly, setShowChangesOnly] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
-  const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
 
-  // Handle view mode changes
-  const handleViewModeChange = (mode: 'compact' | 'detailed') => {
-    setViewMode(mode);
-    // When switching to detailed view, default to 'total' (All Details)
-    if (mode === 'detailed') {
-      setCurrentView('total');
-    } else {
-      setCurrentView('gross-pay');
-    }
-  };
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilter[]>([]);
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
@@ -341,7 +329,7 @@ export const PayrollDashboard = () => {
       summary: payrollSummary,
       approvedEmployees,
       onApproveEmployee: handleApproveEmployee,
-      viewMode,
+      viewMode: 'compact' as const,
     };
 
     const incomeProps = {
@@ -363,12 +351,7 @@ export const PayrollDashboard = () => {
         return <div className="p-8 text-center text-muted-foreground">No custom view configured</div>;
       case 'gross-pay':
       default:
-        // For the gross pay view, we render different tables based on view mode
-        if (viewMode === 'compact') {
-          return <CompactTable {...incomeProps} />;
-        } else {
-          return <DetailedTable {...incomeProps} />;
-        }
+        return <CompactTable {...incomeProps} />;
     }
   };
 
@@ -405,7 +388,6 @@ export const PayrollDashboard = () => {
           activeCard={activeCard}
           approvedEmployees={approvedEmployees}
           currentView={currentView}
-          viewMode={viewMode}
           customView={customView}
           onCreateCustomView={handleCreateCustomView}
           onEditCustomView={handleEditCustomView}
@@ -432,8 +414,6 @@ export const PayrollDashboard = () => {
           <TableControlBar 
             searchValue={searchTerm}
             onSearchChange={setSearchTerm}
-            viewMode={viewMode}
-            onViewModeChange={handleViewModeChange}
             activeFilters={activeFilters}
             onFilterChange={handleFilterChange}
             onAdvancedFilters={handleAdvancedFilters}

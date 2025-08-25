@@ -99,14 +99,6 @@ export const PayrollSummaryCards = ({
       icon: Coins,
     },
     {
-      id: 'take-home-pay',
-      title: 'Take Home Pay',
-      value: formatCurrency(summary.totalTakeHomePay),
-      change: takeHomeChange,
-      changeType: takeHomeChange >= 0 ? 'increase' : 'decrease',
-      icon: PiggyBank,
-    },
-    {
       id: 'employer-cost',
       title: 'Employer Cost',
       value: formatCurrency(summary.totalEmployerCost),
@@ -250,7 +242,7 @@ export const PayrollSummaryCards = ({
       </div>
       
       {/* Pay & Cost Metrics + Custom View */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {summaryCards.map(renderCard)}
         {renderCustomViewCard()}
       </div>

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';  
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Download, Search, Settings, Filter, ChevronDown, X, Users, CheckCircle } from 'lucide-react';
+import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Settings } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,8 +17,6 @@ import {
 interface TableControlBarProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
-  viewMode: 'compact' | 'detailed';
-  onViewModeChange: (mode: 'compact' | 'detailed') => void;
   activeFilters: string[];      
   onFilterChange: (filterId: string, active: boolean) => void;
   onAdvancedFilters: () => void;
@@ -42,8 +40,6 @@ const filterOptions = [
 export const TableControlBar = ({ 
   searchValue,
   onSearchChange,
-  viewMode,
-  onViewModeChange,
   activeFilters,
   onFilterChange,
   onAdvancedFilters,
@@ -223,26 +219,6 @@ export const TableControlBar = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* View Mode Toggle */}
-          <div className="flex items-center gap-1 bg-muted rounded-lg p-1 border">
-            <Button
-              variant={viewMode === 'compact' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => onViewModeChange('compact')}
-              className="h-7 px-2 text-xs font-medium"
-            >
-              Compact
-            </Button>
-            <Button
-              variant={viewMode === 'detailed' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => onViewModeChange('detailed')}
-              className="h-7 px-2 text-xs font-medium"
-            >
-              Detailed
-            </Button>
-          </div>
-
           {/* Download */}
           <Button
             variant="ghost"
@@ -253,29 +229,6 @@ export const TableControlBar = ({
           >
             <Download className="h-4 w-4" />
           </Button>
-
-          {/* Settings Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>Table Settings</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Column Visibility
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Export Options
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </div>

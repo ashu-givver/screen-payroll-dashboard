@@ -10,7 +10,6 @@ interface StaticTopSectionProps {
   activeCard?: string;
   approvedEmployees: Set<string>;
   currentView: 'gross-pay' | 'deductions' | 'employer-cost' | 'total' | 'custom-view';
-  viewMode: 'compact' | 'detailed';
   customView?: CustomView;
   onCreateCustomView: () => void;
   onEditCustomView: () => void;
@@ -26,7 +25,6 @@ export const StaticTopSection = ({
   activeCard,
   approvedEmployees,
   currentView,
-  viewMode,
   customView,
   onCreateCustomView,
   onEditCustomView,
