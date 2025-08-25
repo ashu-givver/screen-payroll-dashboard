@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Search, Calendar, MoreHorizontal } from 'lucide-react';
+import { ChevronRight, Search, Calendar, MoreHorizontal, CheckCircle, Clock, Play, Eye } from 'lucide-react';
 import { payrollCycles, PayrollCycle } from '@/data/payrollCycles';
 import { useNavigate } from 'react-router-dom';
 
@@ -75,7 +75,7 @@ const PayrollCycles = () => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by date, month or status"
+                placeholder="Search payrolls by date, month or status"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9 w-64"
@@ -124,13 +124,19 @@ const PayrollCycles = () => {
                     
                     <div className="flex items-center">
                       <Badge className={getStatusColor(cycle.status)}>
+                        <Play className="h-3 w-3 mr-1" />
                         IN PROGRESS
                       </Badge>
                     </div>
                     
                     <div className="flex items-center">
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        aria-label={`View payroll details for ${cycle.month} ${cycle.year}`}
+                        onClick={() => handleCycleClick(cycle)}
+                      >
+                        <Eye className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -165,13 +171,18 @@ const PayrollCycles = () => {
                     
                     <div className="flex items-center">
                       <Badge className={getStatusColor(cycle.status)}>
+                        <Clock className="h-3 w-3 mr-1" />
                         SUBMITTED
                       </Badge>
                     </div>
                     
                     <div className="flex items-center">
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        aria-label={`View payroll details for ${cycle.month} ${cycle.year}`}
+                      >
+                        <Eye className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -206,13 +217,18 @@ const PayrollCycles = () => {
                     
                     <div className="flex items-center">
                       <Badge className={getStatusColor(cycle.status)}>
+                        <CheckCircle className="h-3 w-3 mr-1" />
                         COMPLETED
                       </Badge>
                     </div>
                     
                     <div className="flex items-center">
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        aria-label={`View payroll details for ${cycle.month} ${cycle.year}`}
+                      >
+                        <Eye className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
