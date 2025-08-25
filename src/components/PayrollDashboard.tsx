@@ -4,7 +4,7 @@ import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
 import { StaticTopSection } from '@/components/StaticTopSection';
 import { AdvancedFilterPanel } from '@/components/AdvancedFilterPanel';
-import { TableToolbar } from '@/components/TableToolbar';
+import { TableControlBar } from '@/components/TableControlBar';
 import { CompactTable } from '@/components/tables/CompactTable';
 import { DetailedTable } from '@/components/tables/DetailedTable';
 import { DeductionsTable } from '@/components/tables/DeductionsTable';
@@ -321,14 +321,6 @@ export const PayrollDashboard = () => {
         <PayrollHeader 
           period={payrollPeriod} 
           onConfirm={handleConfirm}
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          viewMode={viewMode}
-          onViewModeChange={handleViewModeChange}
-          activeFilters={activeFilters}
-          onFilterChange={handleFilterChange}
-          onAdvancedFilters={handleAdvancedFilters}
-          onDownload={handleExport}
         />
         
         <StaticTopSection
@@ -360,6 +352,20 @@ export const PayrollDashboard = () => {
         )}
 
         <div className="bg-background border border-border rounded-lg">
+          <TableControlBar 
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            viewMode={viewMode}
+            onViewModeChange={handleViewModeChange}
+            activeFilters={activeFilters}
+            onFilterChange={handleFilterChange}
+            onAdvancedFilters={handleAdvancedFilters}
+            onDownload={handleExport}
+            approvedCount={approvedEmployees.size}
+            totalCount={filteredEmployees.length}
+            onApproveAll={handleApproveAll}
+            currentView={currentView}
+          />
           {renderCurrentTable()}
         </div>
       </div>
