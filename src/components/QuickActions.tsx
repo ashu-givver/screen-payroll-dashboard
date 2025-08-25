@@ -16,24 +16,34 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
   const approvedCount = employees.filter(emp => emp.status === 'Current').length;
   const pendingCount = employees.length - approvedCount;
 
-  const handleExportSummary = () => {
+  const monthNames = [
+    'January','February','March','April','May','June','July','August','September','October','November','December'
+  ];
+  const currentMonthIndex = monthNames.findIndex(
+    (m) => m.toLowerCase() === payrollPeriod.month.toLowerCase()
+  );
+  const previousMonthIndex = (currentMonthIndex + 11) % 12;
+  const previousYear = currentMonthIndex === 0 ? payrollPeriod.year - 1 : payrollPeriod.year;
+  const currentLabel = `${payrollPeriod.month} ${payrollPeriod.year}`;
+  const previousLabel = `${monthNames[previousMonthIndex]} ${previousYear}`;
+
+  const handleExportCurrent = () => {
     toast({
-      title: "Summary Exported",
-      description: "Payroll summary has been exported successfully.",
+      title: 'Export started',
+      description: `Gross/Net report for ${currentLabel} is being prepared.`,
     });
   };
 
+  const handleExportPrevious = () => {
+    toast({
+      title: 'Export started',
+      description: `Gross/Net report for ${previousLabel} is being prepared.`,
+    });
+  };
   const handleSendNotifications = () => {
     toast({
-      title: "Notifications Sent",
+      title: 'Notifications Sent',
       description: `Sent approval reminders to ${pendingCount} employees.`,
-    });
-  };
-
-  const handleGenerateReport = () => {
-    toast({
-      title: "Report Generated",
-      description: "Executive payroll report is being prepared.",
     });
   };
 
@@ -92,24 +102,34 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
               Reports & Export
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <Button 
-              onClick={handleExportSummary}
-              className="w-full gap-2"
-              variant="outline"
-            >
-              <Download className="h-4 w-4" />
-              Export Summary
-            </Button>
-            
-            <Button 
-              onClick={handleGenerateReport}
-              className="w-full gap-2"
-              variant="outline"
-            >
-              <FileText className="h-4 w-4" />
-              Generate Executive Report
-            </Button>
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <Button 
+                onClick={handleExportCurrent}
+                className="w-full gap-2"
+                variant="outline"
+              >
+                <Download className="h-4 w-4" />
+                Export Gross/Net Report — {currentLabel}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Exports the gross-to-net payroll report for the active payroll cycle (current month).
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <Button 
+                onClick={handleExportPrevious}
+                className="w-full gap-2"
+                variant="outline"
+              >
+                <Download className="h-4 w-4" />
+                Export Gross/Net Report — {previousLabel}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Exports the gross-to-net payroll report for the immediately previous cycle.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
