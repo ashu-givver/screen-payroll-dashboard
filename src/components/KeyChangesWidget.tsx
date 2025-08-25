@@ -120,12 +120,20 @@ export const KeyChangesWidget = () => {
     }
   ];
 
-  // Custom label function for accessibility
+  // Custom label function for accessibility with proper null checks
   const renderCustomLabel = (props: any, dataKey: string) => {
     const { x, y, width, value, payload } = props;
+    
+    // Add null checks to prevent errors
+    if (!payload || !x || !y || !width) {
+      return null;
+    }
+    
     const data = payload;
-    const changeValue = data.change;
-    const formattedValue = dataKey === 'current' ? data.currentFormatted : data.previousFormatted;
+    const changeValue = data?.change || 0;
+    const formattedValue = dataKey === 'current' ? 
+      (data?.currentFormatted || formatCurrency(value || 0)) : 
+      (data?.previousFormatted || formatCurrency(value || 0));
     const changeText = changeValue !== 0 ? ` ${changeValue >= 0 ? '+' : ''}${changeValue.toFixed(0)}%` : '';
     
     return (
