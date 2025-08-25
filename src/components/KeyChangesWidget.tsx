@@ -171,7 +171,7 @@ export const KeyChangesWidget = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5" />
-              Employees with Major Changes
+              Employees with Gross Pay Changes vs Previous Month
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -181,25 +181,34 @@ export const KeyChangesWidget = () => {
               </p>
             ) : (
               <div className="space-y-3">
-                {significantChanges.slice(0, 5).map((change) => (
-                  <div key={change!.employee.id} className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-sm">
-                        {change!.employee.name} ({change!.employee.department})
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm font-medium ${
+                {/* Table Header */}
+                <div className="grid grid-cols-4 gap-4 text-xs font-medium text-muted-foreground border-b border-border pb-2">
+                  <div>Employee Name</div>
+                  <div>Department</div>
+                  <div>% Change</div>
+                  <div>Reason</div>
+                </div>
+                
+                {/* Table Rows */}
+                <div className="space-y-2">
+                  {significantChanges.slice(0, 5).map((change) => (
+                    <div key={change!.employee.id} className="grid grid-cols-4 gap-4 text-sm items-center py-1">
+                      <div className="font-medium">{change!.employee.name}</div>
+                      <div className="text-muted-foreground">{change!.employee.department}</div>
+                      <div className={`font-medium ${
                         change!.percentageChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
                       }`}>
                         {change!.percentageChange >= 0 ? '+' : ''}{change!.percentageChange.toFixed(0)}%
-                      </span>
-                      <Badge variant="outline" className="text-xs">
-                        {change!.reason}
-                      </Badge>
+                      </div>
+                      <div>
+                        <Badge variant="outline" className="text-xs">
+                          {change!.reason}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                
                 {significantChanges.length > 5 && (
                   <div className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
                     <span className="cursor-pointer hover:text-foreground transition-colors">
