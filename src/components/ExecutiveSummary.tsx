@@ -17,7 +17,14 @@ export const ExecutiveSummary = () => {
   const approvedCount = employees.filter(emp => emp.status === 'Current').length;
   const approvalProgress = (approvedCount / employees.length) * 100;
 
-  const headcountChange = employees.length - employees.length; // This would be dynamic in real app
+  // Calculate joiners and leavers (mock data for demo - in real app this would come from data)
+  const newJoiners = 1; // Number of new employees this month
+  const leavers = 0; // Number of employees leaving this month
+  const previousJoiners = 2; // Previous month joiners
+  const previousLeavers = 1; // Previous month leavers
+  
+  const joinersChange = previousJoiners > 0 ? ((newJoiners - previousJoiners) / previousJoiners) * 100 : 0;
+  const leaversChange = previousLeavers > 0 ? ((leavers - previousLeavers) / previousLeavers) * 100 : leavers === 0 ? -100 : 0;
 
   return (
     <div className="space-y-6">
@@ -60,8 +67,43 @@ export const ExecutiveSummary = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{employees.length}</div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span>No change from last month</span>
+            <div className="space-y-1 mt-2">
+              <div className="flex items-center gap-1 text-xs">
+                <span className="text-muted-foreground">New Joiners: {newJoiners}</span>
+                {joinersChange !== 0 && (
+                  <>
+                    {joinersChange >= 0 ? (
+                      <TrendingUp className="h-3 w-3 text-payroll-positive" />
+                    ) : (
+                      <TrendingDown className="h-3 w-3 text-payroll-negative" />
+                    )}
+                    <span className={joinersChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'}>
+                      {joinersChange >= 0 ? '+' : ''}{Math.abs(joinersChange).toFixed(0)}% vs last month
+                    </span>
+                  </>
+                )}
+                {joinersChange === 0 && (
+                  <span className="text-muted-foreground">same as last month</span>
+                )}
+              </div>
+              <div className="flex items-center gap-1 text-xs">
+                <span className="text-muted-foreground">Leavers: {leavers}</span>
+                {leaversChange !== 0 && (
+                  <>
+                    {leaversChange >= 0 ? (
+                      <TrendingUp className="h-3 w-3 text-payroll-negative" />
+                    ) : (
+                      <TrendingDown className="h-3 w-3 text-payroll-positive" />
+                    )}
+                    <span className={leaversChange >= 0 ? 'text-payroll-negative' : 'text-payroll-positive'}>
+                      {leaversChange >= 0 ? '+' : ''}{Math.abs(leaversChange).toFixed(0)}% vs last month
+                    </span>
+                  </>
+                )}
+                {leaversChange === 0 && (
+                  <span className="text-muted-foreground">same as last month</span>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
