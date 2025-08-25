@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Search, Calendar, MoreHorizontal, CheckCircle, Clock, Play, Eye } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ChevronRight, Search, Calendar, MoreHorizontal, CheckCircle, Clock, Play, Download, FileText } from 'lucide-react';
 import { payrollCycles, PayrollCycle } from '@/data/payrollCycles';
 import { useNavigate } from 'react-router-dom';
 
@@ -88,7 +89,7 @@ const PayrollCycles = () => {
             <div>Current</div>
             <div>Pay Date</div>
             <div>Status</div>
-            <div>Action</div>
+            <div>Quick Actions</div>
           </div>
         </div>
 
@@ -132,15 +133,40 @@ const PayrollCycles = () => {
                       </Badge>
                     </div>
                     
-                    <div className="flex items-center">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        aria-label={`View payroll details for ${cycle.month} ${cycle.year}`}
-                        onClick={() => handleCycleClick(cycle)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                    <div className="flex items-center gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              aria-label="Download P32"
+                            >
+                              <FileText className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download P32</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              aria-label="Download All Payslips"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download All Payslips</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 ))}
@@ -182,14 +208,40 @@ const PayrollCycles = () => {
                       </Badge>
                     </div>
                     
-                    <div className="flex items-center">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        aria-label={`View payroll details for ${cycle.month} ${cycle.year}`}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                    <div className="flex items-center gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              aria-label="Download P32"
+                            >
+                              <FileText className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download P32</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              aria-label="Download All Payslips"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download All Payslips</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 ))}
@@ -231,14 +283,40 @@ const PayrollCycles = () => {
                       </Badge>
                     </div>
                     
-                    <div className="flex items-center">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        aria-label={`View payroll details for ${cycle.month} ${cycle.year}`}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                    <div className="flex items-center gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              aria-label="Download P32"
+                            >
+                              <FileText className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download P32</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              aria-label="Download All Payslips"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download All Payslips</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 ))}
