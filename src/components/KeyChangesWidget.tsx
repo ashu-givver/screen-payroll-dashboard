@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, AlertCircle, DollarSign, Wallet, Building, Shield } from 'lucide-react';
 import { BarChart as BarChartIcon } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend, Cell, LabelList } from 'recharts';
 import { employees } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
@@ -89,35 +89,66 @@ export const KeyChangesWidget = () => {
     })
     .filter(change => change && change.hasSignificantChange);
 
-  // Prepare chart data
+  // Prepare chart data with percentage changes
   const chartData = [
     {
       category: 'Employees',
       current: currentNetPay,
       previous: previousNetPay,
+      currentFormatted: formatCurrency(currentNetPay),
+      previousFormatted: formatCurrency(previousNetPay),
+      change: netPayChange,
       color: '#10b981' // green
     },
     {
       category: 'HMRC',
       current: currentHMRC,
       previous: previousHMRC,
+      currentFormatted: formatCurrency(currentHMRC),
+      previousFormatted: formatCurrency(previousHMRC),
+      change: hmrcChange,
       color: '#ef4444' // red
     },
     {
       category: 'Pension',
       current: currentPension,
-      previous: previousPension,
+      previous: previousPension,  
+      currentFormatted: formatCurrency(currentPension),
+      previousFormatted: formatCurrency(previousPension),
+      change: pensionChange,
       color: '#f97316' // orange
     }
   ];
 
+  // Custom label function for accessibility
+  const renderCustomLabel = (props: any, dataKey: string) => {
+    const { x, y, width, value, payload } = props;
+    const data = payload;
+    const changeValue = data.change;
+    const formattedValue = dataKey === 'current' ? data.currentFormatted : data.previousFormatted;
+    const changeText = changeValue !== 0 ? ` ${changeValue >= 0 ? '+' : ''}${changeValue.toFixed(0)}%` : '';
+    
+    return (
+      <text 
+        x={x + width / 2} 
+        y={y - 5} 
+        fill="#374151" 
+        textAnchor="middle" 
+        fontSize="11"
+        fontWeight="500"
+      >
+        {formattedValue}{dataKey === 'current' ? changeText : ''}
+      </text>
+    );
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Employees with Gross Pay Changes - Dedicated Section */}
       <div className="space-y-4">
         <div>
           <h2 className="text-xl font-semibold text-payroll-header">Employees with Gross Pay Changes vs Previous Month</h2>
-          <p className="text-muted-foreground">Employees with gross pay differences compared to the previous month</p>
+          <p className="text-muted-foreground">Employees with notable gross pay changes vs last month</p>
         </div>
         
         <Card>
@@ -181,7 +212,7 @@ export const KeyChangesWidget = () => {
       </div>
 
       {/* Total Changes Section */}
-      <div className="space-y-4">
+      <div className="space-y-4 mt-8">
         <div>
           <h2 className="text-xl font-semibold text-payroll-header">Total Changes</h2>
           <p className="text-muted-foreground">Payroll distribution breakdown with month-over-month comparison</p>
@@ -283,29 +314,50 @@ export const KeyChangesWidget = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart 
                   data={chartData} 
-                  margin={{ top: 30, right: 30, left: 20, bottom: 5 }}
+                  margin={{ top: 40, right: 30, left: 20, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="category" />
-                  <YAxis tickFormatter={(value) => `£${(value / 1000).toFixed(0)}k`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="category" 
+                    tick={{ fontSize: 12 }}
+                    axisLine={{ stroke: '#d1d5db' }}
+                  />
+                  <YAxis 
+                    tickFormatter={(value) => `£${(value / 1000).toFixed(0)}k`}
+                    tick={{ fontSize: 12 }}
+                    axisLine={{ stroke: '#d1d5db' }}
+                  />
                   <Legend />
                   <Bar 
                     dataKey="current" 
                     name="Current Month"
                     fill="#10b981"
-                    radius={[2, 2, 0, 0]}
-                  />
+                    stroke="#059669"
+                    strokeWidth={1}
+                    radius={[3, 3, 0, 0]}
+                  >
+                    <LabelList 
+                      content={(props) => renderCustomLabel(props, 'current')}
+                    />
+                  </Bar>
                   <Bar 
                     dataKey="previous" 
                     name="Previous Month"
-                    fill="#6ee7b7"
-                    opacity={0.7}
-                    radius={[2, 2, 0, 0]}
-                  />
+                    fill="#86efac"
+                    stroke="#059669"
+                    strokeWidth={1}
+                    strokeDasharray="4 4"
+                    opacity={0.8}
+                    radius={[3, 3, 0, 0]}
+                  >
+                    <LabelList 
+                      content={(props) => renderCustomLabel(props, 'previous')}
+                    />
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
