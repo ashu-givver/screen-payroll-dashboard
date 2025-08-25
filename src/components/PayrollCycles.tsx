@@ -33,13 +33,13 @@ const PayrollCycles = () => {
   const getStatusColor = (status: PayrollCycle['status']) => {
     switch (status) {
       case 'Current':
-        return 'text-muted-foreground bg-muted';
+        return 'bg-[#2563EB] text-white border-[#2563EB]';
       case 'Submitted':
-        return 'text-warning-foreground bg-warning';
+        return 'bg-[#FBBF24] text-[#111827] border-[#FBBF24]';
       case 'Completed':
-        return 'text-success-foreground bg-success';
+        return 'bg-[#16A34A] text-white border-[#16A34A]';
       default:
-        return 'text-muted-foreground bg-muted';
+        return 'bg-[#2563EB] text-white border-[#2563EB]';
     }
   };
 
@@ -123,7 +123,10 @@ const PayrollCycles = () => {
                     </div>
                     
                     <div className="flex items-center">
-                      <Badge className={getStatusColor(cycle.status)}>
+                      <Badge 
+                        className={getStatusColor(cycle.status)}
+                        aria-label="Payroll in progress"
+                      >
                         <Play className="h-3 w-3 mr-1" />
                         IN PROGRESS
                       </Badge>
@@ -170,7 +173,10 @@ const PayrollCycles = () => {
                     </div>
                     
                     <div className="flex items-center">
-                      <Badge className={getStatusColor(cycle.status)}>
+                      <Badge 
+                        className={getStatusColor(cycle.status)}
+                        aria-label="Payroll submitted"
+                      >
                         <Clock className="h-3 w-3 mr-1" />
                         SUBMITTED
                       </Badge>
@@ -216,7 +222,10 @@ const PayrollCycles = () => {
                     </div>
                     
                     <div className="flex items-center">
-                      <Badge className={getStatusColor(cycle.status)}>
+                      <Badge 
+                        className={getStatusColor(cycle.status)}
+                        aria-label="Payroll completed"
+                      >
                         <CheckCircle className="h-3 w-3 mr-1" />
                         COMPLETED
                       </Badge>
