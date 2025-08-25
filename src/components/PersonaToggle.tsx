@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { BarChart3, Users } from 'lucide-react';
 
@@ -13,11 +12,6 @@ interface PersonaToggleProps {
 export const PersonaToggle = ({ currentPersona, onPersonaChange }: PersonaToggleProps) => {
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-payroll-header">Payroll Dashboard</h1>
-        <p className="text-muted-foreground">Choose your view based on your role</p>
-      </div>
-
       <div className="flex gap-4">
         <Card 
           className={`p-4 cursor-pointer transition-all border-2 ${

@@ -63,10 +63,7 @@ export const KeyChangesWidget = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-semibold text-payroll-header">Key Changes vs Previous Month</h2>
-        <p className="text-muted-foreground">
-          Notable differences in payroll calculations
-        </p>
+        <h2 className="text-xl font-semibold text-payroll-header">Total Changes</h2>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

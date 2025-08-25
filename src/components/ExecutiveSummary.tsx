@@ -28,13 +28,6 @@ export const ExecutiveSummary = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-payroll-header">Executive Summary</h2>
-        <p className="text-muted-foreground">
-          {payrollPeriod.month} {payrollPeriod.year} payroll overview
-        </p>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Payroll Cost */}
         <Card>
