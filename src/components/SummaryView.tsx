@@ -12,14 +12,20 @@ interface SummaryViewProps {
 export const SummaryView = ({ onSwitchToDetailed }: SummaryViewProps) => {
   return (
     <div className="p-6 space-y-6">
-      {/* Executive Summary */}
+      {/* Executive Summary - Compact */}
       <ExecutiveSummary />
 
-      {/* Key Changes */}
-      <KeyChangesWidget />
-
-      {/* Quick Actions */}
+      {/* Quick Actions - Moved up for better visibility */}
       <QuickActions />
+
+      {/* Insights & Analytics Section */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-payroll-header">Insights & Analytics</h2>
+          <p className="text-muted-foreground">Key changes and trends from this payroll period</p>
+        </div>
+        <KeyChangesWidget />
+      </div>
 
       {/* Dive Deeper Section */}
       <div className="bg-card border border-border rounded-lg p-6">

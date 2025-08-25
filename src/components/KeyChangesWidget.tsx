@@ -180,8 +180,8 @@ export const KeyChangesWidget = () => {
                 No significant changes detected
               </p>
             ) : (
-              <div className="space-y-4">
-                {significantChanges.slice(0, 3).map((change) => (
+              <div className="space-y-3">
+                {significantChanges.slice(0, 5).map((change) => (
                   <div key={change!.employee.id} className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm">
@@ -200,9 +200,11 @@ export const KeyChangesWidget = () => {
                     </div>
                   </div>
                 ))}
-                {significantChanges.length > 3 && (
+                {significantChanges.length > 5 && (
                   <div className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
-                    +{significantChanges.length - 3} more employees with changes
+                    <span className="cursor-pointer hover:text-foreground transition-colors">
+                      +{significantChanges.length - 5} more employees with changes • View All in Detailed Analysis
+                    </span>
                   </div>
                 )}
               </div>
