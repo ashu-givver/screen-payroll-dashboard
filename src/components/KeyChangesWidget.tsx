@@ -6,19 +6,32 @@ import { employees } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
 export const KeyChangesWidget = () => {
-  // Calculate key changes from previous month
+  // Calculate key changes from previous month across all sections
   const significantChanges = employees
     .map(emp => {
       if (!emp.previousMonth) return null;
       
       const incomeChange = emp.totalIncome - emp.previousMonth.totalIncome;
+      const deductionsChange = emp.deductions - emp.previousMonth.deductions;
       const takeHomeChange = emp.takeHomePay - emp.previousMonth.takeHomePay;
+      const employerCostChange = emp.employerCost - emp.previousMonth.employerCost;
+      
+      // Determine which sections have significant changes (>£50 threshold)
+      const changes = [];
+      if (Math.abs(incomeChange) > 50) {
+        changes.push({ type: 'income', change: incomeChange, label: 'Income' });
+      }
+      if (Math.abs(deductionsChange) > 50) {
+        changes.push({ type: 'deductions', change: deductionsChange, label: 'Deductions' });
+      }
+      if (Math.abs(employerCostChange) > 50) {
+        changes.push({ type: 'employer', change: employerCostChange, label: 'Employer Cost' });
+      }
       
       return {
         employee: emp,
-        incomeChange,
-        takeHomeChange,
-        hasSignificantChange: Math.abs(incomeChange) > 100 || Math.abs(takeHomeChange) > 100
+        changes,
+        hasSignificantChange: changes.length > 0
       };
     })
     .filter(change => change && change.hasSignificantChange);
@@ -109,25 +122,35 @@ export const KeyChangesWidget = () => {
                 No significant changes detected
               </p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {significantChanges.slice(0, 3).map((change) => (
-                  <div key={change!.employee.id} className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-sm">{change!.employee.name}</div>
+                  <div key={change!.employee.id} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-medium text-sm">{change!.employee.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {change!.employee.department}
+                        </div>
+                      </div>
                       <div className="text-xs text-muted-foreground">
-                        {change!.employee.department}
+                        {change!.changes.length} section{change!.changes.length > 1 ? 's' : ''} changed
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className={`text-sm font-medium ${
-                        change!.incomeChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
-                      }`}>
-                        {change!.incomeChange >= 0 ? '+' : ''}
-                        {formatCurrency(change!.incomeChange)}
-                      </div>
-                      <Badge variant="outline" className="text-xs">
-                        Income Change
-                      </Badge>
+                    
+                    {/* Multiple change badges */}
+                    <div className="flex flex-wrap gap-2">
+                      {change!.changes.map((changeItem, index) => (
+                        <div key={index} className="flex items-center gap-1">
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              changeItem.change >= 0 ? 'text-payroll-positive border-payroll-positive/20' : 'text-payroll-negative border-payroll-negative/20'
+                            }`}
+                          >
+                            {changeItem.label}: {changeItem.change >= 0 ? '+' : ''}{formatCurrency(Math.abs(changeItem.change))}
+                          </Badge>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
