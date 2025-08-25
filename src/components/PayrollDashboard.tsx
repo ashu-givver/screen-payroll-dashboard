@@ -436,12 +436,6 @@ export const PayrollDashboard = () => {
         onDeleteCustomView={handleDeleteCustomView}
       />
       
-      <PayrollHeader
-        period={payrollPeriod}
-        onConfirm={handleConfirm}
-        onDownload={handleExport}
-      />
-      
       {showAdvancedFilters && (
         <AdvancedFilterPanel
           filters={advancedFilters}
