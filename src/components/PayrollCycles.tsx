@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { ChevronRight, Search, Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, Search, Calendar, MoreHorizontal } from 'lucide-react';
 import { payrollCycles, PayrollCycle } from '@/data/payrollCycles';
 import { useNavigate } from 'react-router-dom';
 
@@ -68,10 +69,9 @@ const PayrollCycles = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
-        {/* Pay run section with search */}
+        {/* Search section */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-foreground">Pay run</h2>
+          <div className="flex items-center justify-end mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -84,10 +84,11 @@ const PayrollCycles = () => {
           </div>
 
           {/* Table Headers */}
-          <div className="grid grid-cols-3 gap-4 px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border">
+          <div className="grid grid-cols-4 gap-4 px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border">
             <div>Current</div>
             <div>Pay Date</div>
             <div>Status</div>
+            <div>Action</div>
           </div>
         </div>
 
@@ -100,12 +101,14 @@ const PayrollCycles = () => {
                 {currentCycles.map(cycle => (
                   <div
                     key={cycle.id}
-                    className={`grid grid-cols-3 gap-4 p-4 transition-all border-b border-border last:border-b-0 ${
-                      cycle.status === 'Current' ? 'cursor-pointer hover:bg-accent/50' : ''
-                    }`}
-                    onClick={() => handleCycleClick(cycle)}
+                    className="grid grid-cols-4 gap-4 p-4 transition-all border-b border-border last:border-b-0"
                   >
-                    <div className="flex items-center gap-3">
+                    <div 
+                      className={`flex items-center gap-3 ${
+                        cycle.status === 'Current' ? 'cursor-pointer hover:text-primary' : ''
+                      }`}
+                      onClick={() => handleCycleClick(cycle)}
+                    >
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                       </div>
@@ -124,6 +127,12 @@ const PayrollCycles = () => {
                         IN PROGRESS
                       </Badge>
                     </div>
+                    
+                    <div className="flex items-center">
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -138,7 +147,7 @@ const PayrollCycles = () => {
                 {submittedCycles.map(cycle => (
                   <div
                     key={cycle.id}
-                    className="grid grid-cols-3 gap-4 p-4 border-b border-border last:border-b-0"
+                    className="grid grid-cols-4 gap-4 p-4 border-b border-border last:border-b-0"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-warning/20">
@@ -159,6 +168,12 @@ const PayrollCycles = () => {
                         SUBMITTED
                       </Badge>
                     </div>
+                    
+                    <div className="flex items-center">
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -173,7 +188,7 @@ const PayrollCycles = () => {
                 {completedCycles.map(cycle => (
                   <div
                     key={cycle.id}
-                    className="grid grid-cols-3 gap-4 p-4 border-b border-border last:border-b-0"
+                    className="grid grid-cols-4 gap-4 p-4 border-b border-border last:border-b-0"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-success/20">
@@ -193,6 +208,12 @@ const PayrollCycles = () => {
                       <Badge className={getStatusColor(cycle.status)}>
                         COMPLETED
                       </Badge>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 ))}
