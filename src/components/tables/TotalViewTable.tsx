@@ -199,10 +199,10 @@ export const TotalViewTable = ({
                   variant="ghost"
                   onClick={() => onApproveEmployee(employee.id)}
                   disabled={false}
-                  className={`h-6 px-3 text-xs font-medium border transition-colors focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 ${
+                  className={`h-6 px-3 text-xs font-medium border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] focus-visible:ring-offset-2 ${
                     isApproved
-                      ? 'bg-green-600 text-white border-green-600 hover:bg-green-700'
-                      : 'bg-transparent text-gray-900 border-gray-400 hover:border-green-600 hover:text-gray-900'
+                      ? 'bg-[#16A34A] text-white border-[#16A34A] hover:bg-[#15803D] hover:border-[#15803D]'
+                      : 'bg-transparent text-[#374151] border-[#D1D5DB] hover:border-[#16A34A] hover:text-[#16A34A]'
                   }`}
                   aria-label={
                     isApproved 
