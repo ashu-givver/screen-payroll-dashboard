@@ -25,7 +25,6 @@ interface TableControlBarProps {
   activeFilters: string[];      
   onFilterChange: (filterId: string, active: boolean) => void;
   onAdvancedFilters: () => void;
-  onDownload?: () => void;
   approvedCount: number;
   totalCount: number;
   onApproveAll: () => void;
@@ -81,7 +80,6 @@ export const TableControlBar = ({
   activeFilters,
   onFilterChange,
   onAdvancedFilters,
-  onDownload,
   approvedCount,
   totalCount,
   onApproveAll,
@@ -96,19 +94,18 @@ export const TableControlBar = ({
       <div className="flex items-center justify-between">
         {/* Left side: Approval status and action */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            Approvals: 
-            <Badge variant={allApproved ? "default" : "secondary"} className="text-xs ml-1">
-              {approvedCount}/{totalCount}
-            </Badge>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">Approvals:</span>
+            <span className="font-medium">{approvedCount}/{totalCount}</span>
           </div>
           {!allApproved && (
             <Button
               variant="outline"
               size="sm"
               onClick={onApproveAll}
-              className="h-8 text-xs"
+              className="h-8 text-xs gap-2"
             >
+              <CheckCircle className="h-3 w-3" />
               Approve All
             </Button>
           )}

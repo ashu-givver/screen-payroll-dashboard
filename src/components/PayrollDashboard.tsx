@@ -436,6 +436,12 @@ export const PayrollDashboard = () => {
         onDeleteCustomView={handleDeleteCustomView}
       />
       
+      <PayrollHeader
+        period={payrollPeriod}
+        onConfirm={handleConfirm}
+        onDownload={handleExport}
+      />
+      
       {showAdvancedFilters && (
         <AdvancedFilterPanel
           filters={advancedFilters}
@@ -458,7 +464,6 @@ export const PayrollDashboard = () => {
           activeFilters={activeFilters}
           onFilterChange={handleFilterChange}
           onAdvancedFilters={handleAdvancedFilters}
-          onDownload={handleExport}
           approvedCount={approvedEmployees.size}
           totalCount={filteredEmployees.length}
           onApproveAll={handleApproveAll}

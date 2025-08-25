@@ -1,16 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal } from 'lucide-react';
+import { Download, MoreHorizontal } from 'lucide-react';
 import { PayrollPeriod } from '@/types/payroll';
 
 interface PayrollHeaderProps {
   period: PayrollPeriod;
   onConfirm: () => void;
+  onDownload?: () => void;
 }
 
 export const PayrollHeader = ({ 
   period, 
-  onConfirm, 
+  onConfirm,
+  onDownload,
 }: PayrollHeaderProps) => {
   return (
     <div className="bg-card border-b border-border">
@@ -30,6 +32,17 @@ export const PayrollHeader = ({
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {onDownload && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={onDownload}
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Download Report
+              </Button>
+            )}
             <Button variant="ghost" size="sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
