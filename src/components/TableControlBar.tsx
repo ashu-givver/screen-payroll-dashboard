@@ -198,6 +198,26 @@ export const TableControlBar = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-muted rounded-lg p-1 border">
+            <Button
+              variant={viewMode === 'compact' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => onViewModeChange('compact')}
+              className="h-7 px-2 text-xs font-medium"
+            >
+              Compact
+            </Button>
+            <Button
+              variant={viewMode === 'detailed' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => onViewModeChange('detailed')}
+              className="h-7 px-2 text-xs font-medium"
+            >
+              Detailed
+            </Button>
+          </div>
+
           {/* Download */}
           <Button
             variant="ghost"
@@ -221,25 +241,13 @@ export const TableControlBar = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>View Options</DropdownMenuLabel>
+              <DropdownMenuLabel>Table Settings</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                onClick={() => onViewModeChange('compact')}
-                className={viewMode === 'compact' ? 'bg-accent' : ''}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span>Compact View</span>
-                  <span className="text-xs text-muted-foreground">(Founder)</span>
-                </div>
+              <DropdownMenuItem>
+                Column Visibility
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => onViewModeChange('detailed')}
-                className={viewMode === 'detailed' ? 'bg-accent' : ''}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span>Detailed View</span>
-                  <span className="text-xs text-muted-foreground">(Finance)</span>
-                </div>
+              <DropdownMenuItem>
+                Export Options
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -27,6 +27,7 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
       <NotionTableHeader>
         <NotionTableRow>
           <NotionTableHead width="192px" sticky>Employee</NotionTableHead>
+          <NotionTableHead width="80px" align="center">Action</NotionTableHead>
           <NotionTableHead width="128px" align="right">Gross Pay</NotionTableHead>
           <NotionTableHead width="96px" align="right">PAYE</NotionTableHead>
           <NotionTableHead width="80px" align="right">NI</NotionTableHead>
@@ -41,6 +42,16 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
         {/* Total row */}
         <NotionTableRow className="bg-muted/40 font-medium">
           <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
+          <NotionTableCell align="center">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled
+              className="h-6 px-2 text-xs opacity-50"
+            >
+              -
+            </Button>
+          </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
@@ -87,6 +98,17 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
                 />
                 <span className="font-medium text-sm">{employee.name}</span>
               </div>
+            </NotionTableCell>
+            <NotionTableCell align="center">
+              <Button
+                size="sm"
+                variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                onClick={() => onApproveEmployee(employee.id)}
+                disabled={approvedEmployees.has(employee.id)}
+                className="h-6 px-2 text-xs"
+              >
+                {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+              </Button>
             </NotionTableCell>
             <NotionTableCell align="right" className="font-medium">
               {formatCurrency(employee.totalIncome)}
