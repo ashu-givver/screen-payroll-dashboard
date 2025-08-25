@@ -6,7 +6,31 @@ import { employees } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
 export const KeyChangesWidget = () => {
-  // Calculate key changes from previous month across all sections
+  // Calculate breakdown totals for current month
+  const currentNetPay = employees.reduce((sum, emp) => sum + emp.takeHomePay, 0);
+  const currentHMRC = employees.reduce((sum, emp) => sum + emp.paye + emp.ni + emp.employerNI, 0);
+  const currentPension = employees.reduce((sum, emp) => sum + emp.pension + emp.employerPension, 0);
+
+  // Calculate breakdown totals for previous month
+  const previousNetPay = employees.reduce((sum, emp) => {
+    if (!emp.previousMonth) return sum;
+    return sum + emp.previousMonth.takeHomePay;
+  }, 0);
+  const previousHMRC = employees.reduce((sum, emp) => {
+    if (!emp.previousMonth) return sum;
+    return sum + emp.previousMonth.paye + emp.previousMonth.ni + emp.previousMonth.employerNI;
+  }, 0);
+  const previousPension = employees.reduce((sum, emp) => {
+    if (!emp.previousMonth) return sum;
+    return sum + emp.previousMonth.pension + emp.previousMonth.employerPension;
+  }, 0);
+
+  // Calculate percentage changes
+  const netPayChange = previousNetPay > 0 ? ((currentNetPay - previousNetPay) / previousNetPay) * 100 : 0;
+  const hmrcChange = previousHMRC > 0 ? ((currentHMRC - previousHMRC) / previousHMRC) * 100 : 0;
+  const pensionChange = previousPension > 0 ? ((currentPension - previousPension) / previousPension) * 100 : 0;
+
+  // Calculate employees with significant changes for the second card
   const significantChanges = employees
     .map(emp => {
       if (!emp.previousMonth) return null;
@@ -36,16 +60,6 @@ export const KeyChangesWidget = () => {
     })
     .filter(change => change && change.hasSignificantChange);
 
-  const totalIncomeChange = employees.reduce((sum, emp) => {
-    if (!emp.previousMonth) return sum;
-    return sum + (emp.totalIncome - emp.previousMonth.totalIncome);
-  }, 0);
-
-  const totalTakeHomeChange = employees.reduce((sum, emp) => {
-    if (!emp.previousMonth) return sum;
-    return sum + (emp.takeHomePay - emp.previousMonth.takeHomePay);
-  }, 0);
-
   return (
     <div className="space-y-4">
       <div>
@@ -65,44 +79,63 @@ export const KeyChangesWidget = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Total Income Change</span>
-              <div className="flex items-center gap-1">
-                {totalIncomeChange >= 0 ? (
-                  <TrendingUp className="h-4 w-4 text-payroll-positive" />
-                ) : (
-                  <TrendingDown className="h-4 w-4 text-payroll-negative" />
-                )}
-                <span className={`font-semibold ${
-                  totalIncomeChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
-                }`}>
-                  {formatCurrency(Math.abs(totalIncomeChange))}
-                </span>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Take-Home Change</span>
-              <div className="flex items-center gap-1">
-                {totalTakeHomeChange >= 0 ? (
-                  <TrendingUp className="h-4 w-4 text-payroll-positive" />
-                ) : (
-                  <TrendingDown className="h-4 w-4 text-payroll-negative" />
-                )}
-                <span className={`font-semibold ${
-                  totalTakeHomeChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
-                }`}>
-                  {formatCurrency(Math.abs(totalTakeHomeChange))}
-                </span>
-              </div>
-            </div>
-            
-            <div className="pt-2 border-t border-border">
+            {/* To Employees (Net Pay) */}
+            <div className="flex items-center justify-between py-2">
+              <span className="text-sm font-medium">To Employees (Net Pay)</span>
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-warning" />
-                <span className="text-sm text-muted-foreground">
-                  {significantChanges.length} employees with significant changes
-                </span>
+                <span className="text-lg font-bold">{formatCurrency(currentNetPay)}</span>
+                <div className="flex items-center gap-1">
+                  {netPayChange >= 0 ? (
+                    <TrendingUp className="h-3 w-3 text-payroll-positive" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3 text-payroll-negative" />
+                  )}
+                  <span className={`text-xs ${
+                    netPayChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
+                  }`}>
+                    {netPayChange >= 0 ? '+' : ''}{Math.abs(netPayChange).toFixed(0)}% vs last month
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* To HMRC */}
+            <div className="flex items-center justify-between py-2 border-t border-border">
+              <span className="text-sm font-medium">To HMRC</span>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold">{formatCurrency(currentHMRC)}</span>
+                <div className="flex items-center gap-1">
+                  {hmrcChange >= 0 ? (
+                    <TrendingUp className="h-3 w-3 text-payroll-positive" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3 text-payroll-negative" />
+                  )}
+                  <span className={`text-xs ${
+                    hmrcChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
+                  }`}>
+                    {hmrcChange >= 0 ? '+' : ''}{Math.abs(hmrcChange).toFixed(0)}% vs last month
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* To Pension Provider */}
+            <div className="flex items-center justify-between py-2 border-t border-border">
+              <span className="text-sm font-medium">To Pension Provider</span>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold">{formatCurrency(currentPension)}</span>
+                <div className="flex items-center gap-1">
+                  {pensionChange >= 0 ? (
+                    <TrendingUp className="h-3 w-3 text-payroll-positive" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3 text-payroll-negative" />
+                  )}
+                  <span className={`text-xs ${
+                    pensionChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
+                  }`}>
+                    {pensionChange >= 0 ? '+' : ''}{Math.abs(pensionChange).toFixed(0)}% vs last month
+                  </span>
+                </div>
               </div>
             </div>
           </CardContent>
