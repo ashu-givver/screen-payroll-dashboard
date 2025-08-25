@@ -81,6 +81,8 @@ export const TableControlBar = ({
         return 'Employer Cost Breakdown';
       case 'total':
         return 'Total View - All Details';
+      case 'custom-view':
+        return 'Custom View - All Details';
       case 'gross-pay':
       default:
         return 'Income Details';

@@ -113,7 +113,8 @@ export const AdvancedFilterPanel = ({
       onSaveView({
         name: viewName.trim(),
         filters: [...filters],
-        basicFilters: { ...currentBasicFilters }
+        basicFilters: { ...currentBasicFilters },
+        createdAt: new Date().toISOString()
       });
       setViewName('');
       setSaveDialogOpen(false);

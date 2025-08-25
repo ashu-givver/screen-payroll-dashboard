@@ -70,6 +70,15 @@ export interface SavedFilterView {
     department: string;
     employmentType: string;
   };
+  createdAt: string;
+}
+
+export interface CustomView {
+  id: string;
+  name: string;
+  fields: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PayrollPeriod {

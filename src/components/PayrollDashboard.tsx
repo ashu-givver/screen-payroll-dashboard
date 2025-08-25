@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { TabType, AdvancedFilter, SavedFilterView } from '@/types/payroll';
+import { useState, useMemo, useEffect } from 'react';
+import { TabType, AdvancedFilter, SavedFilterView, CustomView } from '@/types/payroll';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { PayrollHeader } from '@/components/PayrollHeader';
 import { StaticTopSection } from '@/components/StaticTopSection';
@@ -10,6 +10,8 @@ import { DetailedTable } from '@/components/tables/DetailedTable';
 import { DeductionsTable } from '@/components/tables/DeductionsTable';
 import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
 import { TotalViewTable } from '@/components/tables/TotalViewTable';
+import { CustomViewTable } from '@/components/tables/CustomViewTable';
+import { CustomViewModal } from '@/components/CustomViewModal';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -34,10 +36,37 @@ export const PayrollDashboard = () => {
   const [savedViews, setSavedViews] = useState<SavedFilterView[]>([]);
   const [employeeData, setEmployeeData] = useState(employees);
   const [activeCard, setActiveCard] = useState<string>();
-  const [currentView, setCurrentView] = useState<'gross-pay' | 'deductions' | 'employer-cost' | 'total'>('gross-pay');
+  const [currentView, setCurrentView] = useState<'gross-pay' | 'deductions' | 'employer-cost' | 'total' | 'custom-view'>('gross-pay');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  
+  // Custom view state
+  const [customView, setCustomView] = useState<CustomView | undefined>();
+  const [showCustomViewModal, setShowCustomViewModal] = useState(false);
+  const [isEditingCustomView, setIsEditingCustomView] = useState(false);
+  
   const { toast } = useToast();
+
+  // Load custom view from localStorage on mount
+  useEffect(() => {
+    const savedCustomView = localStorage.getItem('payroll-custom-view');
+    if (savedCustomView) {
+      try {
+        setCustomView(JSON.parse(savedCustomView));
+      } catch (error) {
+        console.error('Failed to load custom view:', error);
+      }
+    }
+  }, []);
+
+  // Save custom view to localStorage whenever it changes
+  useEffect(() => {
+    if (customView) {
+      localStorage.setItem('payroll-custom-view', JSON.stringify(customView));
+    } else {
+      localStorage.removeItem('payroll-custom-view');
+    }
+  }, [customView]);
 
   const filteredEmployees = useMemo(() => {
     return employeeData.filter(employee => {
@@ -233,8 +262,8 @@ export const PayrollDashboard = () => {
 
   const handleCardClick = (cardId: string) => {
     // Handle main cards that switch table views
-    if (['gross-pay', 'deductions', 'employer-cost', 'total'].includes(cardId)) {
-      setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost' | 'total');
+    if (['gross-pay', 'deductions', 'employer-cost', 'total', 'custom-view'].includes(cardId)) {
+      setCurrentView(cardId as 'gross-pay' | 'deductions' | 'employer-cost' | 'total' | 'custom-view');
       setActiveCard(undefined); // Clear filter when switching views
       return;
     }
@@ -269,6 +298,43 @@ export const PayrollDashboard = () => {
     setShowAdvancedFilters(true);
   };
 
+  // Custom view handlers
+  const handleCreateCustomView = () => {
+    setIsEditingCustomView(false);
+    setShowCustomViewModal(true);
+  };
+
+  const handleEditCustomView = () => {
+    setIsEditingCustomView(true);
+    setShowCustomViewModal(true);
+  };
+
+  const handleDeleteCustomView = () => {
+    setCustomView(undefined);
+    if (currentView === 'custom-view') {
+      setCurrentView('gross-pay');
+    }
+    toast({
+      title: "Custom View Deleted",
+      description: "Your custom view has been removed.",
+    });
+  };
+
+  const handleSaveCustomView = (viewData: Omit<CustomView, 'id'>) => {
+    const newView: CustomView = {
+      ...viewData,
+      id: customView?.id || Math.random().toString(36).substr(2, 9)
+    };
+    
+    setCustomView(newView);
+    setShowCustomViewModal(false);
+    
+    toast({
+      title: isEditingCustomView ? "Custom View Updated" : "Custom View Created",
+      description: `Your custom view "${newView.name}" has been ${isEditingCustomView ? 'updated' : 'created'}.`,
+    });
+  };
+
   const renderCurrentTable = () => {
     const commonProps = {
       employees: filteredEmployees,
@@ -290,6 +356,11 @@ export const PayrollDashboard = () => {
         return <EmployerCostTable {...commonProps} />;
       case 'total':
         return <TotalViewTable {...incomeProps} />;
+      case 'custom-view':
+        if (customView) {
+          return <CustomViewTable {...commonProps} customView={customView} />;
+        }
+        return <div className="p-8 text-center text-muted-foreground">No custom view configured</div>;
       case 'gross-pay':
       default:
         // For the gross pay view, we render different tables based on view mode
@@ -309,6 +380,8 @@ export const PayrollDashboard = () => {
         return 'Employer Cost Breakdown';
       case 'total':
         return 'Total View - All Payroll Details';
+      case 'custom-view':
+        return customView ? `Custom View - ${customView.name}` : 'Custom View';
       case 'gross-pay':
       default:
         return 'Income Details';
@@ -333,6 +406,10 @@ export const PayrollDashboard = () => {
           approvedEmployees={approvedEmployees}
           currentView={currentView}
           viewMode={viewMode}
+          customView={customView}
+          onCreateCustomView={handleCreateCustomView}
+          onEditCustomView={handleEditCustomView}
+          onDeleteCustomView={handleDeleteCustomView}
         />
         
 
@@ -368,6 +445,15 @@ export const PayrollDashboard = () => {
           />
           {renderCurrentTable()}
         </div>
+
+        {/* Custom View Modal */}
+        <CustomViewModal
+          isOpen={showCustomViewModal}
+          onClose={() => setShowCustomViewModal(false)}
+          onSave={handleSaveCustomView}
+          existingView={customView}
+          isEdit={isEditingCustomView}
+        />
       </div>
     </div>
   );
