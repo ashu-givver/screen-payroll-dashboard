@@ -108,34 +108,6 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
           </CardContent>
         </Card>
 
-        {/* Export & Reports Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Reports & Export
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button 
-              onClick={handleExportCurrent}
-              className="w-full gap-2"
-              variant="outline"
-            >
-              <Download className="h-4 w-4" />
-              Export Gross/Net Report – {currentLabel}
-            </Button>
-
-            <Button 
-              onClick={handleExportPrevious}
-              className="w-full gap-2"
-              variant="outline"
-            >
-              <Download className="h-4 w-4" />
-              Export Gross/Net Report – {previousLabel}
-            </Button>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
