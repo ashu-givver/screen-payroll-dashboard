@@ -267,14 +267,15 @@ export const KeyChangesWidget = () => {
                   <Legend />
                   <Bar 
                     dataKey="current" 
-                    name="Current Month" 
-                    fill="#3b82f6"
+                    name="Current Month"
+                    fill="#10b981"
                     radius={[2, 2, 0, 0]}
                   />
                   <Bar 
                     dataKey="previous" 
-                    name="Previous Month" 
-                    fill="#9ca3af"
+                    name="Previous Month"
+                    fill="#6ee7b7"
+                    opacity={0.7}
                     radius={[2, 2, 0, 0]}
                   />
                 </BarChart>
