@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, MoreHorizontal } from 'lucide-react';
+import { Download, MoreHorizontal, Play } from 'lucide-react';
 import { PayrollPeriod } from '@/types/payroll';
 
 interface PayrollHeaderProps {
@@ -24,10 +24,11 @@ export const PayrollHeader = ({
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge 
-                variant={period.status === 'Draft' ? 'secondary' : 'default'}
-                className={period.status === 'Draft' ? 'bg-payroll-draft text-payroll-header' : ''}
+                className="bg-[#2563EB] text-white border-[#2563EB]"
+                aria-label="Payroll in progress"
               >
-                {period.status}
+                <Play className="h-3 w-3 mr-1" />
+                IN PROGRESS
               </Badge>
             </div>
           </div>
