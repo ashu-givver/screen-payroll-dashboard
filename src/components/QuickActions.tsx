@@ -103,33 +103,23 @@ export const QuickActions = ({ className }: QuickActionsProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-1">
-              <Button 
-                onClick={handleExportCurrent}
-                className="w-full gap-2"
-                variant="outline"
-              >
-                <Download className="h-4 w-4" />
-                Export Gross/Net Report — {currentLabel}
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                Exports the gross-to-net payroll report for the active payroll cycle (current month).
-              </p>
-            </div>
+            <Button 
+              onClick={handleExportCurrent}
+              className="w-full gap-2"
+              variant="outline"
+            >
+              <Download className="h-4 w-4" />
+              Export Gross/Net Report — {currentLabel}
+            </Button>
 
-            <div className="space-y-1">
-              <Button 
-                onClick={handleExportPrevious}
-                className="w-full gap-2"
-                variant="outline"
-              >
-                <Download className="h-4 w-4" />
-                Export Gross/Net Report — {previousLabel}
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                Exports the gross-to-net payroll report for the immediately previous cycle.
-              </p>
-            </div>
+            <Button 
+              onClick={handleExportPrevious}
+              className="w-full gap-2"
+              variant="outline"
+            >
+              <Download className="h-4 w-4" />
+              Export Gross/Net Report — {previousLabel}
+            </Button>
           </CardContent>
         </Card>
       </div>
