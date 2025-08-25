@@ -122,19 +122,29 @@ export const KeyChangesWidget = () => {
 
   // Custom label function for accessibility with proper null checks
   const renderCustomLabel = (props: any, dataKey: string) => {
+    console.log('renderCustomLabel called with:', { props, dataKey });
+    
     const { x, y, width, value, payload } = props;
+    
+    console.log('Extracted values:', { x, y, width, value, payload });
     
     // Add null checks to prevent errors
     if (!payload || !x || !y || !width) {
+      console.log('Early return due to missing values');
       return null;
     }
     
     const data = payload;
+    console.log('Data object:', data);
+    console.log('Data.change:', data?.change);
+    
     const changeValue = data?.change || 0;
     const formattedValue = dataKey === 'current' ? 
       (data?.currentFormatted || formatCurrency(value || 0)) : 
       (data?.previousFormatted || formatCurrency(value || 0));
     const changeText = changeValue !== 0 ? ` ${changeValue >= 0 ? '+' : ''}${changeValue.toFixed(0)}%` : '';
+    
+    console.log('Final values:', { changeValue, formattedValue, changeText });
     
     return (
       <text 
