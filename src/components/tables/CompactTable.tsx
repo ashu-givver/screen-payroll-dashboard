@@ -122,8 +122,11 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               Employee
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="80px" align="center">
-            Action
+          <NotionTableHead width="100px" align="center">
+            <div className="flex flex-col items-center">
+              <span className="text-xs font-medium">Approval</span>
+              <span className="text-xs text-muted-foreground font-normal">Approve each employee for this payroll</span>
+            </div>
           </NotionTableHead>
           <NotionTableHead width="100px" align="right">
             <SortableHeader 
@@ -214,16 +217,17 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
         {/* Total row */}
         <NotionTableRow className="bg-muted/40 font-medium">
           <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
-          <NotionTableCell align="center">
-            <Button
-              size="sm"
-              variant="outline"
-              disabled
-              className="h-6 px-2 text-xs opacity-50"
-            >
-              -
-            </Button>
-          </NotionTableCell>
+           <NotionTableCell align="center">
+             <Button
+               size="sm"
+               variant="ghost"
+               disabled
+               className="h-6 px-3 text-xs font-medium border bg-gray-200 text-gray-500 border-gray-200 cursor-not-allowed"
+               aria-label="Total row - no action available"
+             >
+               -
+             </Button>
+           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(totalBasePay)}
           </NotionTableCell>
@@ -272,12 +276,26 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <NotionTableCell align="center">
                 <Button
                   size="sm"
-                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                  variant="ghost"
                   onClick={() => onApproveEmployee(employee.id)}
-                  disabled={approvedEmployees.has(employee.id)}
-                  className="h-6 px-2 text-xs"
+                  disabled={false}
+                  className={`h-6 px-3 text-xs font-medium border transition-colors focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 ${
+                    approvedEmployees.has(employee.id)
+                      ? 'bg-green-600 text-white border-green-600 hover:bg-green-700'
+                      : 'bg-transparent text-gray-900 border-gray-400 hover:border-green-600 hover:text-gray-900'
+                  }`}
+                  aria-label={
+                    approvedEmployees.has(employee.id) 
+                      ? `${employee.name} approved for payroll`
+                      : `Approve payroll for ${employee.name}`
+                  }
+                  title={
+                    approvedEmployees.has(employee.id)
+                      ? 'Click to unapprove'
+                      : 'Mark as approved for payroll'
+                  }
                 >
-                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                  {approvedEmployees.has(employee.id) ? "Approved ✓" : "Approve"}
                 </Button>
               </NotionTableCell>
               <NotionTableCell align="right" className="font-medium">

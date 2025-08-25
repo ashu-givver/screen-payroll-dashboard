@@ -27,7 +27,12 @@ export const IncomeTable = ({ employees, summary, viewMode, approvedEmployees, o
             <TableHead className="text-right w-28">Overtime</TableHead>
             <TableHead className="text-right w-28">GIF Flex</TableHead>
             <TableHead className="text-right w-32">Gross Pay</TableHead>
-            <TableHead className="w-20">Action</TableHead>
+            <TableHead className="w-32">
+              <div className="flex flex-col">
+                <span className="text-xs font-medium">Approval</span>
+                <span className="text-xs text-muted-foreground font-normal">Approve each employee for this payroll</span>
+              </div>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,12 +78,26 @@ export const IncomeTable = ({ employees, summary, viewMode, approvedEmployees, o
               <TableCell>
                 <Button
                   size="sm"
-                  variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
+                  variant="ghost"
                   onClick={() => onApproveEmployee(employee.id)}
-                  disabled={approvedEmployees.has(employee.id)}
-                  className="h-6 px-2 text-xs"
+                  disabled={false}
+                  className={`h-6 px-3 text-xs font-medium border transition-colors focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 ${
+                    approvedEmployees.has(employee.id)
+                      ? 'bg-green-600 text-white border-green-600 hover:bg-green-700'
+                      : 'bg-transparent text-gray-900 border-gray-400 hover:border-green-600 hover:text-gray-900'
+                  }`}
+                  aria-label={
+                    approvedEmployees.has(employee.id) 
+                      ? `${employee.name} approved for payroll`
+                      : `Approve payroll for ${employee.name}`
+                  }
+                  title={
+                    approvedEmployees.has(employee.id)
+                      ? 'Click to unapprove'
+                      : 'Mark as approved for payroll'
+                  }
                 >
-                  {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
+                  {approvedEmployees.has(employee.id) ? "Approved ✓" : "Approve"}
                 </Button>
               </TableCell>
             </TableRow>

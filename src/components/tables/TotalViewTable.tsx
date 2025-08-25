@@ -99,7 +99,12 @@ export const TotalViewTable = ({
       <NotionTableHeader>
         <NotionTableRow>
           <NotionTableHead className="w-8"> </NotionTableHead>
-          <NotionTableHead className="w-12">Actions</NotionTableHead>
+          <NotionTableHead className="w-32">
+            <div className="flex flex-col">
+              <span className="text-xs font-medium">Approval</span>
+              <span className="text-xs text-muted-foreground font-normal">Approve each employee for this payroll</span>
+            </div>
+          </NotionTableHead>
           <NotionTableHead className="w-64" sticky>
             <SortableHeader
               sortKey="name"
@@ -189,20 +194,29 @@ export const TotalViewTable = ({
                 </Button>
               </NotionTableCell>
               <NotionTableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      <MoreHorizontal className="h-3 w-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start">
-                    <DropdownMenuItem onClick={() => onApproveEmployee(employee.id)}>
-                      {isApproved ? 'Unapprove' : 'Approve'}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Edit Details</DropdownMenuItem>
-                    <DropdownMenuItem>View History</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onApproveEmployee(employee.id)}
+                  disabled={false}
+                  className={`h-6 px-3 text-xs font-medium border transition-colors focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 ${
+                    isApproved
+                      ? 'bg-green-600 text-white border-green-600 hover:bg-green-700'
+                      : 'bg-transparent text-gray-900 border-gray-400 hover:border-green-600 hover:text-gray-900'
+                  }`}
+                  aria-label={
+                    isApproved 
+                      ? `${employee.name} approved for payroll`
+                      : `Approve payroll for ${employee.name}`
+                  }
+                  title={
+                    isApproved
+                      ? 'Click to unapprove'
+                      : 'Mark as approved for payroll'
+                  }
+                >
+                  {isApproved ? "Approved ✓" : "Approve"}
+                </Button>
               </NotionTableCell>
               <NotionTableCell sticky>
                 <div className="flex items-center gap-3">
