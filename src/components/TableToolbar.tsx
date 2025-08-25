@@ -23,12 +23,14 @@ interface TableToolbarProps {
 }
 
 const filterOptions = [
-  { id: 'total-headcount', label: 'Total Headcount' },
+  { id: 'total-employees', label: 'Total Employees' },
   { id: 'new-joiners', label: 'New Joiners' },
   { id: 'leavers', label: 'Leavers' },
   { id: 'pension-enrolled', label: 'Pension Enrolled' },
   { id: 'pension-opted-out', label: 'Pension Opted Out' },
   { id: 'salary-changes', label: 'Salary Changes' },
+  { id: 'net-differences', label: 'Net Differences' },
+  { id: 'pending-approval', label: 'Pending Approval' },
 ];
 
 export const TableToolbar = ({
@@ -76,24 +78,24 @@ export const TableToolbar = ({
               <ChevronDown className="h-3 w-3 ml-1" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {filterOptions.map((filter) => (
-              <DropdownMenuCheckboxItem
-                key={filter.id}
-                checked={activeFilters.includes(filter.id)}
-                onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
-              >
-                {filter.label}
-              </DropdownMenuCheckboxItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onAdvancedFilters}>
-              <Settings className="h-4 w-4 mr-2" />
-              Advanced Filters
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+            <DropdownMenuContent align="start" className="w-56 bg-background border z-50">
+              <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {filterOptions.map((filter) => (
+                <DropdownMenuCheckboxItem
+                  key={filter.id}
+                  checked={activeFilters.includes(filter.id)}
+                  onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
+                >
+                  {filter.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onAdvancedFilters}>
+                <Settings className="h-4 w-4 mr-2" />
+                Advanced Filters
+              </DropdownMenuItem>
+            </DropdownMenuContent>
         </DropdownMenu>
       </div>
 

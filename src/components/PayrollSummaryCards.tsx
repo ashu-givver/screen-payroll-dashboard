@@ -5,15 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { 
   TrendingUp, 
   TrendingDown, 
-  Users, 
-  UserPlus, 
-  UserMinus, 
-  PiggyBank, 
-  UserX, 
   DollarSign,
   Coins,
   Building,
-  UserCheck
+  PiggyBank
 } from 'lucide-react';
 
 interface SummaryCard {
@@ -23,7 +18,6 @@ interface SummaryCard {
   change: number;
   changeType: 'increase' | 'decrease';
   icon: React.ComponentType<{ className?: string }>;
-  type: 'headcount' | 'pay';
 }
 
 interface PayrollSummaryCardsProps {
@@ -48,16 +42,11 @@ export const PayrollSummaryCards = ({
   const previousMonthDeductions = 23100;
   const previousMonthTakeHome = 61400;
   const previousMonthEmployerCost = 97800;
-  const previousMonthHeadcount = 8;
-  const previousMonthPayDifferences = 3;
 
   const grossChange = ((summary.totalIncome - previousMonthGross) / previousMonthGross) * 100;
   const deductionsChange = ((summary.totalDeductions - previousMonthDeductions) / previousMonthDeductions) * 100;
   const takeHomeChange = ((summary.totalTakeHomePay - previousMonthTakeHome) / previousMonthTakeHome) * 100;
   const employerCostChange = ((summary.totalEmployerCost - previousMonthEmployerCost) / previousMonthEmployerCost) * 100;
-  const headcountChange = ((totalEmployeeCount - previousMonthHeadcount) / previousMonthHeadcount) * 100;
-  const payDifferencesCount = 4; // Mock: employees with pay differences
-  const payDifferencesChange = ((payDifferencesCount - previousMonthPayDifferences) / previousMonthPayDifferences) * 100;
 
   const formatChange = (change: number) => {
     const absChange = Math.abs(change);
@@ -73,62 +62,6 @@ export const PayrollSummaryCards = ({
   };
 
   const summaryCards: SummaryCard[] = [
-    // Headcount & Employee Changes
-    {
-      id: 'total-headcount',
-      title: 'Total Headcount',
-      value: totalEmployeeCount.toString(),
-      change: headcountChange,
-      changeType: headcountChange >= 0 ? 'increase' : 'decrease',
-      icon: Users,
-      type: 'headcount',
-    },
-    {
-      id: 'new-joiners',
-      title: 'New Joiners',
-      value: '3',
-      change: 15.2,
-      changeType: 'increase',
-      icon: UserPlus,
-      type: 'headcount',
-    },
-    {
-      id: 'leavers',
-      title: 'Leavers',
-      value: '1',
-      change: 12.5,
-      changeType: 'decrease',
-      icon: UserMinus,
-      type: 'headcount',
-    },
-    {
-      id: 'pension-enrolled',
-      title: 'Pension Enrolled',
-      value: '2',
-      change: 8.3,
-      changeType: 'increase',
-      icon: PiggyBank,
-      type: 'headcount',
-    },
-    {
-      id: 'pension-opted-out',
-      title: 'Pension Opted Out',
-      value: '0',
-      change: 100,
-      changeType: 'decrease',
-      icon: UserX,
-      type: 'headcount',
-    },
-    {
-      id: 'salary-changes',
-      title: 'Salary Changes',
-      value: '4',
-      change: 25.0,
-      changeType: 'increase',
-      icon: DollarSign,
-      type: 'headcount',
-    },
-    // Pay & Cost Metrics
     {
       id: 'gross-pay',
       title: 'Gross Pay',
@@ -136,7 +69,6 @@ export const PayrollSummaryCards = ({
       change: grossChange,
       changeType: grossChange >= 0 ? 'increase' : 'decrease',
       icon: DollarSign,
-      type: 'pay',
     },
     {
       id: 'deductions',
@@ -145,7 +77,6 @@ export const PayrollSummaryCards = ({
       change: deductionsChange,
       changeType: deductionsChange >= 0 ? 'increase' : 'decrease',
       icon: Coins,
-      type: 'pay',
     },
     {
       id: 'take-home-pay',
@@ -154,7 +85,6 @@ export const PayrollSummaryCards = ({
       change: takeHomeChange,
       changeType: takeHomeChange >= 0 ? 'increase' : 'decrease',
       icon: PiggyBank,
-      type: 'pay',
     },
     {
       id: 'employer-cost',
@@ -163,21 +93,8 @@ export const PayrollSummaryCards = ({
       change: employerCostChange,
       changeType: employerCostChange >= 0 ? 'increase' : 'decrease',
       icon: Building,
-      type: 'pay',
-    },
-    {
-      id: 'net-differences',
-      title: 'Net Differences',
-      value: payDifferencesCount.toString(),
-      change: payDifferencesChange,
-      changeType: payDifferencesChange >= 0 ? 'increase' : 'decrease',
-      icon: UserCheck,
-      type: 'pay',
     },
   ];
-
-  const headcountCards = summaryCards.filter(card => card.type === 'headcount');
-  const payCards = summaryCards.filter(card => card.type === 'pay');
 
   const renderCard = (card: SummaryCard) => {
     const Icon = card.icon;
@@ -222,7 +139,7 @@ export const PayrollSummaryCards = ({
     <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200">
       <div className="flex items-center gap-2 mb-4">
         <h3 className="text-sm font-medium text-gray-900">
-          Summary for {isFiltered ? `${filteredEmployeeCount} of ${totalEmployeeCount}` : filteredEmployeeCount} employees
+          Pay Summary for {isFiltered ? `${filteredEmployeeCount} of ${totalEmployeeCount}` : filteredEmployeeCount} employees
         </h3>
         {isFiltered && (
           <Badge variant="secondary" className="text-xs">
@@ -231,14 +148,9 @@ export const PayrollSummaryCards = ({
         )}
       </div>
       
-      {/* First row: Headcount & Employee Changes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
-        {headcountCards.map(renderCard)}
-      </div>
-      
-      {/* Second row: Pay & Cost Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {payCards.map(renderCard)}
+      {/* Pay & Cost Metrics Only */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {summaryCards.map(renderCard)}
       </div>
     </div>
   );

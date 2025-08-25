@@ -1,9 +1,5 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronDown, ChevronUp, Users, TrendingUp, TrendingDown, 
-         Shield, ShieldOff, PoundSterling, Minus, Calculator, 
-         Banknote, TrendingUpDown, Clock } from 'lucide-react';
+import { PoundSterling, Minus, Calculator, TrendingUpDown } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 import { PayrollSummary, Employee } from '@/types/payroll';
 
@@ -30,18 +26,6 @@ export const StaticTopSection = ({
   currentView,
   viewMode
 }: StaticTopSectionProps) => {
-  const [showMoreInsights, setShowMoreInsights] = useState(false);
-
-  // Calculate additional metrics for "More Insights" cards
-  const newJoinersCount = employees.filter(emp => ['1', '2', '3'].includes(emp.id)).length;
-  const leaversCount = employees.filter(emp => ['4'].includes(emp.id)).length;
-  const pensionEnrolledCount = employees.filter(emp => ['5', '6'].includes(emp.id)).length;
-  const pensionOptedOutCount = 0; // Based on mock data
-  const salaryChangesCount = employees.filter(emp => ['1', '3', '5', '7'].includes(emp.id)).length;
-  const pendingApprovalCount = employees.length - approvedEmployees.size;
-  
-  // Calculate net differences (simplified - would be based on previous month data)
-  const netDifferences = 1250.50; // Mock calculation
 
   const mainCards = [
     {
@@ -70,72 +54,6 @@ export const StaticTopSection = ({
     }
   ];
 
-  const moreInsightsCards = [
-    {
-      id: 'total-headcount',
-      title: 'Total Employees',
-      value: totalEmployeeCount.toString(),
-      change: '+2',
-      icon: Users,
-      type: 'positive' as const
-    },
-    {
-      id: 'new-joiners',
-      title: 'New Joiners',
-      value: newJoinersCount.toString(),
-      change: '+3',
-      icon: TrendingUp,
-      type: 'positive' as const
-    },
-    {
-      id: 'leavers',
-      title: 'Leavers',
-      value: leaversCount.toString(),
-      change: '+1',
-      icon: TrendingDown,
-      type: 'negative' as const
-    },
-    {
-      id: 'pension-enrolled',
-      title: 'Pension Enrolled',
-      value: pensionEnrolledCount.toString(),
-      change: '+2',
-      icon: Shield,
-      type: 'positive' as const
-    },
-    {
-      id: 'pension-opted-out',
-      title: 'Pension Opted Out',
-      value: pensionOptedOutCount.toString(),
-      change: '0',
-      icon: ShieldOff,
-      type: 'neutral' as const
-    },
-    {
-      id: 'salary-changes',
-      title: 'Salary Changes',
-      value: salaryChangesCount.toString(),
-      change: '+4',
-      icon: Banknote,
-      type: 'neutral' as const
-    },
-    {
-      id: 'net-differences',
-      title: 'Net Differences',
-      value: formatCurrency(netDifferences),
-      change: '+5.2%',
-      icon: TrendingUpDown,
-      type: 'positive' as const
-    },
-    {
-      id: 'pending-approval',
-      title: 'Pending Approval',
-      value: pendingApprovalCount.toString(),
-      change: '',
-      icon: Clock,
-      type: 'neutral' as const
-    }
-  ];
 
   const renderCard = (card: any, isClickable = true, isMainCard = false) => {
     const IconComponent = card.icon;
@@ -215,28 +133,6 @@ export const StaticTopSection = ({
           </div>
         )}
 
-        {/* More Insights Button */}
-        <div className="flex justify-center">
-          <Button
-            variant="outline"
-            onClick={() => setShowMoreInsights(!showMoreInsights)}
-            className="flex items-center gap-2"
-          >
-            More Insights
-            {showMoreInsights ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-
-        {/* More Insights Cards */}
-        {showMoreInsights && (
-          <div className="mt-4 grid grid-cols-4 gap-3">
-            {moreInsightsCards.map(card => renderCard(card))}
-          </div>
-        )}
 
         {/* Filter Info */}
         {filteredEmployeeCount !== totalEmployeeCount && (

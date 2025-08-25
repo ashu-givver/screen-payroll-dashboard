@@ -30,12 +30,14 @@ interface TableControlBarProps {
 }
 
 const filterOptions = [
-  { id: 'total-headcount', label: 'Total Headcount' },
+  { id: 'total-employees', label: 'Total Employees' },
   { id: 'new-joiners', label: 'New Joiners' },
   { id: 'leavers', label: 'Leavers' },
   { id: 'pension-enrolled', label: 'Pension Enrolled' },
   { id: 'pension-opted-out', label: 'Pension Opted Out' },
   { id: 'salary-changes', label: 'Salary Changes' },
+  { id: 'net-differences', label: 'Net Differences' },
+  { id: 'pending-approval', label: 'Pending Approval' },
 ];
 
 export const TableControlBar = ({ 
@@ -126,7 +128,7 @@ export const TableControlBar = ({
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Filters Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -141,7 +143,7 @@ export const TableControlBar = ({
                 <ChevronDown className="h-3 w-3 ml-1" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuContent align="start" className="w-56 bg-background border z-50">
               <DropdownMenuLabel>Filter by</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {filterOptions.map((filter) => (
@@ -160,6 +162,28 @@ export const TableControlBar = ({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Active Filter Tags */}
+          {activeFilters.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              {activeFilters.map((filterId) => {
+                const filter = filterOptions.find(f => f.id === filterId);
+                return (
+                  <Badge 
+                    key={filterId}
+                    variant="secondary" 
+                    className="text-xs flex items-center gap-1 bg-primary/10 text-primary border-primary/20"
+                  >
+                    {filter?.label}
+                    <X 
+                      className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                      onClick={() => onFilterChange(filterId, false)}
+                    />
+                  </Badge>
+                );
+              })}
+            </div>
+          )}
 
           {/* Search */}
           <div className="relative">
