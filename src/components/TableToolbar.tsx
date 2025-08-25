@@ -23,7 +23,6 @@ interface TableToolbarProps {
 }
 
 const filterOptions = [
-  { id: 'total-employees', label: 'Total Employees' },
   { id: 'new-joiners', label: 'New Joiners' },
   { id: 'leavers', label: 'Leavers' },
   { id: 'pension-enrolled', label: 'Pension Enrolled' },
