@@ -372,69 +372,61 @@ export const PayrollDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto">
-        <PayrollHeader 
-          period={payrollPeriod} 
-          onConfirm={handleConfirm}
+    <div className="space-y-6 p-6">
+      <StaticTopSection
+        summary={payrollSummary}
+        employees={employees}
+        filteredEmployeeCount={filteredEmployees.length}
+        totalEmployeeCount={employees.length}
+        onCardClick={handleCardClick}
+        activeCard={activeCard}
+        approvedEmployees={approvedEmployees}
+        currentView={currentView}
+        customView={customView}
+        onCreateCustomView={handleCreateCustomView}
+        onEditCustomView={handleEditCustomView}
+        onDeleteCustomView={handleDeleteCustomView}
+      />
+      
+      {showAdvancedFilters && (
+        <AdvancedFilterPanel
+          filters={advancedFilters}
+          onFiltersChange={setAdvancedFilters}
+          savedViews={savedViews}
+          onSaveView={handleSaveView}
+          onLoadView={handleLoadView}
+          currentBasicFilters={{
+            showChangesOnly,
+            department: selectedDepartment,
+            employmentType: 'all'
+          }}
         />
-        
-        <StaticTopSection
-          summary={payrollSummary}
-          employees={employees}
-          filteredEmployeeCount={filteredEmployees.length}
-          totalEmployeeCount={employees.length}
-          onCardClick={handleCardClick}
-          activeCard={activeCard}
-          approvedEmployees={approvedEmployees}
+      )}
+
+      <div className="bg-background border border-border rounded-lg">
+        <TableControlBar 
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          activeFilters={activeFilters}
+          onFilterChange={handleFilterChange}
+          onAdvancedFilters={handleAdvancedFilters}
+          onDownload={handleExport}
+          approvedCount={approvedEmployees.size}
+          totalCount={filteredEmployees.length}
+          onApproveAll={handleApproveAll}
           currentView={currentView}
-          customView={customView}
-          onCreateCustomView={handleCreateCustomView}
-          onEditCustomView={handleEditCustomView}
-          onDeleteCustomView={handleDeleteCustomView}
         />
-        
-
-        {showAdvancedFilters && (
-          <AdvancedFilterPanel
-            filters={advancedFilters}
-            onFiltersChange={setAdvancedFilters}
-            savedViews={savedViews}
-            onSaveView={handleSaveView}
-            onLoadView={handleLoadView}
-            currentBasicFilters={{
-              showChangesOnly,
-              department: selectedDepartment,
-              employmentType: 'all'
-            }}
-          />
-        )}
-
-        <div className="bg-background border border-border rounded-lg">
-          <TableControlBar 
-            searchValue={searchTerm}
-            onSearchChange={setSearchTerm}
-            activeFilters={activeFilters}
-            onFilterChange={handleFilterChange}
-            onAdvancedFilters={handleAdvancedFilters}
-            onDownload={handleExport}
-            approvedCount={approvedEmployees.size}
-            totalCount={filteredEmployees.length}
-            onApproveAll={handleApproveAll}
-            currentView={currentView}
-          />
-          {renderCurrentTable()}
-        </div>
-
-        {/* Custom View Modal */}
-        <CustomViewModal
-          isOpen={showCustomViewModal}
-          onClose={() => setShowCustomViewModal(false)}
-          onSave={handleSaveCustomView}
-          existingView={customView}
-          isEdit={isEditingCustomView}
-        />
+        {renderCurrentTable()}
       </div>
+
+      {/* Custom View Modal */}
+      <CustomViewModal
+        isOpen={showCustomViewModal}
+        onClose={() => setShowCustomViewModal(false)}
+        onSave={handleSaveCustomView}
+        existingView={customView}
+        isEdit={isEditingCustomView}
+      />
     </div>
   );
 };
