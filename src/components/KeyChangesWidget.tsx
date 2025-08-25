@@ -30,32 +30,45 @@ export const KeyChangesWidget = () => {
   const hmrcChange = previousHMRC > 0 ? ((currentHMRC - previousHMRC) / previousHMRC) * 100 : 0;
   const pensionChange = previousPension > 0 ? ((currentPension - previousPension) / previousPension) * 100 : 0;
 
-  // Calculate employees with significant changes for the second card
+  // Calculate employees with significant Gross Pay changes (±5%)
   const significantChanges = employees
     .map(emp => {
       if (!emp.previousMonth) return null;
       
-      const incomeChange = emp.totalIncome - emp.previousMonth.totalIncome;
-      const deductionsChange = emp.deductions - emp.previousMonth.deductions;
-      const takeHomeChange = emp.takeHomePay - emp.previousMonth.takeHomePay;
-      const employerCostChange = emp.employerCost - emp.previousMonth.employerCost;
+      const currentGrossPay = emp.totalIncome;
+      const previousGrossPay = emp.previousMonth.totalIncome;
       
-      // Determine which sections have significant changes (>£50 threshold)
-      const changes = [];
-      if (Math.abs(incomeChange) > 50) {
-        changes.push({ type: 'income', change: incomeChange, label: 'Income' });
-      }
-      if (Math.abs(deductionsChange) > 50) {
-        changes.push({ type: 'deductions', change: deductionsChange, label: 'Deductions' });
-      }
-      if (Math.abs(employerCostChange) > 50) {
-        changes.push({ type: 'employer', change: employerCostChange, label: 'Employer Cost' });
+      if (previousGrossPay === 0) return null;
+      
+      const percentageChange = ((currentGrossPay - previousGrossPay) / previousGrossPay) * 100;
+      
+      // Only show changes ±5%
+      if (Math.abs(percentageChange) < 5) return null;
+      
+      // Determine reason based on pay component changes
+      let reason = 'Other';
+      
+      const bonusChange = emp.bonus - (emp.previousMonth.bonus || 0);
+      const overtimeChange = emp.overtime - (emp.previousMonth.overtime || 0);
+      const basePayChange = emp.basePay - (emp.previousMonth.basePay || 0);
+      
+      if (Math.abs(bonusChange) > Math.abs(basePayChange) && Math.abs(bonusChange) > Math.abs(overtimeChange)) {
+        reason = bonusChange > 0 ? 'Bonus' : 'Bonus adjustment';
+      } else if (Math.abs(overtimeChange) > Math.abs(basePayChange)) {
+        reason = overtimeChange > 0 ? 'Overtime' : 'Reduced hours';
+      } else if (basePayChange < -100) {
+        reason = 'Sickness absence';
+      } else if (basePayChange < -50) {
+        reason = 'Maternity leave';
+      } else if (basePayChange > 100) {
+        reason = 'Salary increase';
       }
       
       return {
         employee: emp,
-        changes,
-        hasSignificantChange: changes.length > 0
+        percentageChange,
+        reason,
+        hasSignificantChange: true
       };
     })
     .filter(change => change && change.hasSignificantChange);
@@ -169,33 +182,21 @@ export const KeyChangesWidget = () => {
             ) : (
               <div className="space-y-4">
                 {significantChanges.slice(0, 3).map((change) => (
-                  <div key={change!.employee.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium text-sm">{change!.employee.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {change!.employee.department}
-                        </div>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {change!.changes.length} section{change!.changes.length > 1 ? 's' : ''} changed
+                  <div key={change!.employee.id} className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-sm">
+                        {change!.employee.name} ({change!.employee.department})
                       </div>
                     </div>
-                    
-                    {/* Multiple change badges */}
-                    <div className="flex flex-wrap gap-2">
-                      {change!.changes.map((changeItem, index) => (
-                        <div key={index} className="flex items-center gap-1">
-                          <Badge 
-                            variant="outline" 
-                            className={`text-xs ${
-                              changeItem.change >= 0 ? 'text-payroll-positive border-payroll-positive/20' : 'text-payroll-negative border-payroll-negative/20'
-                            }`}
-                          >
-                            {changeItem.label}: {changeItem.change >= 0 ? '+' : ''}{formatCurrency(Math.abs(changeItem.change))}
-                          </Badge>
-                        </div>
-                      ))}
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-medium ${
+                        change!.percentageChange >= 0 ? 'text-payroll-positive' : 'text-payroll-negative'
+                      }`}>
+                        {change!.percentageChange >= 0 ? '+' : ''}{change!.percentageChange.toFixed(0)}%
+                      </span>
+                      <Badge variant="outline" className="text-xs">
+                        {change!.reason}
+                      </Badge>
                     </div>
                   </div>
                 ))}
