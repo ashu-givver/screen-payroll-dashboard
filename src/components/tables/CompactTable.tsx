@@ -158,6 +158,9 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <span className="text-xs text-muted-foreground font-normal">Approve each employee for this payroll</span>
             </div>
           </NotionTableHead>
+          <NotionTableHead width="120px" align="right">
+            Gross Pay Difference %
+          </NotionTableHead>
           <NotionTableHead width="100px" align="right">
             <SortableHeader 
               sortKey="basePay" 
@@ -235,9 +238,6 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               Gross Pay
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="120px" align="right">
-            Gross Pay Difference
-          </NotionTableHead>
         </NotionTableRow>
       </NotionTableHeader>
       <NotionTableBody>
@@ -255,7 +255,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                -
              </Button>
            </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+           <NotionTableCell align="right">
+             <span className="text-green-700 bg-green-50 border border-green-200 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium">+2.3%</span>
+           </NotionTableCell>
+           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(totalBasePay)}
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
@@ -275,9 +278,6 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(summary.totalIncome)}
-          </NotionTableCell>
-          <NotionTableCell align="right">
-            <span className="text-green-600 font-medium">+2.3%</span>
           </NotionTableCell>
         </NotionTableRow>
             
@@ -321,6 +321,24 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 >
                   {approvedEmployees.has(employee.id) ? "Approved ✓" : "Approve"}
                 </Button>
+              </NotionTableCell>
+              <NotionTableCell align="right">
+                {grossPayChange.percentage !== 0 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium cursor-help ${getPercentageColorClass(grossPayChange.percentage)}`}>
+                          {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-sm">{payDifferenceTooltip}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                )}
               </NotionTableCell>
               <NotionTableCell align="right" className="font-medium">
                 <EditableCell
@@ -373,24 +391,6 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               </NotionTableCell>
               <NotionTableCell align="right" className="font-medium">
                 {formatCurrency(employee.totalIncome)}
-              </NotionTableCell>
-              <NotionTableCell align="right">
-                {grossPayChange.percentage !== 0 ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium cursor-help ${getPercentageColorClass(grossPayChange.percentage)}`}>
-                          {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-sm">{payDifferenceTooltip}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <span className="text-muted-foreground">-</span>
-                )}
               </NotionTableCell>
             </NotionTableRow>
           );
