@@ -71,6 +71,24 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     return { amount: change, percentage };
   };
 
+  // Get color class based on percentage difference
+  const getPercentageColorClass = (percentage: number) => {
+    const absPercentage = Math.abs(percentage);
+    
+    if (absPercentage < 3) {
+      return 'text-green-700 bg-green-50 border border-green-200';
+    } else if (absPercentage < 5) {
+      return 'text-yellow-700 bg-yellow-50 border border-yellow-200';
+    } else if (absPercentage < 7) {
+      return 'text-orange-700 bg-orange-50 border border-orange-200';
+    } else if (absPercentage <= 10) {
+      return 'text-red-700 bg-red-50 border border-red-200';
+    } else {
+      // For values > 10%, use red with stronger styling
+      return 'text-red-800 bg-red-100 border border-red-300';
+    }
+  };
+
   // Get tooltip information about pay differences
   const getPayDifferenceTooltip = (employee: Employee) => {
     if (!employee.previousMonth) return 'No previous data available';
@@ -361,7 +379,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className={`${grossPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} font-medium cursor-help`}>
+                        <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium cursor-help ${getPercentageColorClass(grossPayChange.percentage)}`}>
                           {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
                         </span>
                       </TooltipTrigger>
