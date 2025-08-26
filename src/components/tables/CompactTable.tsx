@@ -337,8 +337,8 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                           {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
                         </span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-sm">{payDifferenceTooltip}</p>
+                      <TooltipContent className="bg-gray-900 text-white border-gray-800 shadow-lg px-3 py-2 text-xs rounded-lg">
+                        <p>{payDifferenceTooltip}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
