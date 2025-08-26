@@ -89,44 +89,50 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     }
   };
 
-  // Get tooltip information about pay differences
+  // Get tooltip information about pay differences (concise reasons)
   const getPayDifferenceTooltip = (employee: Employee) => {
-    if (!employee.previousMonth) return 'No previous data available';
+    if (!employee.previousMonth) return 'No previous data';
     
-    const changes = [];
+    const reasons = [];
     
-    // Check for changes in different components
+    // Check for changes in different components with thresholds
     const baseDiff = employee.basePay - employee.previousMonth.basePay;
-    if (Math.abs(baseDiff) > 0) {
-      changes.push(`Salary: ${baseDiff > 0 ? '+' : ''}${formatCurrency(baseDiff)}`);
+    if (Math.abs(baseDiff) > 50) {
+      reasons.push('Salary change');
     }
     
     const bonusDiff = employee.bonus - employee.previousMonth.bonus;
     if (Math.abs(bonusDiff) > 0) {
-      changes.push(`Bonus: ${bonusDiff > 0 ? '+' : ''}${formatCurrency(bonusDiff)}`);
+      reasons.push('Bonus');
     }
     
     const overtimeDiff = employee.overtime - employee.previousMonth.overtime;
     if (Math.abs(overtimeDiff) > 0) {
-      changes.push(`Overtime: ${overtimeDiff > 0 ? '+' : ''}${formatCurrency(overtimeDiff)}`);
+      reasons.push('Overtime');
     }
     
     const commissionDiff = employee.commission - employee.previousMonth.commission;
     if (Math.abs(commissionDiff) > 0) {
-      changes.push(`Commission: ${commissionDiff > 0 ? '+' : ''}${formatCurrency(commissionDiff)}`);
+      reasons.push('Commission');
     }
     
     const flexDiff = employee.gifFlex - employee.previousMonth.gifFlex;
     if (Math.abs(flexDiff) > 0) {
-      changes.push(`GIF Flex: ${flexDiff > 0 ? '+' : ''}${formatCurrency(flexDiff)}`);
+      reasons.push('GIF Flex');
     }
     
     const onCallDiff = employee.onCall - employee.previousMonth.onCall;
     if (Math.abs(onCallDiff) > 0) {
-      changes.push(`OnCall: ${onCallDiff > 0 ? '+' : ''}${formatCurrency(onCallDiff)}`);
+      reasons.push('On call');
     }
     
-    return changes.length > 0 ? changes.join(', ') : 'No changes in pay components';
+    // Add mock statutory reasons based on employee ID for demo
+    if (employee.id === '1') reasons.push('Tax code');
+    if (employee.id === '3') reasons.push('Maternity');
+    if (employee.id === '5') reasons.push('Sickness');
+    if (employee.id === '7') reasons.push('Pension change');
+    
+    return reasons.length > 0 ? reasons.join(', ') : 'Minor adjustments';
   };
 
   // Calculate summary totals for all pay elements
