@@ -6,6 +6,7 @@ import { SortableHeader, SortDirection } from '@/components/SortableHeader';
 import { TagsCell } from '@/components/TagsCell';
 import { Button } from '@/components/ui/button';
 import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency } from '@/lib/formatters';
 
 interface CompactTableProps {
@@ -70,33 +71,44 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     return { amount: change, percentage };
   };
 
-  // Get additional information about pay differences
-  const getAdditionalInfo = (employee: Employee) => {
-    if (!employee.previousMonth) return '';
+  // Get tooltip information about pay differences
+  const getPayDifferenceTooltip = (employee: Employee) => {
+    if (!employee.previousMonth) return 'No previous data available';
     
-    const sources = [];
+    const changes = [];
     
-    // Check for significant changes in different components
-    if (Math.abs(employee.basePay - employee.previousMonth.basePay) > 100) {
-      sources.push('Salary Change');
-    }
-    if (employee.bonus > 0 && employee.previousMonth.bonus === 0) {
-      sources.push('New Bonus');
-    }
-    if (employee.overtime > employee.previousMonth.overtime) {
-      sources.push('Additional Overtime');
-    }
-    if (employee.commission > employee.previousMonth.commission) {
-      sources.push('Commission Increase');
+    // Check for changes in different components
+    const baseDiff = employee.basePay - employee.previousMonth.basePay;
+    if (Math.abs(baseDiff) > 0) {
+      changes.push(`Salary: ${baseDiff > 0 ? '+' : ''}${formatCurrency(baseDiff)}`);
     }
     
-    // Mock some additional scenarios based on employee ID
-    if (employee.id === '1') sources.push('New Tax Code');
-    if (employee.id === '3') sources.push('Maternity Leave Adjustment');
-    if (employee.id === '5') sources.push('Sickness Pay Recovery');
-    if (employee.id === '7') sources.push('Performance Bonus');
+    const bonusDiff = employee.bonus - employee.previousMonth.bonus;
+    if (Math.abs(bonusDiff) > 0) {
+      changes.push(`Bonus: ${bonusDiff > 0 ? '+' : ''}${formatCurrency(bonusDiff)}`);
+    }
     
-    return sources.length > 0 ? sources.join(', ') : '';
+    const overtimeDiff = employee.overtime - employee.previousMonth.overtime;
+    if (Math.abs(overtimeDiff) > 0) {
+      changes.push(`Overtime: ${overtimeDiff > 0 ? '+' : ''}${formatCurrency(overtimeDiff)}`);
+    }
+    
+    const commissionDiff = employee.commission - employee.previousMonth.commission;
+    if (Math.abs(commissionDiff) > 0) {
+      changes.push(`Commission: ${commissionDiff > 0 ? '+' : ''}${formatCurrency(commissionDiff)}`);
+    }
+    
+    const flexDiff = employee.gifFlex - employee.previousMonth.gifFlex;
+    if (Math.abs(flexDiff) > 0) {
+      changes.push(`GIF Flex: ${flexDiff > 0 ? '+' : ''}${formatCurrency(flexDiff)}`);
+    }
+    
+    const onCallDiff = employee.onCall - employee.previousMonth.onCall;
+    if (Math.abs(onCallDiff) > 0) {
+      changes.push(`OnCall: ${onCallDiff > 0 ? '+' : ''}${formatCurrency(onCallDiff)}`);
+    }
+    
+    return changes.length > 0 ? changes.join(', ') : 'No changes in pay components';
   };
 
   // Calculate summary totals for all pay elements
@@ -208,9 +220,6 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           <NotionTableHead width="120px" align="right">
             Gross Pay Difference
           </NotionTableHead>
-          <NotionTableHead width="150px" align="right">
-            Additional Information
-          </NotionTableHead>
         </NotionTableRow>
       </NotionTableHeader>
       <NotionTableBody>
@@ -252,15 +261,12 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           <NotionTableCell align="right">
             <span className="text-green-600 font-medium">+2.3%</span>
           </NotionTableCell>
-          <NotionTableCell align="right">
-            <span className="text-sm text-gray-600">Various sources</span>
-          </NotionTableCell>
         </NotionTableRow>
             
         {/* Employee rows */}
         {sortedEmployees.map((employee, index) => {
           const grossPayChange = getGrossPayChange(employee);
-          const additionalInfo = getAdditionalInfo(employee);
+          const payDifferenceTooltip = getPayDifferenceTooltip(employee);
           return (
             <NotionTableRow key={employee.id}>
               <NotionTableCell sticky>
@@ -351,18 +357,22 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 {formatCurrency(employee.totalIncome)}
               </NotionTableCell>
               <NotionTableCell align="right">
-                {grossPayChange.percentage !== 0 && (
-                  <span className={`${grossPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} font-medium`}>
-                    {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
-                  </span>
+                {grossPayChange.percentage !== 0 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className={`${grossPayChange.percentage > 0 ? 'text-green-600' : 'text-red-600'} font-medium cursor-help`}>
+                          {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-sm">{payDifferenceTooltip}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
                 )}
-              </NotionTableCell>
-              <NotionTableCell align="right">
-                <TagsCell 
-                  tags={employee.tags || []}
-                  onTagClick={onTagClick}
-                  maxVisible={2}
-                />
               </NotionTableCell>
             </NotionTableRow>
           );
