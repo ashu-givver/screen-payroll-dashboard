@@ -2,6 +2,7 @@ import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Button } from '@/components/ui/button';
 import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency } from '@/lib/formatters';
 
 interface DeductionsTableProps {
@@ -14,6 +15,59 @@ interface DeductionsTableProps {
 
 export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: DeductionsTableProps) => {
   const filteredEmployees = employees;
+  
+  // Get color class based on percentage difference
+  const getPercentageColorClass = (percentage: number) => {
+    const absPercentage = Math.abs(percentage);
+    
+    if (absPercentage < 3) {
+      return 'text-green-700 bg-green-50 border border-green-200';
+    } else if (absPercentage < 5) {
+      return 'text-yellow-700 bg-yellow-50 border border-yellow-200';
+    } else if (absPercentage < 7) {
+      return 'text-orange-700 bg-orange-50 border border-orange-200';
+    } else if (absPercentage <= 10) {
+      return 'text-red-700 bg-red-50 border border-red-200';
+    } else {
+      // For values > 10%, use red with stronger styling
+      return 'text-red-800 bg-red-100 border border-red-300';
+    }
+  };
+
+  // Get tooltip information about deductions differences
+  const getDeductionsDifferenceTooltip = (employee: Employee) => {
+    if (!employee.previousMonth) return 'No previous data available';
+    
+    const changes = [];
+    
+    // Check for changes in different deduction components
+    const payeDiff = employee.paye - employee.previousMonth.paye;
+    if (Math.abs(payeDiff) > 0) {
+      changes.push(`PAYE: ${payeDiff > 0 ? '+' : ''}${formatCurrency(payeDiff)}`);
+    }
+    
+    const niDiff = employee.ni - employee.previousMonth.ni;
+    if (Math.abs(niDiff) > 0) {
+      changes.push(`NI: ${niDiff > 0 ? '+' : ''}${formatCurrency(niDiff)}`);
+    }
+    
+    const pensionDiff = employee.pension - employee.previousMonth.pension;
+    if (Math.abs(pensionDiff) > 0) {
+      changes.push(`Pension: ${pensionDiff > 0 ? '+' : ''}${formatCurrency(pensionDiff)}`);
+    }
+    
+    const studentLoanDiff = employee.studentLoan - employee.previousMonth.studentLoan;
+    if (Math.abs(studentLoanDiff) > 0) {
+      changes.push(`Student Loan: ${studentLoanDiff > 0 ? '+' : ''}${formatCurrency(studentLoanDiff)}`);
+    }
+    
+    const postgradLoanDiff = employee.postgradLoan - employee.previousMonth.postgradLoan;
+    if (Math.abs(postgradLoanDiff) > 0) {
+      changes.push(`Postgrad Loan: ${postgradLoanDiff > 0 ? '+' : ''}${formatCurrency(postgradLoanDiff)}`);
+    }
+    
+    return changes.length > 0 ? changes.join(', ') : 'No changes in deduction components';
+  };
   
   // Calculate summary totals for deduction breakdown
   const totalPaye = employees.reduce((sum, emp) => sum + emp.paye, 0);
@@ -28,6 +82,7 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
         <NotionTableRow>
           <NotionTableHead width="192px" sticky>Employee</NotionTableHead>
           <NotionTableHead width="80px" align="center">Action</NotionTableHead>
+          <NotionTableHead width="120px" align="right">Employee Deductions Difference %</NotionTableHead>
           <NotionTableHead width="128px" align="right">Gross Pay</NotionTableHead>
           <NotionTableHead width="96px" align="right">PAYE</NotionTableHead>
           <NotionTableHead width="80px" align="right">NI</NotionTableHead>
@@ -35,7 +90,6 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
           <NotionTableHead width="128px" align="right">Student Loan</NotionTableHead>
           <NotionTableHead width="144px" align="right">Postgraduate Loan</NotionTableHead>
           <NotionTableHead width="144px" align="right">Total Deductions</NotionTableHead>
-          <NotionTableHead width="160px" align="right">Total Deductions Change</NotionTableHead>
         </NotionTableRow>
       </NotionTableHeader>
       <NotionTableBody>
@@ -51,6 +105,9 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
             >
               -
             </Button>
+          </NotionTableCell>
+          <NotionTableCell align="right">
+            <span className="text-green-700 bg-green-50 border border-green-200 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium">+6.2%</span>
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(summary.totalIncome)}
@@ -73,9 +130,6 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
           <NotionTableCell align="right" className="font-semibold">
             {formatCurrency(summary.totalDeductions)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold text-green-600">
-            +6.2%
-          </NotionTableCell>
         </NotionTableRow>
           
         {/* Employee rows */}
@@ -86,6 +140,8 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
           const deductionsChangePercentage = previousDeductions > 0 
             ? ((currentDeductions - previousDeductions) / previousDeductions) * 100 
             : 0;
+          
+          const deductionsDifferenceTooltip = getDeductionsDifferenceTooltip(employee);
           
           return (
           <NotionTableRow key={employee.id}>
@@ -110,6 +166,24 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
                 {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
               </Button>
             </NotionTableCell>
+            <NotionTableCell align="right">
+              {deductionsChangePercentage !== 0 ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium cursor-help ${getPercentageColorClass(deductionsChangePercentage)}`}>
+                        {deductionsChangePercentage > 0 ? '+' : ''}{deductionsChangePercentage.toFixed(1)}%
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-sm">{deductionsDifferenceTooltip}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <span className="text-muted-foreground">-</span>
+              )}
+            </NotionTableCell>
             <NotionTableCell align="right" className="font-medium">
               {formatCurrency(employee.totalIncome)}
             </NotionTableCell>
@@ -130,13 +204,6 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
             </NotionTableCell>
             <NotionTableCell align="right" className="font-medium">
               {formatCurrency(employee.deductions)}
-            </NotionTableCell>
-            <NotionTableCell align="right">
-              {deductionsChangePercentage !== 0 && (
-                <span className={`font-medium ${deductionsChangePercentage > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                  {deductionsChangePercentage > 0 ? '+' : ''}{deductionsChangePercentage.toFixed(1)}%
-                </span>
-              )}
             </NotionTableCell>
           </NotionTableRow>
         );
