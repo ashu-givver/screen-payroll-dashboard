@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';  
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Settings, Building } from 'lucide-react';
+import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Building, TrendingUp, PoundSterling, BarChart3 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,40 +36,40 @@ interface TableControlBarProps {
 const filterGroups: FilterGroup[] = [
   {
     id: 'employment',
-    label: 'Employment Status Changes',
+    label: '👤 Employment Status',
     filters: [
-      { id: 'new-joiners', label: 'New Joiners', type: 'employment' },
-      { id: 'leavers', label: 'Leavers', type: 'employment' },
-      { id: 'pending-approval', label: 'Pending Approval', type: 'employment' },
+      { id: 'new-joiners', label: 'New joiner', type: 'employment' },
+      { id: 'leavers', label: 'Leaver', type: 'employment' },
     ]
   },
   {
-    id: 'compensation',
-    label: 'Compensation Changes',
+    id: 'approval',
+    label: '✅ Approval',
     filters: [
-      { id: 'salary-changes', label: 'Salary Changes', type: 'compensation' },
-      { id: 'bonus', label: 'Bonus', type: 'compensation' },
-      { id: 'commission', label: 'Commission', type: 'compensation' },
-      { id: 'overtime', label: 'Overtime', type: 'compensation' },
+      { id: 'approved', label: 'Approved', type: 'approval' },
+      { id: 'pending-approval', label: 'Pending approval', type: 'approval' },
     ]
   },
   {
-    id: 'statutory',
-    label: 'Statutory Changes',
+    id: 'gross-pay',
+    label: '💷 Gross Pay',
     filters: [
-      { id: 'tax-code-change', label: 'Tax Code Change', type: 'statutory' },
-      { id: 'student-loan', label: 'Student Loan', type: 'statutory' },
-      { id: 'pension-enrolled', label: 'Pension Enrolled', type: 'statutory' },
-      { id: 'pension-opted-out', label: 'Pension Opted Out', type: 'statutory' },
-      { id: 'maternity', label: 'Maternity', type: 'statutory' },
-      { id: 'sickness', label: 'Sickness', type: 'statutory' },
+      { id: 'salary-changes', label: 'Salary changes', type: 'gross-pay' },
+      { id: 'bonus', label: 'Bonus', type: 'gross-pay' },
+      { id: 'commission', label: 'Commission', type: 'gross-pay' },
+      { id: 'overtime', label: 'Overtime', type: 'gross-pay' },
+      { id: 'inflex', label: 'Inflex', type: 'gross-pay' },
+      { id: 'on-call', label: 'On call', type: 'gross-pay' },
     ]
   },
   {
-    id: 'other',
-    label: 'Other',
+    id: 'gross-pay-difference',
+    label: '📊 Gross Pay Difference',
     filters: [
-      { id: 'net-differences', label: 'Net Differences', type: 'other' },
+      { id: 'gross-diff-3', label: '< 3%', type: 'gross-pay-difference' },
+      { id: 'gross-diff-5', label: '< 5%', type: 'gross-pay-difference' },
+      { id: 'gross-diff-7', label: '< 7%', type: 'gross-pay-difference' },
+      { id: 'gross-diff-10', label: '< 10%', type: 'gross-pay-difference' },
     ]
   }
 ];
@@ -161,7 +161,7 @@ export const TableControlBar = ({
                           >
                             All Departments
                           </DropdownMenuCheckboxItem>
-                          {['Engineering', 'Sales', 'Marketing', 'Finance', 'Operations', 'HR'].map((dept) => (
+                          {['Engineering', 'Sales', 'Marketing', 'Operations'].map((dept) => (
                             <DropdownMenuCheckboxItem
                               key={dept}
                               checked={selectedDepartment === dept}
@@ -194,12 +194,6 @@ export const TableControlBar = ({
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                   ))}
-                  
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={onAdvancedFilters}>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Advanced Filters
-                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

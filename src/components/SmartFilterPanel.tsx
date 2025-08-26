@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Search, ChevronDown, Users, Building, Clock, Filter } from 'lucide-react';
+import { Search, ChevronDown, Users, Building, Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface SmartFilterPanelProps {
   searchValue: string;
@@ -27,26 +26,8 @@ export const SmartFilterPanel = ({
   selectedEmploymentType,
   onEmploymentTypeChange,
 }: SmartFilterPanelProps) => {
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
   return (
     <div className="bg-gray-50/50 border-b border-gray-200 px-6 py-3 space-y-3">
-      {/* Basic Filters */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {/* Removed Only Show Changes and All Employees buttons */}
-        </div>
-        
-        <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-7 text-xs text-gray-600">
-              <Filter className="h-3 w-3 mr-1" />
-              Advanced Filters
-              <ChevronDown className={`h-3 w-3 ml-1 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-            </Button>
-          </CollapsibleTrigger>
-        </Collapsible>
-      </div>
 
       {/* Standard Filters */}
       <div className="flex items-center gap-3">
@@ -89,41 +70,6 @@ export const SmartFilterPanel = ({
         </Select>
       </div>
 
-      {/* Advanced Filters */}
-      <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-        <CollapsibleContent className="space-y-3">
-          <div className="flex items-center gap-3 pt-2 border-t border-gray-200">
-            <Select>
-              <SelectTrigger className="w-40 h-7 text-xs">
-                <SelectValue placeholder="Pay Element Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Pay Elements</SelectItem>
-                <SelectItem value="base-pay">Base Pay</SelectItem>
-                <SelectItem value="bonus">Bonus</SelectItem>
-                <SelectItem value="commission">Commission</SelectItem>
-                <SelectItem value="overtime">Overtime</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select>
-              <SelectTrigger className="w-40 h-7 text-xs">
-                <SelectValue placeholder="Approval Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="pending">Pending Approval</SelectItem>
-                <SelectItem value="changed">Changed Since Review</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button variant="outline" size="sm" className="h-7 text-xs">
-              Clear Filters
-            </Button>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
     </div>
   );
 };
