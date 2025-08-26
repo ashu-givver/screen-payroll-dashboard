@@ -4,17 +4,26 @@ import { DetailedAnalysisView } from './DetailedAnalysisView';
 
 type PersonaType = 'summary' | 'detailed';
 
-export const PersonaBasedDashboard = () => {
+interface PersonaBasedDashboardProps {
+  onViewChange?: (view: PersonaType) => void;
+}
+
+export const PersonaBasedDashboard = ({ onViewChange }: PersonaBasedDashboardProps) => {
   const [currentPersona, setCurrentPersona] = useState<PersonaType>('summary');
+
+  const handlePersonaChange = (newPersona: PersonaType) => {
+    setCurrentPersona(newPersona);
+    onViewChange?.(newPersona);
+  };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Main Content */}
       <div className="max-w-7xl mx-auto">
         {currentPersona === 'summary' ? (
-          <SummaryView onSwitchToDetailed={() => setCurrentPersona('detailed')} />
+          <SummaryView onSwitchToDetailed={() => handlePersonaChange('detailed')} />
         ) : (
-          <DetailedAnalysisView onSwitchToSummary={() => setCurrentPersona('summary')} />
+          <DetailedAnalysisView onSwitchToSummary={() => handlePersonaChange('summary')} />
         )}
       </div>
     </div>

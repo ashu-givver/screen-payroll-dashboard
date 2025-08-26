@@ -1,7 +1,7 @@
 import { PersonaBasedDashboard } from '@/components/PersonaBasedDashboard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CheckCircle2, Download } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Download, FileText } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { payrollCycles } from '@/data/payrollCycles';
 import {
@@ -18,18 +18,34 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 const PreviewIndex = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [currentView, setCurrentView] = useState<'summary' | 'detailed'>('summary');
   
   // Get the current payroll cycle (assuming it's the first "Current" one)
   const currentCycle = payrollCycles.find(cycle => cycle.status === 'Current');
   
   const handleConfirmClick = () => {
     setShowConfirmDialog(true);
+  };
+
+  const handleExportReport = (month: string, year: string) => {
+    toast({
+      title: "Export Started",
+      description: `Downloading GrossNetReport_${month}${year}.pdf...`,
+    });
   };
   
   const handleClosePayroll = () => {
@@ -63,6 +79,26 @@ const PreviewIndex = () => {
               </Badge>
             </div>
             <div className="flex items-center gap-2">
+              {currentView === 'detailed' && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <FileText className="h-4 w-4" />
+                      Export
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem onClick={() => handleExportReport('July', '2025')}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Gross/Net Report – July 2025
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExportReport('June', '2025')}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Gross/Net Report – June 2025
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
               <Button 
                 variant="default" 
                 size="sm"
@@ -76,7 +112,7 @@ const PreviewIndex = () => {
         </div>
       </div>
 
-      <PersonaBasedDashboard />
+      <PersonaBasedDashboard onViewChange={setCurrentView} />
       
       {/* Confirmation Modal */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
