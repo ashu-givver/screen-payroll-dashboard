@@ -2,11 +2,16 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Users, PoundSterling, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { TrendingUp, TrendingDown, Users, PoundSterling, ArrowRight } from 'lucide-react';
 import { employees, payrollPeriod, payrollSummary } from '@/data/employees';
 import { formatCurrency } from '@/lib/formatters';
 
-export const ExecutiveSummary = () => {
+interface ExecutiveSummaryProps {
+  onSwitchToDetailed?: () => void;
+}
+
+export const ExecutiveSummary = ({ onSwitchToDetailed }: ExecutiveSummaryProps) => {
   // Calculate key metrics
   const totalCost = payrollSummary.totalEmployerCost;
   const previousTotalCost = employees.reduce((sum, emp) => 
@@ -101,20 +106,23 @@ export const ExecutiveSummary = () => {
           </CardContent>
         </Card>
 
-        {/* Time Until Payment Day */}
+        {/* Need More Details CTA */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">📅 Time Until Payment Day</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Need more details?</CardTitle>
+            <ArrowRight className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3 days remaining</div>
-            <div className="text-sm text-muted-foreground mt-2">
-              Payment scheduled for 31 Jul 2025
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Payslips and submissions will be sent automatically on this date.
-            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Switch to Detailed Analysis for full payroll management capabilities.
+            </p>
+            <Button 
+              onClick={onSwitchToDetailed}
+              className="w-full"
+              aria-label="View Detailed Analysis for this payroll"
+            >
+              View Detailed Analysis
+            </Button>
           </CardContent>
         </Card>
 
