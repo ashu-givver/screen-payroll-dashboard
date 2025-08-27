@@ -5,6 +5,8 @@ import { EditableCell } from '@/components/EditableCell';
 import { SortableHeader, SortDirection } from '@/components/SortableHeader';
 import { TagsCell } from '@/components/TagsCell';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Check } from 'lucide-react';
 import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency } from '@/lib/formatters';
@@ -71,22 +73,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     return { amount: change, percentage };
   };
 
-  // Get color class based on percentage difference
-  const getPercentageColorClass = (percentage: number) => {
-    const absPercentage = Math.abs(percentage);
-    
-    if (absPercentage < 3) {
-      return 'text-green-700 bg-green-50 border border-green-200';
-    } else if (absPercentage < 5) {
-      return 'text-yellow-700 bg-yellow-50 border border-yellow-200';
-    } else if (absPercentage < 7) {
-      return 'text-orange-700 bg-orange-50 border border-orange-200';
-    } else if (absPercentage <= 10) {
-      return 'text-red-700 bg-red-50 border border-red-200';
-    } else {
-      // For values > 10%, use red with stronger styling
-      return 'text-red-800 bg-red-100 border border-red-300';
-    }
+  // Get background color based on percentage change
+  const getChangeBackgroundClass = (percentage: number, hasChange: boolean) => {
+    if (!hasChange) return '';
+    return percentage > 0 ? 'bg-green-50/60' : 'bg-red-50/60';
   };
 
   // Get tooltip information about pay differences (concise reasons)
@@ -160,15 +150,18 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="140px" sticky>
+          <NotionTableHead width="50px" align="center" sticky>
+            <span className="text-xs font-semibold uppercase tracking-wide">APPROVE</span>
+          </NotionTableHead>
+          <NotionTableHead width="160px" sticky>
             <SortableHeader 
               sortKey="name" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-medium"
+              className="text-xs font-semibold uppercase tracking-wide"
               align="left"
             >
-              Name
+              NAME
             </SortableHeader>
           </NotionTableHead>
           <NotionTableHead width="120px">
@@ -176,30 +169,24 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               sortKey="department" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-medium"
+              className="text-xs font-semibold uppercase tracking-wide"
               align="left"
             >
-              Department
+              DEPARTMENT
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="100px" align="center" sticky>
-            <div className="flex flex-col items-center">
-              <span className="text-xs font-medium">Approval</span>
-              <span className="text-xs text-muted-foreground font-normal">Approve each employee for this payroll</span>
-            </div>
-          </NotionTableHead>
           <NotionTableHead width="120px" align="right">
-            Gross Pay Difference %
+            <span className="text-xs font-semibold uppercase tracking-wide">GROSS PAY DIFF %</span>
           </NotionTableHead>
           <NotionTableHead width="100px" align="right">
             <SortableHeader 
               sortKey="basePay" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-medium"
+              className="text-xs font-semibold uppercase tracking-wide"
               align="right"
             >
-              Base Pay
+              BASE PAY
             </SortableHeader>
           </NotionTableHead>
           <NotionTableHead width="90px" align="right">
@@ -208,10 +195,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="bonus" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-medium"
+                className="text-xs font-semibold uppercase tracking-wide"
                 align="right"
               >
-                Bonus
+                BONUS
               </SortableHeader>
               <span className="text-xs text-muted-foreground">vs last period</span>
             </div>
@@ -222,10 +209,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="commission" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-medium"
+                className="text-xs font-semibold uppercase tracking-wide"
                 align="right"
               >
-                Commission
+                COMMISSION
               </SortableHeader>
               <span className="text-xs text-muted-foreground">vs last period</span>
             </div>
@@ -236,10 +223,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="overtime" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-medium"
+                className="text-xs font-semibold uppercase tracking-wide"
                 align="right"
               >
-                Overtime
+                OVERTIME
               </SortableHeader>
               <span className="text-xs text-muted-foreground">vs last period</span>
             </div>
@@ -250,10 +237,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="gifFlex" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-medium"
+                className="text-xs font-semibold uppercase tracking-wide"
                 align="right"
               >
-                GIF Flex
+                GIF FLEX
               </SortableHeader>
               <span className="text-xs text-muted-foreground">vs last period</span>
             </div>
@@ -264,10 +251,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="onCall" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-medium"
+                className="text-xs font-semibold uppercase tracking-wide"
                 align="right"
               >
-                OnCall
+                ONCALL
               </SortableHeader>
               <span className="text-xs text-muted-foreground">vs last period</span>
             </div>
@@ -277,67 +264,59 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               sortKey="totalIncome" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-medium"
+              className="text-xs font-semibold uppercase tracking-wide"
               align="right"
             >
-              Gross Pay
+              GROSS PAY
             </SortableHeader>
           </NotionTableHead>
         </NotionTableRow>
       </NotionTableHeader>
       <NotionTableBody>
         {/* Total row */}
-        <NotionTableRow className="bg-muted/40 font-medium">
-          <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
-          <NotionTableCell className="font-semibold">All Departments</NotionTableCell>
-           <NotionTableCell align="center" sticky>
-             <Button
-               size="sm"
-               variant="ghost"
-               disabled
-               className="h-6 px-3 text-xs font-medium border bg-[#E5E7EB] text-[#6B7280] border-[#E5E7EB] cursor-not-allowed"
-               aria-label="Total row - no action available"
-             >
-               -
-             </Button>
-           </NotionTableCell>
-           <NotionTableCell align="right">
-             <span className="text-green-700 bg-green-50 border border-green-200 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium">+2.3%</span>
-           </NotionTableCell>
-           <NotionTableCell align="right" className="font-semibold">
+        <NotionTableRow className="bg-muted/30 font-medium text-muted-foreground">
+          <NotionTableCell align="center" sticky>
+            <div className="w-4 h-4" />
+          </NotionTableCell>
+          <NotionTableCell className="text-muted-foreground" sticky>Total</NotionTableCell>
+          <NotionTableCell className="text-muted-foreground">All Departments</NotionTableCell>
+          <NotionTableCell align="right">
+            <span className="text-xs font-medium text-muted-foreground">+2.3%</span>
+          </NotionTableCell>
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(totalBasePay)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             <div className="flex flex-col items-end">
               <span>{formatCurrency(totalBonus)}</span>
-              <span className="text-xs text-green-600">+8.2%</span>
+              <span className="text-xs text-green-600/70">+8.2%</span>
             </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             <div className="flex flex-col items-end">
               <span>{formatCurrency(totalCommission)}</span>
-              <span className="text-xs text-green-600">+12.1%</span>
+              <span className="text-xs text-green-600/70">+12.1%</span>
             </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             <div className="flex flex-col items-end">
               <span>{formatCurrency(totalOvertime)}</span>
-              <span className="text-xs text-red-600">-5.3%</span>
+              <span className="text-xs text-red-600/70">-5.3%</span>
             </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             <div className="flex flex-col items-end">
               <span>{formatCurrency(totalGifFlex)}</span>
-              <span className="text-xs text-green-600">+22.0%</span>
+              <span className="text-xs text-green-600/70">+22.0%</span>
             </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             <div className="flex flex-col items-end">
               <span>{formatCurrency(totalOnCall)}</span>
-              <span className="text-xs text-muted-foreground">—</span>
+              <span className="text-xs text-muted-foreground/70">—</span>
             </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold" sticky>
+          <NotionTableCell align="right" className="text-muted-foreground" sticky>
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
         </NotionTableRow>
@@ -355,51 +334,40 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           const onCallChange = employee.previousMonth ? getFieldPercentageChange(employee.onCall, employee.previousMonth.onCall) : { percentage: 0, hasChange: false };
           
           return (
-            <NotionTableRow key={employee.id} className={index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'}>
-              <NotionTableCell sticky>
+            <NotionTableRow 
+              key={employee.id} 
+              className={`hover:bg-gray-50/80 transition-colors ${index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'}`}
+            >
+              <NotionTableCell align="center" sticky className="py-2">
+                <Checkbox
+                  checked={approvedEmployees.has(employee.id)}
+                  onCheckedChange={() => onApproveEmployee(employee.id)}
+                  aria-label={`Approve payroll for ${employee.name}`}
+                  className="h-4 w-4"
+                />
+              </NotionTableCell>
+              <NotionTableCell sticky className="py-2">
                 <div className="flex items-center gap-2">
                   <EmployeeAvatar 
                     name={employee.name}
                     initials={employee.initials}
                     size="sm"
                   />
-                  <span className="font-medium text-xs truncate">{employee.name}</span>
+                  <span className="font-medium text-sm truncate">{employee.name}</span>
+                  {approvedEmployees.has(employee.id) && (
+                    <Check className="h-4 w-4 text-green-600 ml-1" />
+                  )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell>
-                <span className="text-xs text-muted-foreground">{employee.department}</span>
+              <NotionTableCell className="py-2">
+                <span className="text-sm text-muted-foreground">{employee.department}</span>
               </NotionTableCell>
-              <NotionTableCell align="center" sticky>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onApproveEmployee(employee.id)}
-                  disabled={false}
-                  className={`h-6 px-3 text-xs font-medium border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] focus-visible:ring-offset-2 ${
-                    approvedEmployees.has(employee.id)
-                      ? 'bg-[#16A34A] text-white border-[#16A34A] hover:bg-[#15803D] hover:border-[#15803D]'
-                      : 'bg-transparent text-[#374151] border-[#D1D5DB] hover:border-[#16A34A] hover:text-[#16A34A]'
-                  }`}
-                  aria-label={
-                    approvedEmployees.has(employee.id) 
-                      ? `${employee.name} approved for payroll`
-                      : `Approve payroll for ${employee.name}`
-                  }
-                  title={
-                    approvedEmployees.has(employee.id)
-                      ? 'Click to unapprove'
-                      : 'Mark as approved for payroll'
-                  }
-                >
-                  {approvedEmployees.has(employee.id) ? "Approved ✓" : "Approve"}
-                </Button>
-              </NotionTableCell>
-              <NotionTableCell align="right">
+              <NotionTableCell align="right" className="py-2">
                 {grossPayChange.percentage !== 0 ? (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium cursor-help ${getPercentageColorClass(grossPayChange.percentage)}`}>
+                        <span className="text-sm font-medium cursor-help text-foreground">
                           {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
                         </span>
                       </TooltipTrigger>
@@ -409,10 +377,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                     </Tooltip>
                   </TooltipProvider>
                 ) : (
-                  <span className="text-muted-foreground">-</span>
+                  <span className="text-muted-foreground text-sm">-</span>
                 )}
               </NotionTableCell>
-              <NotionTableCell align="right" className="font-medium">
+              <NotionTableCell align="right" className="font-medium py-2">
                 <EditableCell
                   value={employee.basePay}
                   onSave={(newValue) => onEmployeeUpdate(employee.id, 'basePay', newValue)}
@@ -421,7 +389,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   className="font-medium"
                 />
               </NotionTableCell>
-              <NotionTableCell align="right">
+              <NotionTableCell align="right" className={`py-2 ${getChangeBackgroundClass(bonusChange.percentage, bonusChange.hasChange)}`}>
                 <div className="flex flex-col items-end">
                   <EditableCell
                     value={employee.bonus}
@@ -438,7 +406,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="right">
+              <NotionTableCell align="right" className={`py-2 ${getChangeBackgroundClass(commissionChange.percentage, commissionChange.hasChange)}`}>
                 <div className="flex flex-col items-end">
                   <EditableCell
                     value={employee.commission}
@@ -455,7 +423,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="right">
+              <NotionTableCell align="right" className={`py-2 ${getChangeBackgroundClass(overtimeChange.percentage, overtimeChange.hasChange)}`}>
                 <div className="flex flex-col items-end">
                   <EditableCell
                     value={employee.overtime}
@@ -472,7 +440,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="right">
+              <NotionTableCell align="right" className={`py-2 ${getChangeBackgroundClass(gifFlexChange.percentage, gifFlexChange.hasChange)}`}>
                 <div className="flex flex-col items-end">
                   <EditableCell
                     value={employee.gifFlex}
@@ -489,7 +457,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="right">
+              <NotionTableCell align="right" className={`py-2 ${getChangeBackgroundClass(onCallChange.percentage, onCallChange.hasChange)}`}>
                 <div className="flex flex-col items-end">
                   <EditableCell
                     value={employee.onCall}
@@ -506,7 +474,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="right" className="font-medium" sticky>
+              <NotionTableCell align="right" className="font-medium py-2" sticky>
                 {formatCurrency(employee.totalIncome)}
               </NotionTableCell>
             </NotionTableRow>

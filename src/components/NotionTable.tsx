@@ -103,7 +103,7 @@ export const NotionTableCell = ({ children, className, align = 'left', width, st
   return (
     <td 
       className={cn(
-        "px-8 py-4 text-sm text-gray-900 font-medium",
+        "px-6 py-3 text-sm text-gray-900 font-medium",
         align === 'left' && "text-left",
         align === 'center' && "text-center",
         align === 'right' && "text-right",
