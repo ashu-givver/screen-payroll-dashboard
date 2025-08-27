@@ -150,40 +150,40 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="50px" align="center" sticky>
-            <span className="text-xs font-semibold uppercase tracking-wide">APPROVE</span>
+          <NotionTableHead width="40px" align="center" sticky>
+            <span className="text-xs font-bold uppercase tracking-wide">APPROVE</span>
           </NotionTableHead>
           <NotionTableHead width="160px" sticky>
             <SortableHeader 
               sortKey="name" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-semibold uppercase tracking-wide"
+              className="text-xs font-bold uppercase tracking-wide"
               align="left"
             >
               NAME
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="120px">
+          <NotionTableHead width="120px" sticky>
             <SortableHeader 
               sortKey="department" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-semibold uppercase tracking-wide"
+              className="text-xs font-bold uppercase tracking-wide"
               align="left"
             >
               DEPARTMENT
             </SortableHeader>
           </NotionTableHead>
           <NotionTableHead width="120px" align="right">
-            <span className="text-xs font-semibold uppercase tracking-wide">GROSS PAY DIFF %</span>
+            <span className="text-xs font-bold uppercase tracking-wide">GROSS PAY DIFF %</span>
           </NotionTableHead>
           <NotionTableHead width="100px" align="right">
             <SortableHeader 
               sortKey="basePay" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-semibold uppercase tracking-wide"
+              className="text-xs font-bold uppercase tracking-wide"
               align="right"
             >
               BASE PAY
@@ -195,7 +195,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="bonus" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-semibold uppercase tracking-wide"
+                className="text-xs font-bold uppercase tracking-wide"
                 align="right"
               >
                 BONUS
@@ -209,7 +209,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="commission" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-semibold uppercase tracking-wide"
+                className="text-xs font-bold uppercase tracking-wide"
                 align="right"
               >
                 COMMISSION
@@ -223,7 +223,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="overtime" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-semibold uppercase tracking-wide"
+                className="text-xs font-bold uppercase tracking-wide"
                 align="right"
               >
                 OVERTIME
@@ -237,7 +237,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="gifFlex" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-semibold uppercase tracking-wide"
+                className="text-xs font-bold uppercase tracking-wide"
                 align="right"
               >
                 GIF FLEX
@@ -251,7 +251,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 sortKey="onCall" 
                 currentSort={sortConfig} 
                 onSort={handleSort}
-                className="text-xs font-semibold uppercase tracking-wide"
+                className="text-xs font-bold uppercase tracking-wide"
                 align="right"
               >
                 ONCALL
@@ -259,12 +259,12 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <span className="text-xs text-muted-foreground">vs last period</span>
             </div>
           </NotionTableHead>
-          <NotionTableHead width="110px" align="right" sticky>
+          <NotionTableHead width="110px" align="right">
             <SortableHeader 
               sortKey="totalIncome" 
               currentSort={sortConfig} 
               onSort={handleSort}
-              className="text-xs font-semibold uppercase tracking-wide"
+              className="text-xs font-bold uppercase tracking-wide"
               align="right"
             >
               GROSS PAY
@@ -279,7 +279,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
             <div className="w-4 h-4" />
           </NotionTableCell>
           <NotionTableCell className="text-muted-foreground" sticky>Total</NotionTableCell>
-          <NotionTableCell className="text-muted-foreground">All Departments</NotionTableCell>
+          <NotionTableCell className="text-muted-foreground" sticky>All Departments</NotionTableCell>
           <NotionTableCell align="right">
             <span className="text-xs font-medium text-muted-foreground">+2.3%</span>
           </NotionTableCell>
@@ -316,7 +316,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <span className="text-xs text-muted-foreground/70">—</span>
             </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="text-muted-foreground" sticky>
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
         </NotionTableRow>
@@ -359,7 +359,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell className="py-2">
+              <NotionTableCell sticky className="py-2">
                 <span className="text-sm text-muted-foreground">{employee.department}</span>
               </NotionTableCell>
               <NotionTableCell align="right" className="py-2">
@@ -474,7 +474,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   )}
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="right" className="font-medium py-2" sticky>
+              <NotionTableCell align="right" className="font-medium py-2">
                 {formatCurrency(employee.totalIncome)}
               </NotionTableCell>
             </NotionTableRow>
