@@ -143,11 +143,24 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
   const totalGifFlex = employees.reduce((sum, emp) => sum + emp.gifFlex, 0);
   const totalOnCall = employees.reduce((sum, emp) => sum + emp.onCall, 0);
 
+  // Helper function to calculate percentage change for any field
+  const getFieldPercentageChange = (current: number, previous: number) => {
+    if (previous === 0) return current > 0 ? { percentage: 100, hasChange: true } : { percentage: 0, hasChange: false };
+    const percentage = ((current - previous) / previous) * 100;
+    return { percentage, hasChange: Math.abs(percentage) > 0.1 };
+  };
+
+  // Helper function to get color class for percentage changes
+  const getChangeColorClass = (percentage: number, hasChange: boolean) => {
+    if (!hasChange) return 'text-muted-foreground';
+    return percentage > 0 ? 'text-green-600' : 'text-red-600';
+  };
+
   return (
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="160px" sticky>
+          <NotionTableHead width="140px" sticky>
             <SortableHeader 
               sortKey="name" 
               currentSort={sortConfig} 
@@ -155,10 +168,21 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               className="text-xs font-medium"
               align="left"
             >
-              Employee
+              Name
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="100px" align="center">
+          <NotionTableHead width="120px">
+            <SortableHeader 
+              sortKey="department" 
+              currentSort={sortConfig} 
+              onSort={handleSort}
+              className="text-xs font-medium"
+              align="left"
+            >
+              Department
+            </SortableHeader>
+          </NotionTableHead>
+          <NotionTableHead width="100px" align="center" sticky>
             <div className="flex flex-col items-center">
               <span className="text-xs font-medium">Approval</span>
               <span className="text-xs text-muted-foreground font-normal">Approve each employee for this payroll</span>
@@ -178,62 +202,77 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               Base Pay
             </SortableHeader>
           </NotionTableHead>
-          <NotionTableHead width="80px" align="right">
-            <SortableHeader 
-              sortKey="bonus" 
-              currentSort={sortConfig} 
-              onSort={handleSort}
-              className="text-xs font-medium"
-              align="right"
-            >
-              Bonus
-            </SortableHeader>
-          </NotionTableHead>
-          <NotionTableHead width="100px" align="right">
-            <SortableHeader 
-              sortKey="commission" 
-              currentSort={sortConfig} 
-              onSort={handleSort}
-              className="text-xs font-medium"
-              align="right"
-            >
-              Commission
-            </SortableHeader>
-          </NotionTableHead>
-          <NotionTableHead width="80px" align="right">
-            <SortableHeader 
-              sortKey="overtime" 
-              currentSort={sortConfig} 
-              onSort={handleSort}
-              className="text-xs font-medium"
-              align="right"
-            >
-              Overtime
-            </SortableHeader>
-          </NotionTableHead>
-          <NotionTableHead width="80px" align="right">
-            <SortableHeader 
-              sortKey="gifFlex" 
-              currentSort={sortConfig} 
-              onSort={handleSort}
-              className="text-xs font-medium"
-              align="right"
-            >
-              GIF Flex
-            </SortableHeader>
-          </NotionTableHead>
-          <NotionTableHead width="80px" align="right">
-            <SortableHeader 
-              sortKey="onCall" 
-              currentSort={sortConfig} 
-              onSort={handleSort}
-              className="text-xs font-medium"
-              align="right"
-            >
-              OnCall
-            </SortableHeader>
+          <NotionTableHead width="90px" align="right">
+            <div className="flex flex-col items-end">
+              <SortableHeader 
+                sortKey="bonus" 
+                currentSort={sortConfig} 
+                onSort={handleSort}
+                className="text-xs font-medium"
+                align="right"
+              >
+                Bonus
+              </SortableHeader>
+              <span className="text-xs text-muted-foreground">vs last period</span>
+            </div>
           </NotionTableHead>
           <NotionTableHead width="110px" align="right">
+            <div className="flex flex-col items-end">
+              <SortableHeader 
+                sortKey="commission" 
+                currentSort={sortConfig} 
+                onSort={handleSort}
+                className="text-xs font-medium"
+                align="right"
+              >
+                Commission
+              </SortableHeader>
+              <span className="text-xs text-muted-foreground">vs last period</span>
+            </div>
+          </NotionTableHead>
+          <NotionTableHead width="90px" align="right">
+            <div className="flex flex-col items-end">
+              <SortableHeader 
+                sortKey="overtime" 
+                currentSort={sortConfig} 
+                onSort={handleSort}
+                className="text-xs font-medium"
+                align="right"
+              >
+                Overtime
+              </SortableHeader>
+              <span className="text-xs text-muted-foreground">vs last period</span>
+            </div>
+          </NotionTableHead>
+          <NotionTableHead width="90px" align="right">
+            <div className="flex flex-col items-end">
+              <SortableHeader 
+                sortKey="gifFlex" 
+                currentSort={sortConfig} 
+                onSort={handleSort}
+                className="text-xs font-medium"
+                align="right"
+              >
+                GIF Flex
+              </SortableHeader>
+              <span className="text-xs text-muted-foreground">vs last period</span>
+            </div>
+          </NotionTableHead>
+          <NotionTableHead width="90px" align="right">
+            <div className="flex flex-col items-end">
+              <SortableHeader 
+                sortKey="onCall" 
+                currentSort={sortConfig} 
+                onSort={handleSort}
+                className="text-xs font-medium"
+                align="right"
+              >
+                OnCall
+              </SortableHeader>
+              <span className="text-xs text-muted-foreground">vs last period</span>
+            </div>
+          </NotionTableHead>
+          <NotionTableHead width="110px" align="right" sticky>
             <SortableHeader 
               sortKey="totalIncome" 
               currentSort={sortConfig} 
@@ -250,7 +289,8 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
         {/* Total row */}
         <NotionTableRow className="bg-muted/40 font-medium">
           <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
-           <NotionTableCell align="center">
+          <NotionTableCell className="font-semibold">All Departments</NotionTableCell>
+           <NotionTableCell align="center" sticky>
              <Button
                size="sm"
                variant="ghost"
@@ -268,21 +308,36 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
             {formatCurrency(totalBasePay)}
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
-            {formatCurrency(totalBonus)}
+            <div className="flex flex-col items-end">
+              <span>{formatCurrency(totalBonus)}</span>
+              <span className="text-xs text-green-600">+8.2%</span>
+            </div>
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
-            {formatCurrency(totalCommission)}
+            <div className="flex flex-col items-end">
+              <span>{formatCurrency(totalCommission)}</span>
+              <span className="text-xs text-green-600">+12.1%</span>
+            </div>
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
-            {formatCurrency(totalOvertime)}
+            <div className="flex flex-col items-end">
+              <span>{formatCurrency(totalOvertime)}</span>
+              <span className="text-xs text-red-600">-5.3%</span>
+            </div>
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
-            {formatCurrency(totalGifFlex)}
+            <div className="flex flex-col items-end">
+              <span>{formatCurrency(totalGifFlex)}</span>
+              <span className="text-xs text-green-600">+22.0%</span>
+            </div>
           </NotionTableCell>
           <NotionTableCell align="right" className="font-semibold">
-            {formatCurrency(totalOnCall)}
+            <div className="flex flex-col items-end">
+              <span>{formatCurrency(totalOnCall)}</span>
+              <span className="text-xs text-muted-foreground">—</span>
+            </div>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="font-semibold" sticky>
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
         </NotionTableRow>
@@ -291,8 +346,16 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
         {sortedEmployees.map((employee, index) => {
           const grossPayChange = getGrossPayChange(employee);
           const payDifferenceTooltip = getPayDifferenceTooltip(employee);
+          
+          // Calculate percentage changes for each pay component
+          const bonusChange = employee.previousMonth ? getFieldPercentageChange(employee.bonus, employee.previousMonth.bonus) : { percentage: 0, hasChange: false };
+          const commissionChange = employee.previousMonth ? getFieldPercentageChange(employee.commission, employee.previousMonth.commission) : { percentage: 0, hasChange: false };
+          const overtimeChange = employee.previousMonth ? getFieldPercentageChange(employee.overtime, employee.previousMonth.overtime) : { percentage: 0, hasChange: false };
+          const gifFlexChange = employee.previousMonth ? getFieldPercentageChange(employee.gifFlex, employee.previousMonth.gifFlex) : { percentage: 0, hasChange: false };
+          const onCallChange = employee.previousMonth ? getFieldPercentageChange(employee.onCall, employee.previousMonth.onCall) : { percentage: 0, hasChange: false };
+          
           return (
-            <NotionTableRow key={employee.id}>
+            <NotionTableRow key={employee.id} className={index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'}>
               <NotionTableCell sticky>
                 <div className="flex items-center gap-2">
                   <EmployeeAvatar 
@@ -303,7 +366,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   <span className="font-medium text-xs truncate">{employee.name}</span>
                 </div>
               </NotionTableCell>
-              <NotionTableCell align="center">
+              <NotionTableCell>
+                <span className="text-xs text-muted-foreground">{employee.department}</span>
+              </NotionTableCell>
+              <NotionTableCell align="center" sticky>
                 <Button
                   size="sm"
                   variant="ghost"
@@ -356,46 +422,91 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                 />
               </NotionTableCell>
               <NotionTableCell align="right">
-                <EditableCell
-                  value={employee.bonus}
-                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
-                  field="bonus"
-                  employeeName={employee.name}
-                />
+                <div className="flex flex-col items-end">
+                  <EditableCell
+                    value={employee.bonus}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'bonus', newValue)}
+                    field="bonus"
+                    employeeName={employee.name}
+                  />
+                  {bonusChange.hasChange ? (
+                    <span className={`text-xs ${getChangeColorClass(bonusChange.percentage, bonusChange.hasChange)}`}>
+                      {bonusChange.percentage > 0 ? '+' : ''}{bonusChange.percentage.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </div>
               </NotionTableCell>
               <NotionTableCell align="right">
-                <EditableCell
-                  value={employee.commission}
-                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
-                  field="commission"
-                  employeeName={employee.name}
-                />
+                <div className="flex flex-col items-end">
+                  <EditableCell
+                    value={employee.commission}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'commission', newValue)}
+                    field="commission"
+                    employeeName={employee.name}
+                  />
+                  {commissionChange.hasChange ? (
+                    <span className={`text-xs ${getChangeColorClass(commissionChange.percentage, commissionChange.hasChange)}`}>
+                      {commissionChange.percentage > 0 ? '+' : ''}{commissionChange.percentage.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </div>
               </NotionTableCell>
               <NotionTableCell align="right">
-                <EditableCell
-                  value={employee.overtime}
-                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
-                  field="overtime"
-                  employeeName={employee.name}
-                />
+                <div className="flex flex-col items-end">
+                  <EditableCell
+                    value={employee.overtime}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'overtime', newValue)}
+                    field="overtime"
+                    employeeName={employee.name}
+                  />
+                  {overtimeChange.hasChange ? (
+                    <span className={`text-xs ${getChangeColorClass(overtimeChange.percentage, overtimeChange.hasChange)}`}>
+                      {overtimeChange.percentage > 0 ? '+' : ''}{overtimeChange.percentage.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </div>
               </NotionTableCell>
               <NotionTableCell align="right">
-                <EditableCell
-                  value={employee.gifFlex}
-                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
-                  field="gifFlex"
-                  employeeName={employee.name}
-                />
+                <div className="flex flex-col items-end">
+                  <EditableCell
+                    value={employee.gifFlex}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'gifFlex', newValue)}
+                    field="gifFlex"
+                    employeeName={employee.name}
+                  />
+                  {gifFlexChange.hasChange ? (
+                    <span className={`text-xs ${getChangeColorClass(gifFlexChange.percentage, gifFlexChange.hasChange)}`}>
+                      {gifFlexChange.percentage > 0 ? '+' : ''}{gifFlexChange.percentage.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </div>
               </NotionTableCell>
               <NotionTableCell align="right">
-                <EditableCell
-                  value={employee.onCall}
-                  onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
-                  field="onCall"
-                  employeeName={employee.name}
-                />
+                <div className="flex flex-col items-end">
+                  <EditableCell
+                    value={employee.onCall}
+                    onSave={(newValue) => onEmployeeUpdate(employee.id, 'onCall', newValue)}
+                    field="onCall"
+                    employeeName={employee.name}
+                  />
+                  {onCallChange.hasChange ? (
+                    <span className={`text-xs ${getChangeColorClass(onCallChange.percentage, onCallChange.hasChange)}`}>
+                      {onCallChange.percentage > 0 ? '+' : ''}{onCallChange.percentage.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </div>
               </NotionTableCell>
-              <NotionTableCell align="right" className="font-medium">
+              <NotionTableCell align="right" className="font-medium" sticky>
                 {formatCurrency(employee.totalIncome)}
               </NotionTableCell>
             </NotionTableRow>

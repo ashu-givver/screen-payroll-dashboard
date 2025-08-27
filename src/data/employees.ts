@@ -1,311 +1,130 @@
 import { Employee, PayrollPeriod, PayrollSummary } from '@/types/payroll';
 import { generateTagsForEmployee } from '@/lib/tagGenerator';
 
-export const employees: Employee[] = [
-  {
-    id: '1',
-    name: 'Emma Thompson',
-    initials: 'ET',
-    basePay: 3750.00,
-    bonus: 0.00,
-    commission: 0.00,
-    overtime: 0.00,
-    gifFlex: 0.00,
-    onCall: 0.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 3750.00,
-    totalIncome: 3750.00,
-    deductions: 885.56,
-    takeHomePay: 2864.44,
-    employerCost: 4346.85,
-    status: 'Current',
-    department: 'Engineering',
-    employmentType: 'Full-time',
-    paye: 540.20,
-    ni: 216.16,
-    pension: 129.20,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    deductionVariance: -0.20,
-    netPaymentVariance: 0.20,
-    employerNI: 417.80,
-    employerPension: 179.06,
-    previousMonth: {
-      basePay: 3750.00,
-      bonus: 0.00,
-      commission: 0.00,
-      overtime: 0.00,
-      gifFlex: 0.00,
-      onCall: 0.00,
-      totalIncome: 3750.00,
-      deductions: 885.76,
-      takeHomePay: 2864.24,
-      employerCost: 4346.85,
-      paye: 540.40,
-      ni: 216.16,
-      pension: 129.20,
-      studentLoan: 0.00,
-      postgradLoan: 0.00,
-      employerNI: 417.80,
-      employerPension: 179.06
-    }
-  },
-  {
-    id: '2', 
-    name: 'James Rodriguez',
-    initials: 'JR',
-    basePay: 3750.00,
-    bonus: 0.00,
-    commission: 0.00,
-    overtime: 0.00,
-    gifFlex: 0.00,
-    onCall: 0.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 3750.00,
-    totalIncome: 3750.00,
-    deductions: 904.96,
-    takeHomePay: 2845.04,
-    employerCost: 4346.85,
-    status: 'Current',
-    department: 'Sales',
-    employmentType: 'Full-time',
-    paye: 559.60,
-    ni: 216.16,
-    pension: 129.20,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    deductionVariance: -0.20,
-    netPaymentVariance: 0.20,
-    employerNI: 417.80,
-    employerPension: 179.06,
-    previousMonth: {
-      basePay: 3750.00,
-      bonus: 0.00,
-      commission: 0.00,
-      overtime: 0.00,
-      gifFlex: 0.00,
-      onCall: 0.00,
-      totalIncome: 3750.00,
-      deductions: 905.16,
-      takeHomePay: 2844.84,
-      employerCost: 4346.85,
-      paye: 559.80,
-      ni: 216.16,
-      pension: 129.20,
-      studentLoan: 0.00,
-      postgradLoan: 0.00,
-      employerNI: 417.80,
-      employerPension: 179.06
-    }
-  },
-  {
-    id: '3',
-    name: 'Sarah Chen',
-    initials: 'SC',
-    basePay: 4416.67,
-    bonus: 500.00,
-    commission: 0.00,
-    overtime: 0.00,
-    gifFlex: 0.00,
-    onCall: 200.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 4416.67,
-    totalIncome: 5116.67,
-    deductions: 1468.25,
-    takeHomePay: 3648.42,
-    employerCost: 5626.69,
-    status: 'Current',
-    department: 'Engineering',
-    employmentType: 'Full-time',
-    paye: 1065.66,
-    ni: 255.83,
-    pension: 146.76,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    deductionVariance: 0.39,
-    netPaymentVariance: -0.39,
-    employerNI: 497.01,
-    employerPension: 213.01,
-    previousMonth: {
-      basePay: 4416.67,
-      bonus: 0.00,
-      commission: 0.00,
-      overtime: 0.00,
-      gifFlex: 0.00,
-      onCall: 0.00,
-      totalIncome: 4416.67,
-      deductions: 1267.86,
-      takeHomePay: 3148.81,
-      employerCost: 5126.69,
-      paye: 865.27,
-      ni: 255.83,
-      pension: 146.76,
-      studentLoan: 0.00,
-      postgradLoan: 0.00,
-      employerNI: 497.01,
-      employerPension: 213.01
-    }
-  },
-  {
-    id: '4',
-    name: 'David Wilson',
-    initials: 'DW',
-    basePay: 5833.33,
-    bonus: 0.00,
-    commission: 0.00,
-    overtime: 0.00,
-    gifFlex: 0.00,
-    onCall: 0.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 5833.33,
-    totalIncome: 5833.33,
-    deductions: 1899.08,
-    takeHomePay: 3934.25,
-    employerCost: 6818.40,
-    status: 'Current',
-    department: 'Finance',
-    employmentType: 'Full-time',
-    paye: 1285.66,
-    ni: 466.66,
-    pension: 146.76,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    deductionVariance: 72.25,
-    netPaymentVariance: -72.25,
-    employerNI: 689.55,
-    employerPension: 295.52
-  },
-  {
-    id: '5',
-    name: 'Lisa Patel',
-    initials: 'LP',
-    basePay: 4000.00,
-    bonus: 250.00,
-    commission: 150.00,
-    overtime: 0.00,
-    gifFlex: 0.00,
-    onCall: 0.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 4000.00,
-    totalIncome: 4400.00,
-    deductions: 1065.56,
-    takeHomePay: 3334.44,
-    employerCost: 5041.85,
-    status: 'Current',
-    department: 'Marketing',
-    employmentType: 'Full-time',
-    paye: 690.20,
-    ni: 236.16,
-    pension: 139.20,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    employerNI: 449.30,
-    employerPension: 192.56,
-    previousMonth: {
-      basePay: 4000.00,
-      bonus: 0.00,
-      commission: 0.00,
-      overtime: 0.00,
-      gifFlex: 0.00,
-      onCall: 0.00,
-      totalIncome: 4000.00,
-      deductions: 965.56,
-      takeHomePay: 3034.44,
-      employerCost: 4641.85,
-      paye: 590.20,
-      ni: 236.16,
-      pension: 139.20,
-      studentLoan: 0.00,
-      postgradLoan: 0.00,
-      employerNI: 449.30,
-      employerPension: 192.56
-    }
-  },
-  {
-    id: '6',
-    name: 'Marcus Johnson',
-    initials: 'MJ',
-    basePay: 4275.00,
-    bonus: 0.00,
-    commission: 0.00,
-    overtime: 150.00,
-    gifFlex: 0.00,
-    onCall: 0.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 4275.00,
-    totalIncome: 4425.00,
-    deductions: 1413.82,
-    takeHomePay: 3011.18,
-    employerCost: 5143.77,
-    status: 'Current',
-    department: 'Operations',
-    employmentType: 'Full-time',
-    paye: 692.06,
-    ni: 253.00,
-    pension: 146.76,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    deductionVariance: -0.41,
-    netPaymentVariance: 0.41,
-    employerNI: 482.14,
-    employerPension: 206.63
-  },
-  {
-    id: '7',
-    name: 'Sophia Martinez',
-    initials: 'SM',
-    basePay: 5833.33,
-    bonus: 1000.00,
-    commission: 0.00,
-    overtime: 0.00,
-    gifFlex: 200.00,
-    onCall: 300.00,
-    salaryBasis: 'Monthly',
-    units: 1,
-    rate: 5833.33,
-    totalIncome: 7333.33,
-    deductions: 2360.68,
-    takeHomePay: 4972.65,
-    employerCost: 8318.40,
-    status: 'Current',
-    department: 'Engineering',
-    employmentType: 'Full-time',
-    paye: 1747.26,
-    ni: 466.66,
-    pension: 146.76,
-    studentLoan: 0.00,
-    postgradLoan: 0.00,
-    deductionVariance: 72.25,
-    netPaymentVariance: -72.25,
-    employerNI: 689.55,
-    employerPension: 295.52,
-    previousMonth: {
-      basePay: 5833.33,
-      bonus: 0.00,
-      commission: 0.00,
-      overtime: 0.00,
-      gifFlex: 0.00,
-      onCall: 0.00,
-      totalIncome: 5833.33,
-      deductions: 1860.68,
-      takeHomePay: 3972.65,
-      employerCost: 6818.40,
-      paye: 1247.26,
-      ni: 466.66,
-      pension: 146.76,
-      studentLoan: 0.00,
-      postgradLoan: 0.00,
-      employerNI: 689.55,
-      employerPension: 295.52
-    }
+const generateEmployeeData = () => {
+  const departments = ['Engineering', 'Sales', 'Marketing', 'Finance', 'Operations', 'HR', 'Product', 'Design', 'Customer Success', 'Legal', 'IT', 'Admin'];
+  const firstNames = ['Emma', 'James', 'Sarah', 'David', 'Lisa', 'Marcus', 'Sophia', 'Michael', 'Jessica', 'Chris', 'Amanda', 'Daniel', 'Rachel', 'Matthew', 'Jennifer', 'Andrew', 'Ashley', 'Ryan', 'Michelle', 'Kevin', 'Stephanie', 'Brandon', 'Megan', 'Jason', 'Brittany', 'Anthony', 'Nicole', 'Mark', 'Samantha', 'Joshua', 'Elizabeth', 'Steven', 'Kimberly', 'Brian', 'Lauren', 'William', 'Danielle', 'John', 'Amy', 'Jonathan', 'Emily', 'Justin', 'Christina', 'Robert', 'Heather', 'Kyle', 'Angela', 'Charles', 'Catherine', 'Joseph'];
+  const lastNames = ['Thompson', 'Rodriguez', 'Chen', 'Wilson', 'Patel', 'Johnson', 'Martinez', 'Brown', 'Davis', 'Miller', 'Garcia', 'Anderson', 'Taylor', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Walker', 'Hall', 'Allen', 'Young', 'King', 'Wright', 'Lopez', 'Hill', 'Scott', 'Green', 'Adams', 'Baker', 'Gonzalez', 'Nelson', 'Carter', 'Mitchell', 'Perez', 'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris', 'Rogers', 'Reed'];
+
+  const employees: Employee[] = [];
+  
+  for (let i = 1; i <= 100; i++) {
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const name = `${firstName} ${lastName}`;
+    const initials = `${firstName[0]}${lastName[0]}`;
+    const department = departments[Math.floor(Math.random() * departments.length)];
+    
+    // Base salary ranges by department
+    const baseSalaryRanges: Record<string, [number, number]> = {
+      'Engineering': [4000, 8000],
+      'Sales': [3500, 7000], 
+      'Marketing': [3200, 6000],
+      'Finance': [4500, 7500],
+      'Operations': [3000, 5500],
+      'HR': [3500, 6500],
+      'Product': [4500, 8500],
+      'Design': [3800, 7000],
+      'Customer Success': [3200, 5800],
+      'Legal': [5000, 9000],
+      'IT': [4200, 7800],
+      'Admin': [2800, 4500]
+    };
+    
+    const [minSalary, maxSalary] = baseSalaryRanges[department];
+    const basePay = Math.floor(Math.random() * (maxSalary - minSalary) + minSalary);
+    
+    // Random bonus (20% chance)
+    const bonus = Math.random() > 0.8 ? Math.floor(Math.random() * 1000) : 0;
+    
+    // Random commission for Sales/Marketing (30% chance)
+    const commission = (department === 'Sales' || department === 'Marketing') && Math.random() > 0.7 
+      ? Math.floor(Math.random() * 500) : 0;
+    
+    // Random overtime (15% chance)  
+    const overtime = Math.random() > 0.85 ? Math.floor(Math.random() * 300) : 0;
+    
+    // Random GIF Flex (10% chance)
+    const gifFlex = Math.random() > 0.9 ? Math.floor(Math.random() * 200) : 0;
+    
+    // Random OnCall for Engineering/IT (25% chance)
+    const onCall = (department === 'Engineering' || department === 'IT') && Math.random() > 0.75
+      ? Math.floor(Math.random() * 400) : 0;
+    
+    const totalIncome = basePay + bonus + commission + overtime + gifFlex + onCall;
+    
+    // Calculate deductions (rough estimate)
+    const deductions = Math.floor(totalIncome * 0.25 + Math.random() * 100);
+    const takeHomePay = totalIncome - deductions;
+    const employerCost = Math.floor(totalIncome * 1.15 + Math.random() * 200);
+    
+    // Previous month data with some variations
+    const prevBasePay = basePay + Math.floor((Math.random() - 0.5) * 200);
+    const prevBonus = Math.random() > 0.9 ? Math.floor(Math.random() * 800) : 0;
+    const prevCommission = commission > 0 && Math.random() > 0.6 ? Math.floor(Math.random() * 400) : 0;
+    const prevOvertime = overtime > 0 && Math.random() > 0.7 ? Math.floor(Math.random() * 250) : 0;
+    const prevGifFlex = gifFlex > 0 && Math.random() > 0.8 ? Math.floor(Math.random() * 150) : 0;
+    const prevOnCall = onCall > 0 && Math.random() > 0.6 ? Math.floor(Math.random() * 350) : 0;
+    const prevTotalIncome = prevBasePay + prevBonus + prevCommission + prevOvertime + prevGifFlex + prevOnCall;
+    const prevDeductions = Math.floor(prevTotalIncome * 0.25 + Math.random() * 80);
+    const prevTakeHomePay = prevTotalIncome - prevDeductions;
+    const prevEmployerCost = Math.floor(prevTotalIncome * 1.15 + Math.random() * 180);
+    
+    employees.push({
+      id: i.toString(),
+      name,
+      initials,
+      basePay,
+      bonus,
+      commission,
+      overtime,
+      gifFlex,
+      onCall,
+      salaryBasis: 'Monthly',
+      units: 1,
+      rate: basePay,
+      totalIncome,
+      deductions,
+      takeHomePay,
+      employerCost,
+      status: 'Current',
+      department,
+      employmentType: 'Full-time',
+      paye: Math.floor(deductions * 0.6),
+      ni: Math.floor(deductions * 0.25),
+      pension: Math.floor(deductions * 0.15),
+      studentLoan: 0,
+      postgradLoan: 0,
+      deductionVariance: Math.floor((Math.random() - 0.5) * 20),
+      netPaymentVariance: Math.floor((Math.random() - 0.5) * 20),
+      employerNI: Math.floor(employerCost * 0.4),
+      employerPension: Math.floor(employerCost * 0.2),
+      previousMonth: {
+        basePay: prevBasePay,
+        bonus: prevBonus,
+        commission: prevCommission,
+        overtime: prevOvertime,
+        gifFlex: prevGifFlex,
+        onCall: prevOnCall,
+        totalIncome: prevTotalIncome,
+        deductions: prevDeductions,
+        takeHomePay: prevTakeHomePay,
+        employerCost: prevEmployerCost,
+        paye: Math.floor(prevDeductions * 0.6),
+        ni: Math.floor(prevDeductions * 0.25),
+        pension: Math.floor(prevDeductions * 0.15),
+        studentLoan: 0,
+        postgradLoan: 0,
+        employerNI: Math.floor(prevEmployerCost * 0.4),
+        employerPension: Math.floor(prevEmployerCost * 0.2)
+      }
+    });
   }
-];
+  
+  return employees;
+};
+
+export const employees: Employee[] = generateEmployeeData();
 
 // Generate tags for all employees
 employees.forEach(employee => {
