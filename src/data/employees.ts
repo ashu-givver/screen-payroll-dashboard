@@ -137,7 +137,7 @@ export const payrollPeriod: PayrollPeriod = {
   startDate: '1 Jul',
   endDate: '31 Jul 2025',
   status: 'Draft',
-  employeeCount: 7,
+  employeeCount: 100,
   companyName: 'Company Name'
 };
 
