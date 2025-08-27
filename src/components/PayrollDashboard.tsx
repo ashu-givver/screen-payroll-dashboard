@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 
 export const PayrollDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [showChangesOnly, setShowChangesOnly] = useState(true);
+  const [showChangesOnly, setShowChangesOnly] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
 
   const [approvedEmployees, setApprovedEmployees] = useState<Set<string>>(new Set());
@@ -63,9 +63,13 @@ export const PayrollDashboard = () => {
         return false;
       }
       
-      // Changes only filter
-      if (showChangesOnly && !['1', '3', '5', '7'].includes(employee.id)) {
-        return false;
+      // Changes only filter - show employees with significant changes
+      if (showChangesOnly) {
+        const hasSignificantChange = employee.previousMonth ? 
+          Math.abs(employee.totalIncome - employee.previousMonth.totalIncome) > 100 : false;
+        if (!hasSignificantChange) {
+          return false;
+        }
       }
       
       // Department filter
