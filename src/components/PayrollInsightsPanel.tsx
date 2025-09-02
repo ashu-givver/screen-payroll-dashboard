@@ -13,7 +13,8 @@ import {
   ArrowUp,
   ArrowDown,
   Minus,
-  X
+  X,
+  PiggyBank
 } from 'lucide-react';
 
 interface PayrollInsightsPanelProps {
@@ -43,6 +44,11 @@ export const PayrollInsightsPanel = ({ isOpen, onClose }: PayrollInsightsPanelPr
     { name: 'Advance', employees: 12, amount: 3600, previousAmount: 2800, change: 28.6 },
     { name: 'Loan', employees: 8, amount: 2400, previousAmount: 2400, change: 0 },
     { name: 'Cycle to Work', employees: 5, amount: 1250, previousAmount: 1100, change: 13.6 }
+  ];
+
+  const pensionsData = [
+    { name: 'Opt-out', employees: 15, amount: 0, previousAmount: 0, change: -12.5 },
+    { name: 'Qualifying', employees: 85, amount: 12750, previousAmount: 0, change: null }
   ];
 
   const absencesData = [
@@ -145,8 +151,8 @@ export const PayrollInsightsPanel = ({ isOpen, onClose }: PayrollInsightsPanelPr
             </CardContent>
           </Card>
 
-          {/* 2. Payments & Deductions (Side-by-side) */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* 2. Payments, Deductions & Pensions (Grid Layout) */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Payments */}
             <Card className="rounded-2xl shadow-sm border-0 bg-white">
               <CardContent className="p-6">
@@ -169,6 +175,19 @@ export const PayrollInsightsPanel = ({ isOpen, onClose }: PayrollInsightsPanelPr
                 </div>
                 <div className="space-y-1">
                   {deductionsData.map(renderMetricRow)}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Pensions */}
+            <Card className="rounded-2xl shadow-sm border-0 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <PiggyBank className="h-5 w-5 text-gray-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">Pensions</h3>
+                </div>
+                <div className="space-y-1">
+                  {pensionsData.map(renderMetricRow)}
                 </div>
               </CardContent>
             </Card>
