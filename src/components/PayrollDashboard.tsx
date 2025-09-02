@@ -424,7 +424,12 @@ export const PayrollDashboard = () => {
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-0">
+      <PayrollHeader 
+        period={payrollPeriod}
+        onConfirm={handleConfirm}
+        onDownload={handleExport}
+      />
       <StaticTopSection
         summary={payrollSummary}
         employees={employees}
@@ -455,7 +460,7 @@ export const PayrollDashboard = () => {
         />
       )}
 
-      <div className="bg-background border border-border rounded-lg">
+      <div className="bg-background border border-border rounded-lg mx-6 mb-6">
         <TableControlBar 
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}

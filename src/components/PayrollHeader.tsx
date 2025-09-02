@@ -2,6 +2,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, MoreHorizontal, Play } from 'lucide-react';
 import { PayrollPeriod } from '@/types/payroll';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface PayrollHeaderProps {
   period: PayrollPeriod;
@@ -15,57 +27,65 @@ export const PayrollHeader = ({
   onDownload,
 }: PayrollHeaderProps) => {
   return (
-    <div className="bg-card border-b border-border">
-      <div className="px-6 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-semibold text-payroll-header">
-              {period.month} {period.year}
-            </h1>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge 
-                className="bg-[#2563EB] text-white border-[#2563EB]"
-                aria-label="Payroll in progress"
+    <TooltipProvider>
+      <div className="bg-card border-b border-border">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <h1 className="text-xl font-bold text-payroll-header">
+                {period.month} {period.year}
+              </h1>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>•</span>
+                <span>{period.employeeCount} Employees</span>
+                <span>•</span>
+                <Badge 
+                  className="bg-amber-400 text-black border-amber-400 hover:bg-amber-400/80"
+                  aria-label="Payroll in progress"
+                >
+                  <Play className="h-3 w-3 mr-1" />
+                  IN PROGRESS
+                </Badge>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <DropdownMenu>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="p-2">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Download reports</p>
+                  </TooltipContent>
+                </Tooltip>
+                <DropdownMenuContent align="end" className="bg-popover">
+                  <DropdownMenuItem onClick={onDownload}>
+                    Gross to Net – June 2025
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={onDownload}>
+                    Gross to Net – July 2025
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button variant="ghost" size="sm" className="p-2">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="default" 
+                size="sm"
+                className="bg-green-600 text-white hover:bg-green-700"
+                onClick={onConfirm}
               >
-                <Play className="h-3 w-3 mr-1" />
-                IN PROGRESS
-              </Badge>
+                Confirm
+              </Button>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {onDownload && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={onDownload}
-                className="gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Download Report
-              </Button>
-            )}
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="default" 
-              size="sm"
-              className="bg-payroll-confirm text-white hover:bg-payroll-confirm/90"
-              onClick={onConfirm}
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-        
-        <div className="text-sm text-muted-foreground">
-          <span className="font-medium text-payroll-header">{period.companyName}</span>
-          <span className="mx-2">•</span>
-          <span>{period.startDate} - {period.endDate}</span>
-          <span className="mx-2">•</span>
-          <span>{period.employeeCount} employees</span>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };

@@ -230,16 +230,13 @@ export const PayrollSummaryCards = ({
 
   return (
     <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200">
-      <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-sm font-medium text-gray-900">
-          Pay Summary for {isFiltered ? `${filteredEmployeeCount} of ${totalEmployeeCount}` : filteredEmployeeCount} employees
-        </h3>
-        {isFiltered && (
+      {isFiltered && (
+        <div className="flex items-center gap-2 mb-4">
           <Badge variant="secondary" className="text-xs">
-            Filtered
+            Showing {filteredEmployeeCount} of {totalEmployeeCount} employees
           </Badge>
-        )}
-      </div>
+        </div>
+      )}
       
       {/* Pay & Cost Metrics + Custom View */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
