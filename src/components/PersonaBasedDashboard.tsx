@@ -9,7 +9,7 @@ interface PersonaBasedDashboardProps {
 }
 
 export const PersonaBasedDashboard = ({ onViewChange }: PersonaBasedDashboardProps) => {
-  const [currentPersona, setCurrentPersona] = useState<PersonaType>('summary');
+  const [currentPersona, setCurrentPersona] = useState<PersonaType>('detailed');
 
   const handlePersonaChange = (newPersona: PersonaType) => {
     setCurrentPersona(newPersona);
