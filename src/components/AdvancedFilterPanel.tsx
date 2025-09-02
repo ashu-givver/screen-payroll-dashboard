@@ -36,14 +36,6 @@ const PAY_ELEMENTS_GROUPED = {
     { value: 'loan', label: 'Loan', count: 3 },
     { value: 'cycleToWork', label: 'Cycle to Work', count: 1 },
   ],
-  'Employer Costs': [
-    { value: 'employerNI', label: 'Employer NI', count: 100 },
-    { value: 'employerPension', label: 'Employer Pension', count: 95 },
-    { value: 'employerCost', label: 'Total Employer Cost', count: 100 },
-  ],
-  'Net Pay': [
-    { value: 'takeHomePay', label: 'Take Home Pay', count: 100 },
-  ]
 };
 
 
