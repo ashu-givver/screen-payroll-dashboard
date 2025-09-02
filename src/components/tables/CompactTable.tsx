@@ -376,8 +376,8 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           const grossPayChange = getGrossPayChange(employee);
           const payDifferenceTooltip = getPayDifferenceTooltip(employee);
           
-          // Determine if this employee should show detailed differences (first 20 with differences)
-          const shouldShowDifference = index < 20 && Math.abs(grossPayChange.percentage) > 0.1;
+          // Determine if this employee should show detailed differences (first 10 with differences)
+          const shouldShowDifference = index < 10 && Math.abs(grossPayChange.percentage) > 0.1;
           const displayedGrossPayChange = shouldShowDifference ? grossPayChange : { amount: 0, percentage: 0 };
           
           // Calculate percentage changes for each pay component
