@@ -146,6 +146,14 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     return percentage > 0 ? 'text-green-600' : 'text-red-600';
   };
 
+  // Traffic light color system for Gross Pay Difference
+  const getGrossPayDifferenceColorClass = (percentage: number) => {
+    const absPercentage = Math.abs(percentage);
+    if (absPercentage >= 5) return 'text-red-600 font-semibold';
+    if (absPercentage >= 3) return 'text-orange-600 font-semibold';
+    return 'text-green-600 font-semibold';
+  };
+
   return (
     <NotionTable>
       <NotionTableHeader>
@@ -367,9 +375,9 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="text-sm font-medium cursor-help text-foreground">
-                          {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
-                        </span>
+                         <span className={`text-sm cursor-help ${getGrossPayDifferenceColorClass(grossPayChange.percentage)}`}>
+                           {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
+                         </span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-gray-900 text-white border-gray-800 shadow-lg px-3 py-2 text-xs rounded-lg">
                         <p>{payDifferenceTooltip}</p>
