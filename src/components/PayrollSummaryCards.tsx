@@ -115,31 +115,31 @@ export const PayrollSummaryCards = ({
     return (
       <Card 
         key={card.id}
-        className={`cursor-pointer transition-all duration-200 hover:shadow-md border ${
+        className={`cursor-pointer transition-all duration-200 hover:shadow-md border max-w-xs ${
           isActive 
             ? 'border-primary bg-primary/5 shadow-md' 
             : 'border-gray-200 bg-white hover:border-gray-300'
         }`}
         onClick={() => onCardClick(card.id)}
       >
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between mb-2">
+        <CardContent className="p-3">
+          <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
-              <Icon className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              <Icon className={`h-3 w-3 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+              <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                 {card.title}
               </span>
             </div>
           </div>
           
-          <div className="space-y-2">
-            <div className="text-2xl font-bold text-foreground">
+          <div className="space-y-1">
+            <div className="text-xl font-bold text-foreground">
               {card.value}
             </div>
             
             <div className="flex items-center justify-between">
               {formatChange(card.change)}
-              <span className="text-xs text-muted-foreground">vs last month</span>
+              <span className="text-sm font-medium text-muted-foreground">vs last month</span>
             </div>
           </div>
         </CardContent>
@@ -153,24 +153,24 @@ export const PayrollSummaryCards = ({
       
       return (
         <Card 
-          className={`cursor-pointer transition-all duration-200 hover:shadow-md border ${
+          className={`cursor-pointer transition-all duration-200 hover:shadow-md border max-w-xs ${
             isActive 
               ? 'border-primary bg-primary/5 shadow-md' 
               : 'border-gray-200 bg-white hover:border-gray-300'
           }`}
           onClick={() => onCardClick('custom-view')}
         >
-          <CardContent className="p-4">
-            <div className="flex items-start justify-between mb-2">
+          <CardContent className="p-3">
+            <div className="flex items-start justify-between mb-1">
               <div className="flex items-center gap-2">
-                <FileEdit className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <FileEdit className={`h-3 w-3 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+                <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                   Custom View
                 </span>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                  <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
                     <MoreVertical className="h-3 w-3" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -194,12 +194,12 @@ export const PayrollSummaryCards = ({
               </DropdownMenu>
             </div>
             
-            <div className="space-y-2">
-              <div className="text-lg font-bold text-foreground">
+            <div className="space-y-1">
+              <div className="text-xl font-bold text-foreground">
                 {customView.name}
               </div>
               
-              <div className="text-xs text-muted-foreground">
+              <div className="text-sm font-medium text-muted-foreground">
                 {customView.fields.length} field{customView.fields.length !== 1 ? 's' : ''} selected
               </div>
             </div>
@@ -209,16 +209,16 @@ export const PayrollSummaryCards = ({
     } else {
       return (
         <Card 
-          className="cursor-pointer transition-all duration-200 hover:shadow-md border border-dashed border-gray-300 bg-gray-50/50 hover:border-primary hover:bg-primary/5"
+          className="cursor-pointer transition-all duration-200 hover:shadow-md border border-dashed border-gray-300 bg-gray-50/50 hover:border-primary hover:bg-primary/5 max-w-xs"
           onClick={onCreateCustomView}
         >
-          <CardContent className="p-4">
-            <div className="flex flex-col items-center justify-center space-y-2 text-center h-full min-h-[100px]">
-              <Plus className="h-6 w-6 text-muted-foreground" />
+          <CardContent className="p-3">
+            <div className="flex flex-col items-center justify-center space-y-1 text-center h-full min-h-[70px]">
+              <Plus className="h-5 w-5 text-muted-foreground" />
               <div className="text-sm font-medium text-muted-foreground">
                 Create Custom View
               </div>
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-gray-500">
                 Choose your own columns
               </div>
             </div>
@@ -229,7 +229,7 @@ export const PayrollSummaryCards = ({
   };
 
   return (
-    <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200">
+    <div className="px-6 py-3 bg-gray-50/50 border-b border-gray-200">
       {isFiltered && (
         <div className="flex items-center gap-2 mb-4">
           <Badge variant="secondary" className="text-xs">
@@ -239,7 +239,7 @@ export const PayrollSummaryCards = ({
       )}
       
       {/* Pay & Cost Metrics + Custom View */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {summaryCards.map(renderCard)}
         {renderCustomViewCard()}
       </div>
