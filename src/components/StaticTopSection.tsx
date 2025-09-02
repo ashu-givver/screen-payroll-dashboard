@@ -14,6 +14,7 @@ interface StaticTopSectionProps {
   onCreateCustomView: () => void;
   onEditCustomView: () => void;
   onDeleteCustomView: () => void;
+  onInsightsClick: () => void;
 }
 
 export const StaticTopSection = ({ 
@@ -28,7 +29,8 @@ export const StaticTopSection = ({
   customView,
   onCreateCustomView,
   onEditCustomView,
-  onDeleteCustomView
+  onDeleteCustomView,
+  onInsightsClick
 }: StaticTopSectionProps) => {
   return (
     <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
@@ -42,6 +44,7 @@ export const StaticTopSection = ({
         onCreateCustomView={onCreateCustomView}
         onEditCustomView={onEditCustomView}
         onDeleteCustomView={onDeleteCustomView}
+        onInsightsClick={onInsightsClick}
       />
     </div>
   );

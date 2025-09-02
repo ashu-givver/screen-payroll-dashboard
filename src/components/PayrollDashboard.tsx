@@ -11,6 +11,7 @@ import { EmployerCostTable } from '@/components/tables/EmployerCostTable';
 import { TotalViewTable } from '@/components/tables/TotalViewTable';
 import { CustomViewTable } from '@/components/tables/CustomViewTable';
 import { CustomViewModal } from '@/components/CustomViewModal';
+import { PayrollInsightsPanel } from '@/components/PayrollInsightsPanel';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -32,6 +33,7 @@ export const PayrollDashboard = () => {
   const [customView, setCustomView] = useState<CustomView | undefined>();
   const [showCustomViewModal, setShowCustomViewModal] = useState(false);
   const [isEditingCustomView, setIsEditingCustomView] = useState(false);
+  const [showInsightsPanel, setShowInsightsPanel] = useState(false);
   
   const { toast } = useToast();
 
@@ -373,6 +375,10 @@ export const PayrollDashboard = () => {
     });
   };
 
+  const handleInsightsClick = () => {
+    setShowInsightsPanel(true);
+  };
+
   const renderCurrentTable = () => {
     const commonProps = {
       employees: filteredEmployees,
@@ -443,6 +449,7 @@ export const PayrollDashboard = () => {
         onCreateCustomView={handleCreateCustomView}
         onEditCustomView={handleEditCustomView}
         onDeleteCustomView={handleDeleteCustomView}
+        onInsightsClick={handleInsightsClick}
       />
       
       {showAdvancedFilters && (
@@ -484,6 +491,12 @@ export const PayrollDashboard = () => {
         onSave={handleSaveCustomView}
         existingView={customView}
         isEdit={isEditingCustomView}
+      />
+
+      {/* Payroll Insights Panel */}
+      <PayrollInsightsPanel
+        isOpen={showInsightsPanel}
+        onClose={() => setShowInsightsPanel(false)}
       />
     </div>
   );

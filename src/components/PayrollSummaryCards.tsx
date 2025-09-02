@@ -14,7 +14,8 @@ import {
   MoreVertical,
   Edit,
   Trash2,
-  FileEdit
+  FileEdit,
+  BarChart3
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -42,6 +43,7 @@ interface PayrollSummaryCardsProps {
   onCreateCustomView: () => void;
   onEditCustomView: () => void;
   onDeleteCustomView: () => void;
+  onInsightsClick: () => void;
 }
 
 export const PayrollSummaryCards = ({ 
@@ -53,7 +55,8 @@ export const PayrollSummaryCards = ({
   customView,
   onCreateCustomView,
   onEditCustomView,
-  onDeleteCustomView
+  onDeleteCustomView,
+  onInsightsClick
 }: PayrollSummaryCardsProps) => {
   const isFiltered = filteredEmployeeCount !== totalEmployeeCount;
   
@@ -228,6 +231,27 @@ export const PayrollSummaryCards = ({
     }
   };
 
+  const renderPayrollInsightsCard = () => {
+    return (
+      <Card 
+        className="cursor-pointer transition-all duration-200 hover:shadow-md border border-gray-200 bg-white hover:border-gray-300 max-w-xs"
+        onClick={onInsightsClick}
+      >
+        <CardContent className="p-3">
+          <div className="flex flex-col items-center justify-center space-y-1 text-center h-full min-h-[70px]">
+            <BarChart3 className="h-5 w-5 text-muted-foreground" />
+            <div className="text-sm font-medium text-foreground">
+              Payroll Insights
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Click to view key metrics
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <div className="px-6 py-3 bg-gray-50/50 border-b border-gray-200">
       {isFiltered && (
@@ -238,10 +262,15 @@ export const PayrollSummaryCards = ({
         </div>
       )}
       
-      {/* Pay & Cost Metrics + Custom View */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {summaryCards.map(renderCard)}
-        {renderCustomViewCard()}
+      {/* Pay & Cost Metrics + Insights + Custom View */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {summaryCards.map(renderCard)}
+        </div>
+        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {renderPayrollInsightsCard()}
+          {renderCustomViewCard()}
+        </div>
       </div>
     </div>
   );
