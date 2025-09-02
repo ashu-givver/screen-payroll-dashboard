@@ -23,13 +23,13 @@ interface TableToolbarProps {
 }
 
 const filterOptions = [
-  { id: 'new-joiners', label: 'New Joiners' },
-  { id: 'leavers', label: 'Leavers' },
-  { id: 'pension-enrolled', label: 'Pension Enrolled' },
-  { id: 'pension-opted-out', label: 'Pension Opted Out' },
-  { id: 'salary-changes', label: 'Salary Changes' },
-  { id: 'net-differences', label: 'Net Differences' },
-  { id: 'pending-approval', label: 'Pending Approval' },
+  { id: 'new-joiners', label: 'New Joiners', count: 7 },
+  { id: 'leavers', label: 'Leavers', count: 3 },
+  { id: 'pension-enrolled', label: 'Pension Enrolled', count: 95 },
+  { id: 'pension-opted-out', label: 'Pension Opted Out', count: 5 },
+  { id: 'salary-changes', label: 'Salary Changes', count: 14 },
+  { id: 'net-differences', label: 'Net Differences', count: 6 },
+  { id: 'pending-approval', label: 'Pending Approval', count: 12 },
 ];
 
 export const TableToolbar = ({
@@ -66,15 +66,15 @@ export const TableToolbar = ({
         {/* Filters Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 text-sm text-muted-foreground hover:text-foreground">
-              <Filter className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" className="h-8 text-sm text-foreground border-border">
+              <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
               Filters
               {activeFilters.length > 0 && (
-                <span className="ml-1 bg-primary text-primary-foreground rounded-full text-xs px-1.5 py-0.5">
+                <span className="ml-1 bg-muted text-foreground rounded-full text-xs px-1.5 py-0.5 border">
                   {activeFilters.length}
                 </span>
               )}
-              <ChevronDown className="h-3 w-3 ml-1" />
+              <ChevronDown className="h-3 w-3 ml-1 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 bg-background border z-50">
@@ -86,7 +86,10 @@ export const TableToolbar = ({
                   checked={activeFilters.includes(filter.id)}
                   onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
                 >
-                  {filter.label}
+                  <div className="flex items-center justify-between w-full">
+                    <span>{filter.label}</span>
+                    <span className="text-xs text-muted-foreground ml-2">({filter.count})</span>
+                  </div>
                 </DropdownMenuCheckboxItem>
               ))}
               <DropdownMenuSeparator />

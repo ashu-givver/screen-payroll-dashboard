@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, Plus, X, Save, FolderOpen, Bookmark, Zap } from 'lucide-react';
+import { ChevronDown, Plus, X, Save, FolderOpen, Bookmark } from 'lucide-react';
 import { AdvancedFilter, SavedFilterView, PayrollSummary } from '@/types/payroll';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -24,30 +24,33 @@ interface AdvancedFilterPanelProps {
 }
 
 const PAY_ELEMENTS_GROUPED = {
-  'Incomes': [
-    { value: 'basePay', label: 'Base Pay' },
-    { value: 'bonus', label: 'Bonus' },
-    { value: 'commission', label: 'Commission' },
-    { value: 'overtime', label: 'Overtime' },
-    { value: 'gifFlex', label: 'GIF Flex' },
-    { value: 'onCall', label: 'OnCall' },
-    { value: 'totalIncome', label: 'Gross Pay' },
+  'Payments': [
+    { value: 'basePay', label: 'Base Pay', count: 100 },
+    { value: 'bonus', label: 'Bonus', count: 12 },
+    { value: 'commission', label: 'Commission', count: 5 },
+    { value: 'overtime', label: 'Overtime', count: 8 },
+    { value: 'gifFlex', label: 'Inflex', count: 3 },
+    { value: 'onCall', label: 'On Call', count: 2 },
+    { value: 'totalIncome', label: 'Gross Pay', count: 100 },
   ],
   'Deductions': [
-    { value: 'paye', label: 'PAYE' },
-    { value: 'ni', label: 'NI' },
-    { value: 'pension', label: 'Pension' },
-    { value: 'studentLoan', label: 'Student Loan' },
-    { value: 'postgradLoan', label: 'Postgraduate Loan' },
-    { value: 'deductions', label: 'Total Deductions' },
+    { value: 'paye', label: 'PAYE', count: 100 },
+    { value: 'ni', label: 'NI', count: 100 },
+    { value: 'pension', label: 'Pension', count: 95 },
+    { value: 'studentLoan', label: 'Student Loan', count: 15 },
+    { value: 'postgradLoan', label: 'Postgraduate Loan', count: 3 },
+    { value: 'advance', label: 'Advance', count: 4 },
+    { value: 'loan', label: 'Loan', count: 3 },
+    { value: 'cycleToWork', label: 'Cycle to Work', count: 1 },
+    { value: 'deductions', label: 'Total Deductions', count: 100 },
   ],
   'Employer Costs': [
-    { value: 'employerNI', label: 'Employer NI' },
-    { value: 'employerPension', label: 'Employer Pension' },
-    { value: 'employerCost', label: 'Total Employer Cost' },
+    { value: 'employerNI', label: 'Employer NI', count: 100 },
+    { value: 'employerPension', label: 'Employer Pension', count: 95 },
+    { value: 'employerCost', label: 'Total Employer Cost', count: 100 },
   ],
   'Net Pay': [
-    { value: 'takeHomePay', label: 'Take Home Pay' },
+    { value: 'takeHomePay', label: 'Take Home Pay', count: 100 },
   ]
 };
 
@@ -219,12 +222,15 @@ export const AdvancedFilterPanel = ({
                       <SelectContent className="bg-popover border border-border">
                         {Object.entries(PAY_ELEMENTS_GROUPED).map(([group, elements]) => (
                           <div key={group}>
-                            <div className="px-2 py-1 text-xs font-semibold text-muted-foreground border-b border-border">
+                            <div className="px-2 py-1 text-sm font-medium text-foreground border-b border-border">
                               {group}
                             </div>
                             {elements.map((element) => (
-                              <SelectItem key={element.value} value={element.value}>
-                                {element.label}
+                              <SelectItem key={element.value} value={element.value} className="pl-6">
+                                <div className="flex items-center justify-between w-full">
+                                  <span>{element.label}</span>
+                                  <span className="text-xs text-muted-foreground ml-2">({element.count})</span>
+                                </div>
                               </SelectItem>
                             ))}
                           </div>
