@@ -1,10 +1,15 @@
 import { useState } from 'react';
+import { format } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { X, Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AddPaymentModalProps {
   isOpen: boolean;
@@ -49,6 +54,9 @@ export const AddPaymentModal = ({
 }: AddPaymentModalProps) => {
   const [amount, setAmount] = useState(currentAmount.toString());
   const [comment, setComment] = useState('');
+  const [currency, setCurrency] = useState('GBP');
+  const [frequency, setFrequency] = useState('Fixed');
+  const [date, setDate] = useState<Date>(new Date());
 
   const handleSave = () => {
     const numericAmount = parseFloat(amount) || 0;
@@ -74,12 +82,12 @@ export const AddPaymentModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="pb-4">
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader className="pb-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <DialogTitle className="text-lg font-semibold">Add Payment</DialogTitle>
-              <Badge variant="secondary" className="bg-muted text-muted-foreground">
+            <div className="flex items-center gap-4">
+              <DialogTitle className="text-xl font-medium">Add Payment</DialogTitle>
+              <Badge variant="secondary" className="bg-orange-100 text-orange-800 px-3 py-1 text-sm font-medium">
                 {getPaymentTypeBadge(paymentType)}
               </Badge>
             </div>
@@ -87,84 +95,99 @@ export const AddPaymentModal = ({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="h-6 w-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100"
+              className="h-8 w-8 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </Button>
           </div>
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Context Information */}
-          <div className="bg-muted/30 rounded-lg p-3 space-y-2">
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">Employee:</span>
-              <span className="font-medium">{employeeName}</span>
+          {/* Currency and Amount Row */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Currency</label>
+              <Select value={currency} onValueChange={setCurrency}>
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="Currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="GBP">Currency</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">Payroll Month:</span>
-              <span className="font-medium">December 2024</span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">Payment Type:</span>
-              <span className="font-medium">{getPaymentTypeLabel(paymentType)}</span>
-            </div>
-          </div>
-
-          {/* Amount Input */}
-          <div className="space-y-2">
-            <label htmlFor="amount" className="text-sm font-medium">
-              Amount *
-            </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                £
-              </span>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Amount</label>
               <Input
-                id="amount"
                 type="text"
                 value={amount}
                 onChange={handleAmountChange}
-                placeholder="0.00"
-                className="pl-7"
+                placeholder="Amount"
+                className="h-12"
                 autoFocus
               />
             </div>
           </div>
 
-          {/* Comment Input */}
+          {/* Frequency */}
           <div className="space-y-2">
-            <label htmlFor="comment" className="text-sm font-medium">
-              Comment <span className="text-muted-foreground">(optional)</span>
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Frequency</label>
+            <Select value={frequency} onValueChange={setFrequency}>
+              <SelectTrigger className="h-12">
+                <SelectValue placeholder="Fixed" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Fixed">Fixed</SelectItem>
+                <SelectItem value="Variable">Variable</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Date */}
+          <div className="space-y-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full h-12 justify-start text-left font-normal",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  {date ? format(date, "MMMM yyyy") : <span>MMMM YYYY</span>}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(newDate) => newDate && setDate(newDate)}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          {/* Comments */}
+          <div className="space-y-2">
             <Textarea
-              id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Add a comment..."
-              className="min-h-[80px]"
+              placeholder="Comments"
+              className="min-h-[120px] resize-none"
             />
           </div>
 
-          {/* Buttons */}
-          <div className="space-y-3">
-            <Button 
-              onClick={handleSave} 
-              className="w-full"
-              disabled={!amount || parseFloat(amount) < 0}
-            >
-              Save
-            </Button>
-            <div className="text-center">
-              <Button
-                variant="ghost"
-                onClick={handleCancel}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
+          {/* Save Button */}
+          <Button 
+            onClick={handleSave} 
+            className="w-full h-12 text-base"
+            disabled={!amount || parseFloat(amount) < 0}
+          >
+            Save
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
