@@ -64,6 +64,7 @@ export interface PayrollTag {
 export interface FilterGroup {
   id: string;
   label: string;
+  icon?: React.ComponentType<{ className?: string }>;
   filters: FilterOption[];
 }
 

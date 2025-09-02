@@ -36,7 +36,8 @@ interface TableControlBarProps {
 const filterGroups: FilterGroup[] = [
   {
     id: 'employment',
-    label: '👤 Employment Status',
+    label: 'Employment Status',
+    icon: Users,
     filters: [
       { id: 'new-joiners', label: 'New joiner', type: 'employment' },
       { id: 'leavers', label: 'Leaver', type: 'employment' },
@@ -44,7 +45,8 @@ const filterGroups: FilterGroup[] = [
   },
   {
     id: 'approval',
-    label: '✅ Approval',
+    label: 'Approval',
+    icon: CheckCircle,
     filters: [
       { id: 'approved', label: 'Approved', type: 'approval' },
       { id: 'pending-approval', label: 'Pending approval', type: 'approval' },
@@ -52,7 +54,8 @@ const filterGroups: FilterGroup[] = [
   },
   {
     id: 'gross-pay',
-    label: '💷 Gross Pay',
+    label: 'Gross Pay',
+    icon: PoundSterling,
     filters: [
       { id: 'salary-changes', label: 'Salary changes', type: 'gross-pay' },
       { id: 'bonus', label: 'Bonus', type: 'gross-pay' },
@@ -64,7 +67,8 @@ const filterGroups: FilterGroup[] = [
   },
   {
     id: 'gross-pay-difference',
-    label: '📊 Gross Pay Difference',
+    label: 'Gross Pay Difference',
+    icon: BarChart3,
     filters: [
       { id: 'gross-diff-3', label: '< 3%', type: 'gross-pay-difference' },
       { id: 'gross-diff-5', label: '< 5%', type: 'gross-pay-difference' },
@@ -179,6 +183,7 @@ export const TableControlBar = ({
                   {filterGroups.map((group) => (
                     <DropdownMenuSub key={group.id}>
                       <DropdownMenuSubTrigger>
+                        {group.icon && <group.icon className="h-4 w-4 mr-2" aria-hidden="true" />}
                         {group.label}
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent>

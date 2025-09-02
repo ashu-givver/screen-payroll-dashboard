@@ -37,7 +37,7 @@ export const ExecutiveSummary = ({ onSwitchToDetailed }: ExecutiveSummaryProps) 
         {/* Total Payroll Cost */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">💷 Payroll Cost</CardTitle>
+            <CardTitle className="text-sm font-medium">Payroll Cost</CardTitle>
             <PoundSterling className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -60,7 +60,7 @@ export const ExecutiveSummary = ({ onSwitchToDetailed }: ExecutiveSummaryProps) 
         {/* Employee Count */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">👥 Active Employees</CardTitle>
+            <CardTitle className="text-sm font-medium">Active Employees</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
