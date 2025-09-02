@@ -1,6 +1,8 @@
 import { Employee, PayrollSummary } from '@/types/payroll';
 import { EmployeeAvatar } from '@/components/EmployeeAvatar';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Check } from 'lucide-react';
 import { NotionTable, NotionTableHeader, NotionTableBody, NotionTableRow, NotionTableHead, NotionTableCell } from '@/components/NotionTable';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatCurrency } from '@/lib/formatters';
@@ -80,60 +82,77 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
     <NotionTable>
       <NotionTableHeader>
         <NotionTableRow>
-          <NotionTableHead width="192px" sticky>Employee</NotionTableHead>
-          <NotionTableHead width="80px" align="center">Action</NotionTableHead>
-          <NotionTableHead width="120px" align="right">Employee Deductions Difference %</NotionTableHead>
-          <NotionTableHead width="128px" align="right">Gross Pay</NotionTableHead>
-          <NotionTableHead width="96px" align="right">PAYE</NotionTableHead>
-          <NotionTableHead width="80px" align="right">NI</NotionTableHead>
-          <NotionTableHead width="112px" align="right">Pension</NotionTableHead>
-          <NotionTableHead width="128px" align="right">Student Loan</NotionTableHead>
-          <NotionTableHead width="144px" align="right">Postgraduate Loan</NotionTableHead>
-          <NotionTableHead width="144px" align="right">Total Deductions</NotionTableHead>
+          <NotionTableHead width="40px" align="center" sticky>
+            <span className="text-xs font-bold uppercase tracking-wide">APPROVE</span>
+          </NotionTableHead>
+          <NotionTableHead width="160px" sticky>
+            <span className="text-xs font-bold uppercase tracking-wide">EMPLOYEE</span>
+          </NotionTableHead>
+          <NotionTableHead width="120px" sticky>
+            <span className="text-xs font-bold uppercase tracking-wide">DEPARTMENT</span>
+          </NotionTableHead>
+          <NotionTableHead width="120px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">DEDUCTIONS DIFF %</span>
+          </NotionTableHead>
+          <NotionTableHead width="128px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">GROSS PAY</span>
+          </NotionTableHead>
+          <NotionTableHead width="96px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">PAYE</span>
+          </NotionTableHead>
+          <NotionTableHead width="80px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">NI</span>
+          </NotionTableHead>
+          <NotionTableHead width="112px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">PENSION</span>
+          </NotionTableHead>
+          <NotionTableHead width="128px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">STUDENT LOAN</span>
+          </NotionTableHead>
+          <NotionTableHead width="144px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">POSTGRAD LOAN</span>
+          </NotionTableHead>
+          <NotionTableHead width="144px" align="right">
+            <span className="text-xs font-bold uppercase tracking-wide">TOTAL DEDUCTIONS</span>
+          </NotionTableHead>
         </NotionTableRow>
       </NotionTableHeader>
       <NotionTableBody>
         {/* Total row */}
-        <NotionTableRow className="bg-muted/40 font-medium">
-          <NotionTableCell className="font-semibold" sticky>Total</NotionTableCell>
-          <NotionTableCell align="center">
-            <Button
-              size="sm"
-              variant="outline"
-              disabled
-              className="h-6 px-2 text-xs opacity-50"
-            >
-              -
-            </Button>
+        <NotionTableRow className="bg-muted/30 font-medium text-muted-foreground">
+          <NotionTableCell align="center" sticky>
+            <div className="w-4 h-4" />
           </NotionTableCell>
+          <NotionTableCell className="text-muted-foreground" sticky>Total</NotionTableCell>
+          <NotionTableCell className="text-muted-foreground" sticky>All Departments</NotionTableCell>
           <NotionTableCell align="right">
-            <span className="text-green-700 bg-green-50 border border-green-200 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium">+6.2%</span>
+            <span className="text-xs font-medium text-muted-foreground">+6.2%</span>
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(summary.totalIncome)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(totalPaye)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(totalNI)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(totalPension)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(totalStudentLoan)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(totalPostgradLoan)}
           </NotionTableCell>
-          <NotionTableCell align="right" className="font-semibold">
+          <NotionTableCell align="right" className="text-muted-foreground">
             {formatCurrency(summary.totalDeductions)}
           </NotionTableCell>
         </NotionTableRow>
           
         {/* Employee rows */}
-        {filteredEmployees.map((employee) => {
+        {filteredEmployees.map((employee, index) => {
           // Calculate total deductions change percentage
           const currentDeductions = employee.deductions;
           const previousDeductions = employee.previousMonth?.deductions || currentDeductions;
@@ -144,65 +163,71 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
           const deductionsDifferenceTooltip = getDeductionsDifferenceTooltip(employee);
           
           return (
-          <NotionTableRow key={employee.id}>
-            <NotionTableCell sticky>
+          <NotionTableRow 
+            key={employee.id} 
+            className={`hover:bg-gray-50/80 transition-colors ${index % 2 === 0 ? 'bg-gray-50/30' : 'bg-white'}`}
+          >
+            <NotionTableCell align="center" sticky className="py-2">
+              <Checkbox
+                checked={approvedEmployees.has(employee.id)}
+                onCheckedChange={() => onApproveEmployee(employee.id)}
+                aria-label={`Approve payroll for ${employee.name}`}
+                className="h-4 w-4"
+              />
+            </NotionTableCell>
+            <NotionTableCell sticky className="py-2">
               <div className="flex items-center gap-2">
                 <EmployeeAvatar 
                   name={employee.name}
                   initials={employee.initials}
                   size="sm"
                 />
-                <span className="font-medium text-sm">{employee.name}</span>
+                <span className="font-medium text-sm truncate">{employee.name}</span>
+                {approvedEmployees.has(employee.id) && (
+                  <Check className="h-4 w-4 text-green-600 ml-1" />
+                )}
               </div>
             </NotionTableCell>
-            <NotionTableCell align="center">
-              <Button
-                size="sm"
-                variant={approvedEmployees.has(employee.id) ? "secondary" : "outline"}
-                onClick={() => onApproveEmployee(employee.id)}
-                disabled={approvedEmployees.has(employee.id)}
-                className="h-6 px-2 text-xs"
-              >
-                {approvedEmployees.has(employee.id) ? "✓" : "Approve"}
-              </Button>
+            <NotionTableCell sticky className="py-2">
+              <span className="text-sm text-muted-foreground">{employee.department}</span>
             </NotionTableCell>
-            <NotionTableCell align="right">
+            <NotionTableCell align="right" className="py-2">
               {deductionsChangePercentage !== 0 ? (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium cursor-help ${getPercentageColorClass(deductionsChangePercentage)}`}>
+                      <span className="text-sm font-medium cursor-help text-foreground">
                         {deductionsChangePercentage > 0 ? '+' : ''}{deductionsChangePercentage.toFixed(1)}%
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-sm">{deductionsDifferenceTooltip}</p>
+                    <TooltipContent className="bg-gray-900 text-white border-gray-800 shadow-lg px-3 py-2 text-xs rounded-lg">
+                      <p>{deductionsDifferenceTooltip}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               ) : (
-                <span className="text-muted-foreground">-</span>
+                <span className="text-muted-foreground text-sm">-</span>
               )}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.totalIncome)}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.paye)}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.ni)}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.pension)}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.studentLoan)}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.postgradLoan)}
             </NotionTableCell>
-            <NotionTableCell align="right" className="font-medium">
+            <NotionTableCell align="right" className="font-medium py-2">
               {formatCurrency(employee.deductions)}
             </NotionTableCell>
           </NotionTableRow>
