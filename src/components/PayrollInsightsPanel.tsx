@@ -5,11 +5,15 @@ import {
   Users, 
   UserPlus, 
   UserMinus,
-  DollarSign,
-  Coins,
+  CreditCard,
+  MinusCircle,
   Calendar,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  ArrowUp,
+  ArrowDown,
+  Minus,
+  X
 } from 'lucide-react';
 
 interface PayrollInsightsPanelProps {
@@ -49,112 +53,139 @@ export const PayrollInsightsPanel = ({ isOpen, onClose }: PayrollInsightsPanelPr
     { name: 'SAP', employees: 1, amount: 350, previousAmount: 700, change: -50.0 }
   ];
 
-  const renderChangeIndicator = (change: number | null) => {
-    if (change === null) return <span className="text-xs text-muted-foreground">New</span>;
+  const renderChangeIndicator = (change: number | null, size: 'small' | 'large' = 'small') => {
+    if (change === null) {
+      return (
+        <Badge variant="secondary" className="text-gray-500 bg-gray-100">
+          New
+        </Badge>
+      );
+    }
     
-    const Icon = change >= 0 ? TrendingUp : TrendingDown;
-    const colorClass = change >= 0 ? 'text-green-600' : 'text-red-600';
+    if (change === 0) {
+      return (
+        <Badge variant="secondary" className="text-gray-500 bg-gray-100">
+          <Minus className="h-3 w-3 mr-1" />
+          0%
+        </Badge>
+      );
+    }
+
+    const Icon = change > 0 ? ArrowUp : ArrowDown;
+    const isPositive = change > 0;
+    const colorClass = isPositive 
+      ? 'text-green-600 bg-green-100' 
+      : 'text-red-600 bg-red-100';
+    
+    const textSize = size === 'large' ? 'text-sm' : 'text-xs';
     
     return (
-      <div className={`flex items-center gap-1 ${colorClass}`}>
-        <Icon className="h-3 w-3" />
-        <span className="text-xs font-medium">{Math.abs(change).toFixed(1)}%</span>
-      </div>
+      <Badge variant="secondary" className={`${colorClass} ${textSize}`}>
+        <Icon className="h-3 w-3 mr-1" />
+        {Math.abs(change).toFixed(1)}%
+      </Badge>
     );
   };
 
-  const renderMetricCard = (title: string, data: any[], icon: React.ComponentType<{ className?: string }>) => {
-    const Icon = icon;
-    
-    return (
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm font-medium">
-            <Icon className="h-4 w-4" />
-            {title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {data.map((item, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">{item.name}</span>
-                  <Badge variant="outline" className="text-xs">
-                    {item.employees} emp
-                  </Badge>
-                </div>
-                <div className="text-lg font-bold">{formatCurrency(item.amount)}</div>
-              </div>
-              <div className="text-right">
-                {renderChangeIndicator(item.change)}
-                <div className="text-xs text-muted-foreground">vs last month</div>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    );
-  };
+  const renderMetricRow = (item: any, index: number) => (
+    <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-sm text-gray-600">{item.name}</span>
+          <Badge variant="outline" className="text-xs">
+            {item.employees} emp
+          </Badge>
+        </div>
+        <div className="text-lg font-semibold text-gray-900">{formatCurrency(item.amount)}</div>
+      </div>
+      <div className="text-right">
+        {renderChangeIndicator(item.change)}
+      </div>
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
+      <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto shadow-xl">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b p-6 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-lg font-semibold">Payroll Insights</h2>
           <button
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            ×
+            <X className="h-5 w-5" />
           </button>
         </div>
         
         <div className="p-6 space-y-6">
-          {/* Headcount Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Headcount Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* 1. Headcount Summary (Top Banner) */}
+          <Card className="rounded-2xl shadow-sm border-0 bg-white">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Users className="h-5 w-5 text-gray-600" />
+                <h3 className="text-lg font-semibold text-gray-900">Headcount Summary</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
-                  <div className="text-2xl font-bold">{headcountData.totalEmployees}</div>
-                  <div className="text-sm text-muted-foreground">Total Employees</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{headcountData.totalEmployees}</div>
+                  <div className="text-sm text-gray-500 mb-2">Total Employees</div>
                 </div>
                 <div className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <UserPlus className="h-4 w-4 text-green-600" />
-                    <span className="text-2xl font-bold">{headcountData.newJoiners.current}</span>
-                  </div>
-                  <div className="text-sm text-muted-foreground">New Joiners</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{headcountData.newJoiners.current}</div>
+                  <div className="text-sm text-gray-500 mb-2">New Joiners</div>
                   {renderChangeIndicator(headcountData.newJoiners.change)}
                 </div>
                 <div className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <UserMinus className="h-4 w-4 text-red-600" />
-                    <span className="text-2xl font-bold">{headcountData.leavers.current}</span>
-                  </div>
-                  <div className="text-sm text-muted-foreground">Leavers</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{headcountData.leavers.current}</div>
+                  <div className="text-sm text-gray-500 mb-2">Leavers</div>
                   {renderChangeIndicator(headcountData.leavers.change)}
                 </div>
               </div>
             </CardContent>
           </Card>
 
+          {/* 2. Payments & Deductions (Side-by-side) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Payments */}
-            {renderMetricCard('Payments', paymentsData, DollarSign)}
+            <Card className="rounded-2xl shadow-sm border-0 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <CreditCard className="h-5 w-5 text-gray-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">Payments</h3>
+                </div>
+                <div className="space-y-1">
+                  {paymentsData.map(renderMetricRow)}
+                </div>
+              </CardContent>
+            </Card>
             
             {/* Deductions */}
-            {renderMetricCard('Deductions', deductionsData, Coins)}
+            <Card className="rounded-2xl shadow-sm border-0 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <MinusCircle className="h-5 w-5 text-gray-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">Deductions</h3>
+                </div>
+                <div className="space-y-1">
+                  {deductionsData.map(renderMetricRow)}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Absences & Statutory Pay */}
-          {renderMetricCard('Absences & Statutory Pay', absencesData, Calendar)}
+          {/* 3. Absences & Statutory Pay (Full Width) */}
+          <Card className="rounded-2xl shadow-sm border-0 bg-white">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar className="h-5 w-5 text-gray-600" />
+                <h3 className="text-lg font-semibold text-gray-900">Absences & Statutory Pay</h3>
+              </div>
+              <div className="space-y-1">
+                {absencesData.map(renderMetricRow)}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
