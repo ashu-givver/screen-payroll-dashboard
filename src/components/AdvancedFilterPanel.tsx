@@ -25,24 +25,16 @@ interface AdvancedFilterPanelProps {
 
 const PAY_ELEMENTS_GROUPED = {
   'Payments': [
-    { value: 'basePay', label: 'Base Pay', count: 100 },
     { value: 'bonus', label: 'Bonus', count: 12 },
     { value: 'commission', label: 'Commission', count: 5 },
     { value: 'overtime', label: 'Overtime', count: 8 },
     { value: 'gifFlex', label: 'Inflex', count: 3 },
     { value: 'onCall', label: 'On Call', count: 2 },
-    { value: 'totalIncome', label: 'Gross Pay', count: 100 },
   ],
   'Deductions': [
     { value: 'advance', label: 'Advance', count: 4 },
     { value: 'loan', label: 'Loan', count: 3 },
     { value: 'cycleToWork', label: 'Cycle to Work', count: 1 },
-    { value: 'paye', label: 'PAYE', count: 100 },
-    { value: 'ni', label: 'NI', count: 100 },
-    { value: 'pension', label: 'Pension', count: 95 },
-    { value: 'studentLoan', label: 'Student Loan', count: 15 },
-    { value: 'postgradLoan', label: 'Postgraduate Loan', count: 3 },
-    { value: 'deductions', label: 'Total Deductions', count: 100 },
   ],
   'Employer Costs': [
     { value: 'employerNI', label: 'Employer NI', count: 100 },
@@ -76,7 +68,7 @@ export const AdvancedFilterPanel = ({
   const addFilter = (preset?: Partial<AdvancedFilter>) => {
     const newFilter: AdvancedFilter = {
       id: Math.random().toString(36).substr(2, 9),
-      payElement: preset?.payElement || 'basePay',
+      payElement: preset?.payElement || 'bonus',
       condition: preset?.condition || 'greater',
       value: preset?.value || 0,
       isPercentage: preset?.isPercentage || false,
