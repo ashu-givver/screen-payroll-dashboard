@@ -16,23 +16,28 @@ interface DeductionsTableProps {
 }
 
 export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployees, onApproveEmployee }: DeductionsTableProps) => {
-  const filteredEmployees = employees;
-  
-  // Get color class based on percentage difference
+  // Sort employees by deduction differences (largest differences first)
+  const sortedEmployees = [...employees].sort((a, b) => {
+    const aDeductionsChange = a.previousMonth 
+      ? Math.abs(((a.deductions - a.previousMonth.deductions) / a.previousMonth.deductions) * 100)
+      : 0;
+    const bDeductionsChange = b.previousMonth 
+      ? Math.abs(((b.deductions - b.previousMonth.deductions) / b.previousMonth.deductions) * 100)
+      : 0;
+    return bDeductionsChange - aDeductionsChange;
+  });
+
+  // Traffic light color logic: smaller value = red, larger value = green
   const getPercentageColorClass = (percentage: number) => {
-    const absPercentage = Math.abs(percentage);
-    
-    if (absPercentage < 3) {
+    if (percentage > 0) {
+      // Increase (larger value) = green
       return 'text-green-700 bg-green-50 border border-green-200';
-    } else if (absPercentage < 5) {
-      return 'text-yellow-700 bg-yellow-50 border border-yellow-200';
-    } else if (absPercentage < 7) {
-      return 'text-orange-700 bg-orange-50 border border-orange-200';
-    } else if (absPercentage <= 10) {
+    } else if (percentage < 0) {
+      // Decrease (smaller value) = red
       return 'text-red-700 bg-red-50 border border-red-200';
     } else {
-      // For values > 10%, use red with stronger styling
-      return 'text-red-800 bg-red-100 border border-red-300';
+      // No change
+      return 'text-gray-700 bg-gray-50 border border-gray-200';
     }
   };
 
@@ -152,13 +157,17 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
         </NotionTableRow>
           
         {/* Employee rows */}
-        {filteredEmployees.map((employee, index) => {
+        {sortedEmployees.map((employee, index) => {
           // Calculate total deductions change percentage
           const currentDeductions = employee.deductions;
           const previousDeductions = employee.previousMonth?.deductions || currentDeductions;
           const deductionsChangePercentage = previousDeductions > 0 
             ? ((currentDeductions - previousDeductions) / previousDeductions) * 100 
             : 0;
+          
+          // Show detailed differences for only first 5 employees with differences
+          const shouldShowDifference = index < 5 && Math.abs(deductionsChangePercentage) > 0.1;
+          const displayedDeductionsChange = shouldShowDifference ? deductionsChangePercentage : 0;
           
           const deductionsDifferenceTooltip = getDeductionsDifferenceTooltip(employee);
           
@@ -192,12 +201,12 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
               <span className="text-sm text-muted-foreground">{employee.department}</span>
             </NotionTableCell>
             <NotionTableCell align="right" className="py-2">
-              {deductionsChangePercentage !== 0 ? (
+              {displayedDeductionsChange !== 0 ? (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="text-sm font-medium cursor-help text-foreground">
-                        {deductionsChangePercentage > 0 ? '+' : ''}{deductionsChangePercentage.toFixed(1)}%
+                      <span className={`text-sm font-medium cursor-help px-2 py-1 rounded-md ${getPercentageColorClass(displayedDeductionsChange)}`}>
+                        {displayedDeductionsChange > 0 ? '+' : ''}{displayedDeductionsChange.toFixed(1)}%
                       </span>
                     </TooltipTrigger>
                     <TooltipContent className="bg-gray-900 text-white border-gray-800 shadow-lg px-3 py-2 text-xs rounded-lg">
@@ -206,7 +215,7 @@ export const DeductionsTable = ({ employees, summary, viewMode, approvedEmployee
                   </Tooltip>
                 </TooltipProvider>
               ) : (
-                <span className="text-muted-foreground text-sm">-</span>
+                <span className="text-muted-foreground text-sm">0%</span>
               )}
             </NotionTableCell>
             <NotionTableCell align="right" className="font-medium py-2">
