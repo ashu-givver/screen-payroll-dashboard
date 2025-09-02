@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, MoreHorizontal, Play } from 'lucide-react';
+import { Download, MoreHorizontal, Play, ArrowLeft } from 'lucide-react';
 import { PayrollPeriod } from '@/types/payroll';
+import { Link } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,10 +33,13 @@ export const PayrollHeader = ({
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <Link to="/" className="text-foreground hover:text-foreground/80">
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
               <h1 className="text-xl font-bold text-payroll-header">
                 {period.month} {period.year}
               </h1>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 text-sm text-gray-700">
                 <span>•</span>
                 <span>{period.employeeCount} Employees</span>
                 <span>•</span>

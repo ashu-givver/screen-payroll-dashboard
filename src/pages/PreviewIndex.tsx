@@ -60,58 +60,6 @@ const PreviewIndex = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      {/* Clean Header */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link to="/" className="text-foreground hover:text-foreground/80">
-                <ArrowLeft className="h-5 w-5" />
-              </Link>
-              <h1 className="text-xl font-medium text-foreground">
-                {currentCycle?.period || 'July 2025 Payroll'} Dashboard
-              </h1>
-              <Badge 
-                variant={currentCycle?.status === 'Current' ? 'secondary' : 'default'}
-                className="ml-2"
-              >
-                {currentCycle?.status === 'Current' ? 'In Progress' : currentCycle?.status || 'In Progress'}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              {currentView === 'detailed' && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <FileText className="h-4 w-4" />
-                      Export
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuItem onClick={() => handleExportReport('July', '2025')}>
-                      <Download className="h-4 w-4 mr-2" />
-                      Export Gross/Net Report – July 2025
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleExportReport('June', '2025')}>
-                      <Download className="h-4 w-4 mr-2" />
-                      Export Gross/Net Report – June 2025
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-              <Button 
-                variant="default" 
-                size="sm"
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-                onClick={handleConfirmClick}
-              >
-                Confirm
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <PersonaBasedDashboard onViewChange={setCurrentView} />
       
       {/* Confirmation Modal */}
