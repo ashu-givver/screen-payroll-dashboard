@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FilterGroup } from '@/types/payroll';
+import { Employee, FilterGroup } from '@/types/payroll';
 
 interface TableControlBarProps {
   searchValue: string;
@@ -31,6 +31,7 @@ interface TableControlBarProps {
   currentView: string;
   selectedDepartment?: string;
   onDepartmentChange?: (value: string) => void;
+  employees: Employee[];
 }
 
 const filterGroups: FilterGroup[] = [
@@ -109,8 +110,104 @@ export const TableControlBar = ({
   currentView,
   selectedDepartment = 'all',
   onDepartmentChange,
+  employees,
 }: TableControlBarProps) => {
   const allApproved = approvedCount === totalCount && totalCount > 0;
+
+  // Function to calculate count for each filter option
+  const getFilterCount = (filterId: string, filterType: string): number => {
+    switch (filterType) {
+      case 'employment':
+        if (filterId === 'new-joiners') {
+          // Mock: 10% of employees are new joiners
+          return Math.floor(employees.length * 0.1);
+        }
+        if (filterId === 'leavers') {
+          // Mock: 5% of employees are leavers
+          return Math.floor(employees.length * 0.05);
+        }
+        break;
+      case 'approval':
+        if (filterId === 'approved') {
+          return approvedCount;
+        }
+        if (filterId === 'pending-approval') {
+          return totalCount - approvedCount;
+        }
+        break;
+      case 'payment':
+        if (filterId === 'bonus') {
+          return employees.filter(emp => emp.bonus > 0).length;
+        }
+        if (filterId === 'commission') {
+          return employees.filter(emp => emp.commission > 0).length;
+        }
+        if (filterId === 'overtime') {
+          return employees.filter(emp => emp.overtime > 0).length;
+        }
+        if (filterId === 'inflex') {
+          return employees.filter(emp => emp.gifFlex > 0).length;
+        }
+        if (filterId === 'on-call') {
+          return employees.filter(emp => emp.onCall > 0).length;
+        }
+        break;
+      case 'deductions':
+        if (filterId === 'loan') {
+          return employees.filter(emp => emp.studentLoan > 0 || emp.postgradLoan > 0).length;
+        }
+        if (filterId === 'advanced-cycle-scheme') {
+          // Mock: 15% of employees have cycle scheme
+          return Math.floor(employees.length * 0.15);
+        }
+        break;
+      case 'salary-changes':
+        if (filterId === 'salary-increase') {
+          return employees.filter(emp => 
+            emp.previousMonth && emp.basePay > emp.previousMonth.basePay
+          ).length;
+        }
+        if (filterId === 'salary-decrease') {
+          return employees.filter(emp => 
+            emp.previousMonth && emp.basePay < emp.previousMonth.basePay
+          ).length;
+        }
+        if (filterId === 'promotion') {
+          // Mock: 3% of employees got promoted
+          return Math.floor(employees.length * 0.03);
+        }
+        if (filterId === 'role-change') {
+          // Mock: 2% of employees changed roles
+          return Math.floor(employees.length * 0.02);
+        }
+        break;
+      case 'gross-pay-difference':
+        const getPercentageDiff = (emp: Employee) => {
+          if (!emp.previousMonth) return 0;
+          const diff = Math.abs(emp.totalIncome - emp.previousMonth.totalIncome);
+          return (diff / emp.previousMonth.totalIncome) * 100;
+        };
+        
+        if (filterId === 'gross-diff-3') {
+          return employees.filter(emp => getPercentageDiff(emp) < 3).length;
+        }
+        if (filterId === 'gross-diff-5') {
+          return employees.filter(emp => getPercentageDiff(emp) < 5).length;
+        }
+        if (filterId === 'gross-diff-7') {
+          return employees.filter(emp => getPercentageDiff(emp) < 7).length;
+        }
+        if (filterId === 'gross-diff-10') {
+          return employees.filter(emp => getPercentageDiff(emp) < 10).length;
+        }
+        break;
+    }
+    return 0;
+  };
+
+  const formatCount = (count: number): string => {
+    return count === 1 ? '1 employee' : `${count} employees`;
+  };
 
   return (
     <div className="bg-card border-b border-border px-6 py-3">
@@ -206,15 +303,22 @@ export const TableControlBar = ({
                         {group.label}
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent>
-                        {group.filters.map((filter) => (
-                          <DropdownMenuCheckboxItem
-                            key={filter.id}
-                            checked={activeFilters.includes(filter.id)}
-                            onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
-                          >
-                            {filter.label}
-                          </DropdownMenuCheckboxItem>
-                        ))}
+                        {group.filters.map((filter) => {
+                          const count = getFilterCount(filter.id, filter.type);
+                          return (
+                            <DropdownMenuCheckboxItem
+                              key={filter.id}
+                              checked={activeFilters.includes(filter.id)}
+                              onCheckedChange={(checked) => onFilterChange(filter.id, checked)}
+                              className="flex items-center justify-between"
+                            >
+                              <span>{filter.label}</span>
+                              <span className="text-xs text-muted-foreground opacity-60 ml-2">
+                                {formatCount(count)}
+                              </span>
+                            </DropdownMenuCheckboxItem>
+                          );
+                        })}
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                   ))}

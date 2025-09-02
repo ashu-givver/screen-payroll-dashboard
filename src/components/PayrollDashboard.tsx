@@ -480,6 +480,7 @@ export const PayrollDashboard = () => {
           currentView={currentView}
           selectedDepartment={selectedDepartment}
           onDepartmentChange={setSelectedDepartment}
+          employees={filteredEmployees}
         />
         {renderCurrentTable()}
       </div>
