@@ -34,14 +34,14 @@ const PAY_ELEMENTS_GROUPED = {
     { value: 'totalIncome', label: 'Gross Pay', count: 100 },
   ],
   'Deductions': [
+    { value: 'advance', label: 'Advance', count: 4 },
+    { value: 'loan', label: 'Loan', count: 3 },
+    { value: 'cycleToWork', label: 'Cycle to Work', count: 1 },
     { value: 'paye', label: 'PAYE', count: 100 },
     { value: 'ni', label: 'NI', count: 100 },
     { value: 'pension', label: 'Pension', count: 95 },
     { value: 'studentLoan', label: 'Student Loan', count: 15 },
     { value: 'postgradLoan', label: 'Postgraduate Loan', count: 3 },
-    { value: 'advance', label: 'Advance', count: 4 },
-    { value: 'loan', label: 'Loan', count: 3 },
-    { value: 'cycleToWork', label: 'Cycle to Work', count: 1 },
     { value: 'deductions', label: 'Total Deductions', count: 100 },
   ],
   'Employer Costs': [
