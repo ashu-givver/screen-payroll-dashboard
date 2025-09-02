@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';  
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Building, TrendingUp, PoundSterling, BarChart3 } from 'lucide-react';
+import { Download, Search, Filter, ChevronDown, X, Users, CheckCircle, Building, TrendingUp, Receipt, BarChart3, MinusCircle, ArrowUpDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,16 +53,35 @@ const filterGroups: FilterGroup[] = [
     ]
   },
   {
-    id: 'gross-pay',
-    label: 'Gross Pay',
-    icon: PoundSterling,
+    id: 'payment',
+    label: 'Payment',
+    icon: Receipt,
     filters: [
-      { id: 'salary-changes', label: 'Salary changes', type: 'gross-pay' },
-      { id: 'bonus', label: 'Bonus', type: 'gross-pay' },
-      { id: 'commission', label: 'Commission', type: 'gross-pay' },
-      { id: 'overtime', label: 'Overtime', type: 'gross-pay' },
-      { id: 'inflex', label: 'Inflex', type: 'gross-pay' },
-      { id: 'on-call', label: 'On call', type: 'gross-pay' },
+      { id: 'bonus', label: 'Bonus', type: 'payment' },
+      { id: 'commission', label: 'Commission', type: 'payment' },
+      { id: 'overtime', label: 'Overtime', type: 'payment' },
+      { id: 'inflex', label: 'Inflex', type: 'payment' },
+      { id: 'on-call', label: 'On call', type: 'payment' },
+    ]
+  },
+  {
+    id: 'deductions',
+    label: 'Deductions',
+    icon: MinusCircle,
+    filters: [
+      { id: 'loan', label: 'Loan', type: 'deductions' },
+      { id: 'advanced-cycle-scheme', label: 'Advanced Cycle Scheme', type: 'deductions' },
+    ]
+  },
+  {
+    id: 'salary-changes',
+    label: 'Salary Changes',
+    icon: ArrowUpDown,
+    filters: [
+      { id: 'salary-increase', label: 'Salary increase', type: 'salary-changes' },
+      { id: 'salary-decrease', label: 'Salary decrease', type: 'salary-changes' },
+      { id: 'promotion', label: 'Promotion', type: 'salary-changes' },
+      { id: 'role-change', label: 'Role change', type: 'salary-changes' },
     ]
   },
   {

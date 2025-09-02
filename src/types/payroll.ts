@@ -57,7 +57,7 @@ export interface Employee {
 export interface PayrollTag {
   id: string;
   label: string;
-  type: 'employment' | 'compensation' | 'statutory' | 'other' | 'approval' | 'gross-pay' | 'gross-pay-difference';
+  type: 'employment' | 'compensation' | 'statutory' | 'other' | 'approval' | 'gross-pay' | 'gross-pay-difference' | 'payment' | 'deductions' | 'salary-changes';
   category: string; // More specific category for filtering
 }
 
@@ -71,7 +71,7 @@ export interface FilterGroup {
 export interface FilterOption {
   id: string;
   label: string;
-  type: 'employment' | 'compensation' | 'statutory' | 'other' | 'approval' | 'gross-pay' | 'gross-pay-difference';
+  type: 'employment' | 'compensation' | 'statutory' | 'other' | 'approval' | 'gross-pay' | 'gross-pay-difference' | 'payment' | 'deductions' | 'salary-changes';
 }
 
 export interface AdvancedFilter {
