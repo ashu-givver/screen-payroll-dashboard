@@ -26,42 +26,9 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
     direction: null 
   });
 
-  // Sorting logic
-  const sortedEmployees = useMemo(() => {
-    if (!sortConfig.direction || !sortConfig.key) {
-      return employees;
-    }
-
-    return [...employees].sort((a, b) => {
-      let aValue: any = a[sortConfig.key as keyof Employee];
-      let bValue: any = b[sortConfig.key as keyof Employee];
-
-      // Handle string sorting (like employee names)
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      // Handle numeric sorting
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-
-      // Handle string sorting
-      if (aValue < bValue) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (aValue > bValue) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-  }, [employees, sortConfig]);
-
   const handleSort = (key: string, direction: SortDirection) => {
     setSortConfig({ key, direction });
   };
-  const filteredEmployees = employees;
 
   // Calculate comparison with previous month for Gross Pay only
   const getGrossPayChange = (employee: Employee) => {
@@ -72,6 +39,68 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
       : 0;
     return { amount: change, percentage };
   };
+
+  // Sorting logic with priority for employees with gross pay differences
+  const sortedEmployees = useMemo(() => {
+    // First, separate employees with and without gross pay differences
+    const employeesWithDifferences: Employee[] = [];
+    const employeesWithoutDifferences: Employee[] = [];
+
+    employees.forEach(employee => {
+      const grossPayChange = getGrossPayChange(employee);
+      if (Math.abs(grossPayChange.percentage) > 0.1) { // Consider changes > 0.1% as significant
+        employeesWithDifferences.push(employee);
+      } else {
+        employeesWithoutDifferences.push(employee);
+      }
+    });
+
+    // Sort employees with differences by absolute percentage change (highest first)
+    employeesWithDifferences.sort((a, b) => {
+      const aChange = Math.abs(getGrossPayChange(a).percentage);
+      const bChange = Math.abs(getGrossPayChange(b).percentage);
+      return bChange - aChange;
+    });
+
+    // Apply secondary sorting if specified
+    let sortedWithDifferences = employeesWithDifferences;
+    let sortedWithoutDifferences = employeesWithoutDifferences;
+
+    if (sortConfig.direction && sortConfig.key) {
+      const sortFunction = (a: Employee, b: Employee) => {
+        let aValue: any = a[sortConfig.key as keyof Employee];
+        let bValue: any = b[sortConfig.key as keyof Employee];
+
+        // Handle string sorting (like employee names)
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          aValue = aValue.toLowerCase();
+          bValue = bValue.toLowerCase();
+        }
+
+        // Handle numeric sorting
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+        }
+
+        // Handle string sorting
+        if (aValue < bValue) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      };
+
+      sortedWithDifferences = [...employeesWithDifferences].sort(sortFunction);
+      sortedWithoutDifferences = [...employeesWithoutDifferences].sort(sortFunction);
+    }
+
+    // Return employees with differences first, then without differences
+    return [...sortedWithDifferences, ...sortedWithoutDifferences];
+  }, [employees, sortConfig]);
+
+  const filteredEmployees = employees;
 
   // Get background color based on percentage change
   const getChangeBackgroundClass = (percentage: number, hasChange: boolean) => {
@@ -347,6 +376,10 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
           const grossPayChange = getGrossPayChange(employee);
           const payDifferenceTooltip = getPayDifferenceTooltip(employee);
           
+          // Determine if this employee should show detailed differences (first 20 with differences)
+          const shouldShowDifference = index < 20 && Math.abs(grossPayChange.percentage) > 0.1;
+          const displayedGrossPayChange = shouldShowDifference ? grossPayChange : { amount: 0, percentage: 0 };
+          
           // Calculate percentage changes for each pay component
           const bonusChange = employee.previousMonth ? getFieldPercentageChange(employee.bonus, employee.previousMonth.bonus) : { percentage: 0, hasChange: false };
           const commissionChange = employee.previousMonth ? getFieldPercentageChange(employee.commission, employee.previousMonth.commission) : { percentage: 0, hasChange: false };
@@ -383,13 +416,13 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
               <NotionTableCell sticky className="py-2">
                 <span className="text-sm text-muted-foreground">{employee.department}</span>
               </NotionTableCell>
-              <NotionTableCell align="right" className={`py-2 ${grossPayChange.percentage !== 0 ? getGrossPayDifferenceClasses(grossPayChange.percentage).cellClass : ''}`}>
-                {grossPayChange.percentage !== 0 ? (
+              <NotionTableCell align="right" className={`py-2 ${displayedGrossPayChange.percentage !== 0 ? getGrossPayDifferenceClasses(displayedGrossPayChange.percentage).cellClass : ''}`}>
+                {displayedGrossPayChange.percentage !== 0 ? (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                         <span className={`text-sm cursor-help ${getGrossPayDifferenceClasses(grossPayChange.percentage).textClass}`}>
-                           {grossPayChange.percentage > 0 ? '+' : ''}{grossPayChange.percentage.toFixed(1)}%
+                         <span className={`text-sm cursor-help ${getGrossPayDifferenceClasses(displayedGrossPayChange.percentage).textClass}`}>
+                           {displayedGrossPayChange.percentage > 0 ? '+' : ''}{displayedGrossPayChange.percentage.toFixed(1)}%
                          </span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-gray-900 text-white border-gray-800 shadow-lg px-3 py-2 text-xs rounded-lg">
@@ -398,7 +431,7 @@ export const CompactTable = ({ employees, summary, approvedEmployees, onApproveE
                     </Tooltip>
                   </TooltipProvider>
                 ) : (
-                  <span className="text-muted-foreground text-sm">-</span>
+                  <span className="text-muted-foreground text-sm">0%</span>
                 )}
               </NotionTableCell>
               <NotionTableCell align="right" className="font-medium py-2">
